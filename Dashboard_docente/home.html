@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Poppins:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div class="container">
+      <header id="main-menu">
+        <h2>Dashboard</h2>
+        <div class="top-menu">
+          <div>
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </div>
+          <div>
+            <img
+              class="icon"
+              src="assets/icons/bell.svg"
+              alt="notifications"
+            />
+          </div>
+          <div>
+            <img src="assets/icons/avatar.svg" alt="avatar" />
+            <p>Celso</p>
+          </div>
+          <div>
+            <img src="assets/icons/chevron-down.svg" alt="dropdown" />
+          </div>
+        </div>
+      </header>
+
+      <nav id="side-menu">
+        <div class="nav">
+          <div class="container-menu">
+            <div class="logo">
+              <div>
+                <img src="/assets/icons/bolt-circle.svg" alt="" />
+              </div>
+              <img src="assets/icons/senai_color.png" alt="Logo" class="logo">
+              <img class="icon chevron-icon" src="assets/icons/chevron-left.svg" alt="">
+              />
+            </div>
+
+            <div class="components">
+              <div class="main-menu">
+                <div class="text-box">MENU PRINCIPAL</div>
+                <div class="component">
+                  <img src="assets/icons/dashboard.svg" alt="" />
+                  <p class="text-menu">Painel</p>
+                </div>
+                <div class="component">
+                  <img src="assets/icons/inbox.svg" alt="" />
+                  <p class="text-menu">Caixa de Entrada</p>
+                </div>
+              </div>
+
+              <div class="workspace">
+                <div class="text-box">Espaço de Trabalho</div>
+                <div class="component">
+                  <img src= assets/icons/accounts.svg" alt="" />
+                  <p class="text-menu">Contas</p>
+                </div>
+                <div class="component">
+                  <img src="assets/icons/schedule.svg" alt="" />
+                  <p class="text-menu">Agenda de Aulas</p>
+                </div>
+                <div class="component">
+                  <img src="assets/icons/communities.svg" alt="" />
+                  <p class="text-menu">Comunidades</p>
+                </div>
+                <div class="component">
+                  <img src="assets/icons/analytics.svg" alt="" />
+                  <p class="text-menu">Análise de gráfico</p>
+                </div>
+              </div>
+
+              <div class="general">
+                <div class="text-box">Em Geral</div>
+                <div class="component">
+                  <img src="assets/icons/file_folders.svg" alt="" />
+                  <p class="text-menu">Arquivos e Pastas</p>
+                </div>
+                <div class="component">
+                  <img src="assets/icons/settings.svg" alt="" />
+                  <p class="text-menu">Configurações</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="help">
+            <div class="wrapper-box">
+              <div class="help-box">
+                <img src="assets/icons/help-circle.svg" alt="" />
+                <p>Precisa de Ajuda com <span>Painel</span>?</p>
+                <div class="button">
+                  <p>Acesse a central de ajuda</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main>
+        <section id="main-chart">
+          <header>
+            <div class="wrapper-reach">
+              <div class="card-reach">
+                <div class="box-image total-reach">
+                  <img src="assets/icons/rectangle.svg" alt="" />
+                  <img src="assets/icons/polygon.svg" alt="" />
+                </div>
+                <div class="text-reach">
+                  <p class="sub-title">Quantidade de aulas</p>
+                  <h3>aaa</h3>
+                </div>
+              </div>
+              <div class="card-reach">
+                <div class="box-image total-paid">
+                  <img src="assets/icons/rectangle_green.svg" alt="" />
+                  <div></div>
+                  <img src="assets/icons/polygon_green.svg" alt="" />
+                </div>
+                <div class="text-reach">
+                  <p class="sub-title">Alcançe total de aulas</p>
+                  <h3>bbb</h3>
+                </div>
+              </div>
+              <div class="card-reach">
+                <div class="box-image total-organic">
+                  <img src="assets/icons/rectangle-rose.svg" alt="" />
+                  <img src="assets/icons/polygon-rose.svg"" alt="" />
+                </div>
+                <div class="text-reach">
+                  <p class="sub-title">Aulas realizadas</p>
+                  <h3>ccc</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrapper-filter">
+              <div class="filters">
+                <div class="filter selected">
+                  <p>Diário</p>
+                </div>
+                <div class="filter">
+                  <p>Semanal</p>
+                </div>
+                <div class="filter">
+                  <p>Mensal</p>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="chart">
+            <canvas id="chartMain" width="700" height="200"> </canvas>
+          </div>
+        </section>
+
+        <section id="demographic">
+          <header>
+            <div class="title">
+              <div>
+                <img src="assets/icons/pipe.svg" alt="" />
+              </div>
+              <h3>Demográfico</h3>
+            </div>
+            <div class="detail">
+              <p>Ver Detalhes</p>
+              <img src="assets/icons/chevron-right.svg" alt="" />
+            </div>
+          </header>
+          <div class="wrapper-demographic">
+            <div class="chart-demographic">
+              <canvas id="myChart" width="200" height="400"></canvas>
+              <h5>Matérias</h5>
+            </div>
+            <div class="audience-age">
+              <h4 class="title-audience">Salas de Aulas</h4>
+              <div class="progress-bar-group">
+                <div class="first"></div>
+                <div class="second"></div>
+                <div class="third"></div>
+                <div class="fourth"></div>
+              </div>
+              <div class="age-group">
+                <div class="first-circle"></div>
+                <div>< Laboratório de Informática</div>
+                <h4></h4>
+                <div>30%</div>
+              </div>
+              <div class="age-group">
+                <div class="second-circle"></div>
+                <div>Laboratório de software</div>
+                <h4></h4>
+                <div>42%</div>
+              </div>
+              <div class="age-group">
+                <div class="third-circle"></div>
+                <div>Eletrónica</div>
+                <h4></h4>
+                <div>18%</div>
+              </div>
+              <div class="age-group">
+                <div class="fourth-circle"></div>
+                <div>> Sesi andar 2</div>
+                <h4></h4>
+                <div>10%</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="top-channels">
+          <header>
+            <div class="title">
+              <div>
+                <img src="assets/icons/pipe.svg" alt="" />
+              </div>
+              <h3>Aulas confirmadas</h3>
+            </div>
+            <div class="detail">
+              <p>Detalhes</p>
+              <img src="assets/icons/chevron-right.svg" alt="" />
+            </div>
+          </header>
+          <div class="wrapper-channels">
+            <div class="head">
+              <p class="sub-title">Matéria</p>
+              <p class="sub-title">Porcentagem</p>
+            </div>
+            <div class="channel">
+              <div>
+                <img src="assets/icons/matéria.png" alt="" />
+                <h4 class="channel-name">PHP</h4>
+                <h4>20H</h4>
+                <p>+12%</p>
+                <div class="container-bar">
+                  <div class="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div class="channel">
+              <div>
+                <img src="assets/icons/matéria.png" alt="" />
+                <h4 class="channel-name">JAVA SCRIPT</h4>
+                <h4>15H</h4>
+                <p>+12%</p>
+                <div class="container-bar">
+                  <div class="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div class="channel">
+              <div>
+                <img src="assets/icons/matéria.png" alt="" />
+                <h4 class="channel-name">JAVA</h4>
+                <h4>8H</h4>
+                <p>+12%</p>
+                <div class="container-bar">
+                  <div class="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div class="channel">
+              <div>
+                <img src="assets/icons/matéria.png" alt="" />
+                <h4 class="channel-name">PYTHON</h4>
+                <h4>12H</h4>
+                <p>+12%</p>
+                <div class="container-bar">
+                  <div class="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

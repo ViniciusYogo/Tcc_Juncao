@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Senai</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+<div class="container">
+	<div class="screen">
+		<div class="screen__content">
+            
+			<!-- FORMULÁRIO DE LOGIN -->
+			<form class="login" id="login-form">
+				
+				<div class="logo-container">
+					<img src="https://www.imagemhost.com.br/images/2024/11/22/Logo-novo-SENAI_-sem-slogan_755X325.png" alt="Logo Senai" class="login-logo">
+				</div>
+				
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+					<input type="text" class="login__input" placeholder="User name / Email">
+				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input type="password" class="login__input" placeholder="Password">
+				</div>
+                
+                <!-- CHECKBOX MANTER CONECTADO -->
+                <div class="login__field">
+                    <input type="checkbox" id="keep-connected">
+                    <label for="keep-connected">Manter Conectado</label>
+                </div>
+                
+				<button class="button login__submit">
+					<span class="button__text">Acessar</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>
+
+                <!-- LINK PARA RECUPERAÇÃO DE SENHA -->
+                <p class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">Esqueceu sua senha?</a>
+                </p>
+			</form>
+			
+
+            <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA (ESCONDIDO) -->
+            <form class="forgot-password-form" id="forgot-password-form" style="display: none;">
+                <h3>Recuperação de Senha</h3>
+                <p>Digite seu e-mail para receber um link de redefinição de senha.</p>
+                
+                <div class="login__field">
+                    <i class="login__icon fas fa-envelope"></i>
+                    <input type="email" class="login__input" placeholder="Digite seu e-mail">
+                </div>
+                
+                <button class="button login__submit">
+                    <span class="button__text">Enviar Link</span>
+                    <i class="button__icon fas fa-paper-plane"></i>
+                </button>               
+                
+                <p class="back-to-login">
+                    <a href="#" onclick="showLogin()">Voltar ao Login</a>
+                </p>
+            </form>
+
+			<div class="social-login">
+				<h3></h3>
+				<div class="social-icons">
+					<a href="#" class="social-login__icon fab fa-instagram"></a>
+					<a href="#" class="social-login__icon fab fa-facebook"></a>
+					<a href="#" class="social-login__icon fab fa-twitter"></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>      
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>      
+	</div>
+</div>
+
+<!-- SCRIPT PARA TROCAR ENTRE LOGIN E RECUPERAÇÃO DE SENHA -->
+<script>
+    function showForgotPassword() {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("forgot-password-form").style.display = "block";
+    }
+
+    function showLogin() {
+        document.getElementById("forgot-password-form").style.display = "none";
+        document.getElementById("login-form").style.display = "block";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizar Horários</title>
+  <link rel="stylesheet" href="visualizar-horarios.css">
+</head>
+<body>
+  <h2>Visualizar Horários <span id="mes-ano"></span></h2>
+  <div class="controles-calendario">
+    <button id="semana-anterior">&lt; Semana Anterior</button>
+    <button id="hoje">Hoje</button>
+    <button id="proxima-semana">Próxima Semana &gt;</button>
+  </div>
+  <div class="calendario">
+    <div class="linha-do-tempo">
+      <div class="espacador"></div>
+      <div class="marcador-de-tempo">07h</div>
+      <div class="marcador-de-tempo">08h</div>
+      <div class="marcador-de-tempo">09h</div>
+      <div class="marcador-de-tempo">10h</div>
+      <div class="marcador-de-tempo">11h</div>
+      <div class="marcador-de-tempo">12h</div>
+      <div class="marcador-de-tempo">13h</div>
+      <div class="marcador-de-tempo">14h</div>
+      <div class="marcador-de-tempo">15h</div>
+      <div class="marcador-de-tempo">16h</div>
+      <div class="marcador-de-tempo">17h</div>
+      <div class="marcador-de-tempo">18h</div>
+      <div class="marcador-de-tempo">19h</div>
+      <div class="marcador-de-tempo">20h</div>
+      <div class="marcador-de-tempo">21h</div>
+      <div class="marcador-de-tempo">22h</div>
+    </div>
+    <div class="dias">
+      <div class="dia segunda">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Segunda</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+      <div class="dia terca">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Terça</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+      <div class="dia quarta">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Quarta</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+      <div class="dia quinta">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Quinta</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+      <div class="dia sexta">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Sexta</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+      <div class="dia sabado">
+        <div class="data">
+          <p class="numero-data"></p>
+          <p class="dia-da-semana">Sábado</p>
+          <p class="mes-data"></p>
+        </div>
+        <div class="eventos"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-edicao" id="modalEdicao">
+    <div class="modal-conteudo">
+      <h3>Editar Aula</h3>
+      <div id="detalhesAula">
+        <form id="formEdicao">
+          <div class="form-group">
+            <label for="editDescricao">Matéria:</label>
+            <input type="text" id="editDescricao" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="editProfessor">Professor:</label>
+            <input type="text" id="editProfessor" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="editHoraInicio">Hora Início:</label>
+            <input type="time" id="editHoraInicio" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="editHoraFim">Hora Fim:</label>
+            <input type="time" id="editHoraFim" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="editData">Data:</label>
+            <input type="date" id="editData" class="form-input" required>
+          </div>
+        </form>
+      </div>
+      <div class="botoes-acao">
+        <button class="botao botao-salvar" id="btnSalvar">Salvar</button>
+        <button class="botao botao-excluir" id="btnExcluir">Excluir</button>
+        <button class="botao botao-cancelar" id="btnCancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="visualizar-horarios.js"></script>
+</body>
+</html>

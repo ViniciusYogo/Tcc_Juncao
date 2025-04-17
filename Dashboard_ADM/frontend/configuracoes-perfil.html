@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuração de Perfil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .config-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    input[type="file"] {
+      width: 100%;
+    }
+    .profile-pic-preview {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    #preview-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+      border: 2px solid #ddd;
+    }
+    #file-name {
+      color: #666;
+    }
+    .save-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    .save-btn:hover {
+      background-color: #45a049;
+    }
+    .save-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .error-message {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="config-container">
+    <h2>Configurações de Perfil</h2>
+    <form id="perfil-form" enctype="multipart/form-data">
+      <div class="input-group">
+        <label for="username">Nome de Usuário</label>
+        <input type="text" id="username" name="nome_usuario" required>
+      </div>
+      <div class="input-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="profile-picture">Foto de Perfil</label>
+        <input type="file" id="profile-picture" name="profile-picture" accept="image/*">
+        <div class="profile-pic-preview">
+          <img src="assets/default-profile.png" id="preview-img" alt="Preview Foto" />
+          <span id="file-name">Nenhum arquivo escolhido</span>
+        </div>
+        <div id="file-error" class="error-message"></div>
+      </div>
+      <button type="submit" class="save-btn" id="save-btn">Salvar Alterações</button>
+      <div id="form-error" class="error-message"></div>
+    </form>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("profile-picture");
+    const previewImg = document.getElementById("preview-img");
+    const fileName = document.getElementById("file-name");
+    const form = document.getElementById("perfil-form");
+    const saveBtn = document.getElementById("save-btn");
+    const fileError = document.getElementById("file-error");
+    const formError = document.getElementById("form-error");
+
+    // Carrega os dados do perfil ao iniciar
+    async function loadProfile() {
+      try {
+        const response = await fetch('http://localhost:5500/api/colaboradores/1'); // Substitua pelo ID do usuário logado
+        if (!response.ok) {
+          throw new Error('Erro ao carregar perfil');
+        }
+        
+        const profile = await response.json();
+        document.getElementById('username').value = profile.nome_usuario || '';
+        document.getElementById('email').value = profile.email || '';
+        
+        if (profile.foto) {
+          previewImg.src = `/uploads/${profile.foto}`;
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        formError.textContent = 'Erro ao carregar dados do perfil';
+      }
+    }
+
+    fileInput.addEventListener("change", function () {
+      const file = this.files[0];
+      fileError.textContent = '';
+      
+      if (file) {
+        // Validação do arquivo
+        if (file.size > 5 * 1024 * 1024) {
+          fileError.textContent = 'Arquivo muito grande (máximo 5MB)';
+          this.value = '';
+          return;
+        }
+        
+        if (!file.type.match('image.*')) {
+          fileError.textContent = 'Por favor, selecione uma imagem válida';
+          this.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        fileName.textContent = file.name;
+      } else {
+        fileName.textContent = "Nenhum arquivo escolhido";
+      }
+    });
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Salvando...";
+      formError.textContent = '';
+      
+      try {
+        const formData = new FormData(form);
+        
+        // Validação dos campos
+        if (!formData.get('nome_usuario') || !formData.get('email')) {
+          throw new Error('Preencha todos os campos obrigatórios');
+        }
+
+        const response = await fetch('http://localhost:5500/api/colaboradores/1', { // Substitua pelo ID do usuário logado
+          method: 'PUT',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao atualizar perfil');
+        }
+
+        const data = await response.json();
+        alert('Perfil atualizado com sucesso!');
+      } catch (error) {
+        console.error('Erro:', error);
+        formError.textContent = error.message;
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Salvar Alterações";
+      }
+    });
+
+    // Carrega os dados do perfil quando a página é aberta
+    window.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+
+</body>
+</html>

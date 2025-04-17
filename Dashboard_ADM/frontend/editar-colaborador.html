@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Colaborador</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .preview-container {
+      margin: 15px 0;
+      text-align: center;
+    }
+    #preview {
+      max-width: 150px;
+      max-height: 150px;
+      margin-top: 10px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Editar Colaborador</h1>
+    <form id="edit-form">
+      <input type="hidden" id="id">
+      
+      <div class="form-group">
+        <label for="primeiro_nome">Primeiro Nome:</label>
+        <input type="text" id="primeiro_nome" name="primeiro_nome" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="ultimo_nome">Último Nome:</label>
+        <input type="text" id="ultimo_nome" name="ultimo_nome" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="numero_contato">Número de Contato:</label>
+        <input type="tel" id="numero_contato" name="numero_contato" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="nome_usuario">Nome de Usuário:</label>
+        <input type="text" id="nome_usuario" name="nome_usuario" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+      
+      <div class="preview-container">
+        <img id="preview" src="" alt="Foto do colaborador">
+      </div>
+      
+      <button type="submit">Salvar Alterações</button>
+    </form>
+  </div>
+
+  <script>
+    async function loadColaborador() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      
+      if (!id) {
+        alert('ID do colaborador não especificado');
+        window.location.href = '/';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`http://localhost:5500/api/colaboradores/${id}`);
+        
+        if (!response.ok) {
+          throw new Error('Colaborador não encontrado');
+        }
+        
+        const colaborador = await response.json();
+        
+        document.getElementById('id').value = colaborador.id;
+        document.getElementById('primeiro_nome').value = colaborador.primeiro_nome;
+        document.getElementById('ultimo_nome').value = colaborador.ultimo_nome;
+        document.getElementById('numero_contato').value = colaborador.numero_contato;
+        document.getElementById('email').value = colaborador.email;
+        document.getElementById('nome_usuario').value = colaborador.nome_usuario;
+        document.getElementById('senha').value = colaborador.senha;
+        
+        if (colaborador.foto) {
+          document.getElementById('preview').src = colaborador.foto;
+          document.getElementById('preview').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao carregar colaborador: ' + error.message);
+        window.location.href = '/';
+      }
+    }
+    
+    document.getElementById('edit-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Salvando...";
+      
+      try {
+        const id = document.getElementById('id').value;
+        const colaborador = {
+          primeiro_nome: document.getElementById('primeiro_nome').value,
+          ultimo_nome: document.getElementById('ultimo_nome').value,
+          numero_contato: document.getElementById('numero_contato').value,
+          email: document.getElementById('email').value,
+          nome_usuario: document.getElementById('nome_usuario').value,
+          senha: document.getElementById('senha').value,
+          foto: document.getElementById('preview').src.replace(/^.*\/uploads\//, '')
+        };
+        
+        const response = await fetch(`http://localhost:5500/api/colaboradores/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(colaborador)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao atualizar colaborador');
+        }
+        
+        alert('Colaborador atualizado com sucesso!');
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro: ' + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Salvar Alterações";
+      }
+    });
+    
+    // Carrega os dados quando a página é aberta
+    window.addEventListener('DOMContentLoaded', loadColaborador);
+  </script>
+</body>
+</html>

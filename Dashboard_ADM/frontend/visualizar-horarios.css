@@ -1,0 +1,283 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.controles-calendario {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.controles-calendario button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.controles-calendario button:hover {
+  background-color: #45a049;
+}
+
+.calendario {
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.linha-do-tempo {
+  width: 50px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+.espacador {
+  height: 60px;
+}
+
+.marcador-de-tempo {
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 5px;
+  color: #666;
+  font-size: 12px;
+  border-top: 1px solid #eee;
+}
+
+.dias {
+  display: flex;
+  flex: 1;
+}
+
+.dia {
+  flex: 1;
+  border-right: 1px solid #eee;
+  position: relative;
+}
+
+.dia:last-child {
+  border-right: none;
+}
+
+.dia.hoje .data {
+  background-color: #e8f5e9;
+}
+
+.data {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  background-color: #f9f9f9;
+}
+
+.numero-data {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.dia-da-semana {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.mes-data {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.eventos {
+  position: relative;
+  min-height: calc(16 * 70px);
+}
+
+.evento {
+  position: absolute;
+  left: 5%;
+  width: 90%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.evento:hover {
+  transform: scale(1.02);
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.evento.confirmado {
+  border-left: 4px solid #4CAF50 !important;
+}
+
+.evento .titulo {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  word-break: break-word;
+}
+
+.evento .horario {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.evento .professor {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.marcador-hoje {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+}
+
+.modal-edicao {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-conteudo {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-conteudo h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.botoes-acao {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.botao {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.botao-salvar {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.botao-salvar:hover {
+  background-color: #45a049;
+}
+
+.botao-excluir {
+  background-color: #f44336;
+  color: white;
+}
+
+.botao-excluir:hover {
+  background-color: #d32f2f;
+}
+
+.botao-cancelar {
+  background-color: #e0e0e0;
+}
+
+.botao-cancelar:hover {
+  background-color: #bdbdbd;
+}
+
+.check-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 14px;
+}
+
+.check-btn.checked {
+  background: #4CAF50;
+  color: white;
+}
+
+.check-btn:hover {
+  background: #ddd;
+}
+
+.check-btn.checked:hover {
+  background: #45a049;
+}
+
+.evento.confirmado {
+  border-left: 4px solid #4CAF50 !important;
+}

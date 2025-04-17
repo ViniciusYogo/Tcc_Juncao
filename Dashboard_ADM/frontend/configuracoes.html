@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações do Sistema</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="settings-container">
+        <h2><i class="fa-solid fa-gear"></i> Configurações</h2>
+        
+        <div class="setting-item">
+            <label for="theme"><i class="fa-solid fa-palette"></i> Tema:</label>
+            <select id="theme">
+                <option value="light">Claro</option>
+                <option value="dark">Escuro</option>
+                <option value="auto">Automático</option>
+            </select>
+        </div>
+        
+        <div class="setting-item">
+            <label for="primary-color"><i class="fa-solid fa-brush"></i> Cor Primária:</label>
+            <input type="color" id="primary-color" value="#007BFF">
+        </div>
+        
+        <div class="setting-item">
+            <label for="language"><i class="fa-solid fa-globe"></i> Idioma:</label>
+            <select id="language">
+                <option value="pt">Português</option>
+                <option value="en">Inglês</option>
+                <option value="es">Espanhol</option>
+                <option value="fr">Francês</option>
+            </select>
+        </div>
+        
+        <div class="setting-item">
+            <label for="notifications"><i class="fa-solid fa-bell"></i> Notificações:</label>
+            <input type="checkbox" id="notifications">
+        </div>
+
+        <div class="setting-item">
+            <label for="font-size"><i class="fa-solid fa-text-height"></i> Tamanho da Fonte:</label>
+            <input type="range" id="font-size" min="12" max="24" value="16">
+        </div>
+        
+        <div class="setting-item">
+            <label for="high-contrast"><i class="fa-solid fa-adjust"></i> Alto Contraste:</label>
+            <input type="checkbox" id="high-contrast">
+        </div>
+        
+        <button onclick="saveSettings()" class="save-btn"><i class="fa-solid fa-save"></i> Salvar Configurações</button>
+        <button onclick="resetSettings()" class="reset-btn"><i class="fa-solid fa-rotate-left"></i> Redefinir Padrão</button>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const theme = localStorage.getItem("theme") || "light";
+            const language = localStorage.getItem("language") || "pt";
+            const notifications = localStorage.getItem("notifications") === "true";
+            const fontSize = localStorage.getItem("font-size") || "16";
+            const primaryColor = localStorage.getItem("primary-color") || "#007BFF";
+            const highContrast = localStorage.getItem("high-contrast") === "true";
+            
+            document.getElementById("theme").value = theme;
+            document.getElementById("language").value = language;
+            document.getElementById("notifications").checked = notifications;
+            document.getElementById("font-size").value = fontSize;
+            document.getElementById("primary-color").value = primaryColor;
+            document.getElementById("high-contrast").checked = highContrast;
+            
+            applyTheme(theme);
+            document.body.style.fontSize = fontSize + "px";
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+            if (highContrast) {
+                document.body.classList.add("high-contrast");
+            }
+        });
+
+        function saveSettings() {
+            const theme = document.getElementById("theme").value;
+            const language = document.getElementById("language").value;
+            const notifications = document.getElementById("notifications").checked;
+            const fontSize = document.getElementById("font-size").value;
+            const primaryColor = document.getElementById("primary-color").value;
+            const highContrast = document.getElementById("high-contrast").checked;
+            
+            localStorage.setItem("theme", theme);
+            localStorage.setItem("language", language);
+            localStorage.setItem("notifications", notifications);
+            localStorage.setItem("font-size", fontSize);
+            localStorage.setItem("primary-color", primaryColor);
+            localStorage.setItem("high-contrast", highContrast);
+            
+            applyTheme(theme);
+            document.body.style.fontSize = fontSize + "px";
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+            if (highContrast) {
+                document.body.classList.add("high-contrast");
+            } else {
+                document.body.classList.remove("high-contrast");
+            }
+            alert("Configurações salvas com sucesso!");
+        }
+
+        function applyTheme(theme) {
+            if (theme === "auto") {
+                const hour = new Date().getHours();
+                document.body.className = hour >= 18 || hour < 6 ? "dark" : "light";
+            } else {
+                document.body.className = theme;
+            }
+        }
+
+        function resetSettings() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+    
+    <style>
+        :root {
+            --primary-color: #007BFF;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease-in-out;
+        }
+        .settings-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .setting-item {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .save-btn, .reset-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .save-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+        .reset-btn {
+            background: #FF3B3B;
+            color: white;
+            margin-top: 10px;
+        }
+        .save-btn:hover {
+            background: #0056b3;
+        }
+        .reset-btn:hover {
+            background: #cc0000;
+        }
+        body.light {
+            background: #ffffff;
+            color: #000;
+        }
+        body.dark {
+            background: #333;
+            color: #fff;
+        }
+        .high-contrast {
+            filter: contrast(2);
+        }
+    </style>
+</body>
+</html>

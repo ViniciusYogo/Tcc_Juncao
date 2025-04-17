@@ -1,0 +1,228 @@
+[2025-04-15T19:28:01.352Z] 🚀 Servidor rodando em http://localhost:3000
+[2025-04-15T19:28:01.353Z] 🔌 Tentando conectar ao banco: INSTITUICAO
+[2025-04-15T19:28:01.353Z] 📂 Diretório atual: C:\projetos\Agenda_TCC
+[2025-04-15T19:28:01.371Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:01:13.253Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:01:13.255Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:01:13.271Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:01:17.890Z] 📥 Requisição recebida: GET /favicon.ico
+[2025-04-15T21:02:11.339Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:02:11.340Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:02:11.356Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:03:25.607Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:29.922Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:30.261Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:30.428Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:30.586Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.246Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.379Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.499Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.691Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.845Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:31.990Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:32.127Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:03:32.298Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:13.624Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:05:13.625Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:05:13.642Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:05:18.807Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:21.173Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:21.555Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:22.195Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:22.446Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:22.672Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:22.842Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:22.993Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:23.130Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:23.276Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:23.418Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:23.561Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:26.670Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:26.824Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:26.972Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.110Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.247Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.385Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.721Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.866Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:27.993Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:28.132Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:28.266Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:28.396Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:28.549Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:28.944Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.077Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.206Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.338Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.461Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.603Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:29.726Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:30.752Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:31.175Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:31.390Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:31.576Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:31.737Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:31.903Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:34.584Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:34.727Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:34.856Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:34.997Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:35.491Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:35.629Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:35.758Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:35.898Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.040Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.174Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.318Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.465Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.609Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.747Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:36.882Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.030Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.177Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.325Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.472Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.615Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.758Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:37.911Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:38.059Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:38.199Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:38.344Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:38.490Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:39.463Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:39.605Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:39.751Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:39.895Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:40.046Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:40.179Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:40.334Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:40.481Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:05:40.665Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:06:26.395Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T21:48:35.066Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:48:35.067Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:48:35.085Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:49:56.775Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:49:56.776Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:49:56.791Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:50:47.140Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:50:47.141Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:50:47.155Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:53:05.435Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:53:05.437Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:53:05.454Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:55:59.172Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T21:55:59.173Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T21:55:59.189Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T21:57:50.442Z] 📥 Requisição recebida: GET /favicon.ico
+[2025-04-15T21:57:50.690Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:57:53.525Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:57:54.040Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:57:54.624Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:08.989Z] 📥 Requisição recebida: PUT /api/atividades/167
+[2025-04-15T21:58:13.957Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:15.761Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:15.970Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:16.179Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:16.393Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:17.565Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:57.826Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:58.118Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:59.009Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:58:59.231Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:59:01.796Z] 📥 Requisição recebida: PATCH /api/atividades/153/confirmar
+[2025-04-15T21:59:02.523Z] 📥 Requisição recebida: PATCH /api/atividades/153/confirmar
+[2025-04-15T21:59:03.064Z] 📥 Requisição recebida: PATCH /api/atividades/153/confirmar
+[2025-04-15T21:59:12.697Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:59:13.253Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:59:13.643Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:59:13.876Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T21:59:30.325Z] 📥 Requisição recebida: GET /favicon.ico
+[2025-04-15T21:59:36.224Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:13.804Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:17.443Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.069Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.212Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.345Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.477Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.609Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.739Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:26.890Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.042Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.186Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.329Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.487Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.658Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:27.810Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:29.992Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.142Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.278Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.406Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.542Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.687Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.817Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:30.959Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:31.112Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:31.238Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:31.399Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:31.542Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:31.694Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:52.794Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:52.928Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.080Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.192Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.343Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.487Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.622Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:08:53.771Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:14:16.914Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T22:14:16.916Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T22:14:16.931Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T22:17:05.194Z] 📥 Requisição recebida: POST /api/atividades
+[2025-04-15T22:17:22.900Z] 📥 Requisição recebida: GET /visualisar-plnilha.html
+[2025-04-15T22:17:34.060Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:35.695Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:35.879Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:36.040Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:36.800Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:38.551Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:38.704Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:38.864Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:39.008Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:39.144Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:17:39.264Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:31.968Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-15T22:33:31.969Z] 🌐 Acesse: http://localhost:5500/visualizar-horario.html
+[2025-04-15T22:33:31.999Z] ✅ Conexão com o MySQL (INSTITUICAO) estabelecida com sucesso!
+[2025-04-15T22:33:36.917Z] 📥 Requisição recebida: GET /favicon.ico
+[2025-04-15T22:33:37.047Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:43.399Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:44.241Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:44.610Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:44.865Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:45.298Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:45.513Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:45.682Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:45.841Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:46.002Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:46.609Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:51.486Z] 📥 Requisição recebida: DELETE /api/atividades/195
+[2025-04-15T22:33:51.501Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:53.873Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:54.545Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:56.384Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:56.801Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:56.945Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:57.129Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:57.769Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:33:57.945Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:32.457Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:32.462Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:32.467Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:32.610Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:32.739Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:33.715Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:33.875Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:34.043Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:35.986Z] 📥 Requisição recebida: GET /api/atividades
+[2025-04-15T22:50:36.129Z] 📥 Requisição recebida: GET /api/atividades

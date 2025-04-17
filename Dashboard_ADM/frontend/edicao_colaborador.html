@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editar Colaborador</title>
+  <link rel="stylesheet" href="editar-colaborador.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Editar Colaborador</h1>
+      <button class="btn-back" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </button>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar-upload">
+            <div class="avatar-preview" id="avatarPreview">
+              <img id="previewImage" src="https://i.pravatar.cc/150" alt="Foto"/>
+            </div>
+            <label for="fotoInput" class="btn-upload">
+              <i class="fas fa-camera"></i> Alterar foto
+            </label>
+            <input type="file" id="fotoInput" accept="image/*" hidden/>
+          </div>
+          <h2 id="profileName">Carregando...</h2>
+          <p id="profileEmail">carregando...</p>
+        </div>
+        
+        <div class="profile-info">
+          <div class="info-item">
+            <i class="fas fa-id-card"></i>
+            <span id="profileId">#---</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-user"></i>
+            <span id="profileUser">carregando...</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <span id="profileContact">carregando...</span>
+          </div>
+        </div>
+      </div>
+
+      <form id="form-editar" enctype="multipart/form-data">
+        <div class="form-section">
+          <h3><i class="fas fa-user-edit"></i> Informações Pessoais</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="primeiro_nome">Primeiro Nome</label>
+              <input type="text" id="primeiro_nome" name="primeiro_nome" required />
+            </div>
+            <div class="form-group">
+              <label for="ultimo_nome">Último Nome</label>
+              <input type="text" id="ultimo_nome" name="ultimo_nome" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3><i class="fas fa-envelope"></i> Informações de Contato</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="numero_contato">Telefone</label>
+              <input type="text" id="numero_contato" name="numero_contato" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3><i class="fas fa-lock"></i> Credenciais</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome_usuario">Usuário</label>
+              <input type="text" id="nome_usuario" name="nome_usuario" required />
+            </div>
+            <div class="form-group">
+              <label for="senha">Senha</label>
+              <input type="password" id="senha" name="senha" />
+              <button type="button" id="togglePassword">
+                <i class="fas fa-eye"></i>
+              </button>
+              <small>Deixe em branco para manter a atual</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="btn-excluir">
+            <i class="fas fa-trash"></i> Excluir
+          </button>
+          <button type="submit">
+            <i class="fas fa-save"></i> Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const colaboradorId = urlParams.get('id');
+
+      if (!colaboradorId) {
+        alert('ID do colaborador não encontrado na URL');
+        window.location.href = 'colaboradores.html';
+        return;
+      }
+
+      const form = document.getElementById('form-editar');
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('senha');
+      const fotoInput = document.getElementById('fotoInput');
+      const previewImage = document.getElementById('previewImage');
+
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
+
+      fotoInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewImage.src = e.target.result;
+          }
+          reader.readAsDataURL(file);
+        }
+      });
+
+      async function carregarDados() {
+        try {
+          const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`);
+          if (!response.ok) throw new Error('Erro ao carregar dados');
+
+          const colaborador = await response.json();
+
+          document.getElementById('primeiro_nome').value = colaborador.primeiro_nome || '';
+          document.getElementById('ultimo_nome').value = colaborador.ultimo_nome || '';
+          document.getElementById('email').value = colaborador.email || '';
+          document.getElementById('numero_contato').value = colaborador.numero_contato || '';
+          document.getElementById('nome_usuario').value = colaborador.nome_usuario || '';
+
+          document.getElementById('profileName').textContent =
+            `${colaborador.primeiro_nome || ''} ${colaborador.ultimo_nome || ''}`.trim();
+          document.getElementById('profileEmail').textContent = colaborador.email || '';
+          document.getElementById('profileUser').textContent = colaborador.nome_usuario || '';
+          document.getElementById('profileContact').textContent = colaborador.numero_contato || '';
+          document.getElementById('profileId').textContent = `#${colaboradorId}`;
+
+          if (colaborador.foto) {
+            previewImage.src = colaborador.foto;
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Erro ao carregar dados do colaborador');
+          window.location.href = 'colaboradores.html';
+        }
+      }
+
+      form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btnSubmit = form.querySelector('button[type="submit"]');
+  const btnOriginalText = btnSubmit.innerHTML;
+
+  try {
+    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+    btnSubmit.disabled = true;
+
+    const formData = new FormData(form); // Usando o formulário diretamente
+    
+    // Se uma nova foto foi selecionada, adiciona ao FormData
+    if (fotoInput.files[0]) {
+      formData.append('foto', fotoInput.files[0]);
+    }
+
+    const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
+      method: 'PUT',
+      body: formData
+      // Não definir Content-Type manualmente - o browser fará isso automaticamente
+      // com o boundary correto para multipart/form-data
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Erro ao salvar alterações');
+    }
+
+    const data = await response.json();
+    alert('Alterações salvas com sucesso!');
+    
+    // Atualiza a visualização da foto se foi alterada
+    if (data.fotoUrl) {
+      previewImage.src = data.fotoUrl;
+    }
+
+  } catch (error) {
+    console.error('Erro:', error);
+    alert(error.message || 'Erro ao salvar alterações');
+  } finally {
+    btnSubmit.innerHTML = btnOriginalText;
+    btnSubmit.disabled = false;
+  }
+});
+
+      document.getElementById('btn-excluir').addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja excluir este colaborador?')) {
+          fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (!response.ok) throw new Error('Erro ao excluir');
+            alert('Colaborador excluído com sucesso!');
+            window.location.href = 'index.html';
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao excluir colaborador');
+          });
+        }
+      });
+
+      carregarDados();
+    });
+  </script>
+</body>
+</html>

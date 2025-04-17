@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrair Dados da Planilha Excel</title>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Upload de Planilha Excel</h1>
+        <div class="file-input-wrapper">
+            <label for="fileInput" class="file-input-label">Selecionar Planilha</label>
+            <input type="file" id="fileInput" accept=".xlsx, .xls" />
+            <div id="fileName" class="file-name"></div>
+        </div>
+        <button id="processButton">Processar Planilha</button>
+        <div id="uploadFeedback" class="upload-feedback" style="display: none;"></div>
+    </div>
+    <div id="output"></div>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="inserirPlanilha.js"></script>
+</body>
+</html>

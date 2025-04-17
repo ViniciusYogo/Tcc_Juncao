@@ -1,0 +1,528 @@
+[2025-04-16T00:18:41.189Z] ✅ Conexão com o banco de dados INSTITUICAO estabelecida com sucesso!
+[2025-04-16T00:18:41.203Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T00:18:41.203Z] 📂 Diretório: C:\projetos\Agenda_TCC\Dashboard_ADM\frontend
+[2025-04-16T00:18:50.550Z] 📥 GET /api/colaboradores
+[2025-04-16T00:18:50.748Z] 📥 GET /favicon.ico
+[2025-04-16T00:20:23.476Z] 📥 GET /styles.css
+[2025-04-16T00:23:27.043Z] ✅ Conexão com o banco de dados INSTITUICAO estabelecida com sucesso!
+[2025-04-16T00:23:27.055Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T00:23:27.055Z] 📂 Diretório: C:\projetos\Agenda_TCC\Dashboard_ADM\frontend
+[2025-04-16T00:23:28.494Z] 📥 GET /api/colaboradores
+[2025-04-16T00:24:09.913Z] 📥 GET /api/colaboradores
+[2025-04-16T00:24:15.252Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:24:17.004Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:24:17.190Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:24:17.368Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:26:22.149Z] 📥 GET /api/colaboradores
+[2025-04-16T00:26:27.667Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:26:43.945Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:27:59.369Z] 📥 GET /api/criar-colaborador
+[2025-04-16T00:28:07.588Z] 📥 GET /api/criar-colaborador.html
+[2025-04-16T00:29:55.556Z] 📥 GET /api/colaboradores
+[2025-04-16T00:29:55.574Z] 📥 GET /favicon.ico
+[2025-04-16T00:30:02.764Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:30:08.158Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:30:41.648Z] 📥 GET /api/colaboradores
+[2025-04-16T00:30:46.483Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:39:42.194Z] 📥 GET /api/colaboradores
+[2025-04-16T00:39:58.524Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:41:58.662Z] 📥 GET /api/criar-colaborador
+[2025-04-16T00:42:47.943Z] 📥 GET /api/criar-colaborador
+[2025-04-16T00:45:52.234Z] 📥 GET /api/colaboradores
+[2025-04-16T00:46:04.367Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:50:44.631Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T00:50:44.643Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T00:50:44.644Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T00:50:44.644Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T00:50:57.819Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T00:50:57.831Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T00:50:57.831Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T00:50:57.831Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T00:51:14.281Z] 📥 GET /api/colaboradores
+[2025-04-16T00:51:30.291Z] 📥 POST /api/criar-colaborador
+[2025-04-16T00:55:27.409Z] 📥 GET /api/colaboradores
+[2025-04-16T00:55:37.896Z] 📥 GET /api/colaboradores
+[2025-04-16T00:55:41.735Z] 📥 GET /styles.css
+[2025-04-16T00:55:46.492Z] 📥 GET /styles.css
+[2025-04-16T01:05:07.384Z] 📥 GET /api/colaboradores
+[2025-04-16T01:05:35.270Z] 📥 GET /api/colaboradores
+[2025-04-16T01:07:41.850Z] 📥 GET /api/colaboradores
+[2025-04-16T01:07:44.057Z] 📥 GET /api/colaboradores
+[2025-04-16T01:08:39.432Z] 📥 GET /api/colaboradores
+[2025-04-16T01:10:40.139Z] 📥 GET /api/colaboradores
+[2025-04-16T01:10:45.974Z] 📥 GET /assets/default-profile.png
+[2025-04-16T01:10:52.404Z] 📥 GET /assets/default-profile.png
+[2025-04-16T01:11:04.788Z] 📥 GET /api/colaboradores
+[2025-04-16T01:11:06.622Z] 📥 GET /assets/default-profile.png
+[2025-04-16T01:11:13.515Z] 📥 GET /styles.css
+[2025-04-16T01:12:27.611Z] 📥 GET /api/colaboradores
+[2025-04-16T01:12:50.204Z] 📥 GET /uploads/$%7Bc.foto%7D
+[2025-04-16T01:13:01.700Z] 📥 GET /uploads/$%7Bc.foto%7D
+[2025-04-16T01:17:28.429Z] 📥 GET /api/colaboradores
+[2025-04-16T01:17:31.013Z] 📥 GET /api/colaboradores
+[2025-04-16T01:19:04.344Z] 📥 GET /api/colaboradores
+[2025-04-16T01:19:04.580Z] 📥 GET /api/colaboradores
+[2025-04-16T01:23:03.386Z] 📥 GET /api/colaboradores
+[2025-04-16T01:23:58.689Z] 📥 GET /api/colaboradores
+[2025-04-16T01:24:05.987Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T01:24:05.999Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T01:24:06.000Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:24:06.000Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:24:06.649Z] 📥 GET /api/colaboradores
+[2025-04-16T01:24:37.494Z] 📥 GET /api/colaboradores
+[2025-04-16T01:25:58.172Z] 📥 GET /api/colaboradores
+[2025-04-16T01:25:58.987Z] 📥 GET /api/colaboradores
+[2025-04-16T01:25:58.995Z] 📥 GET /uploads/foto.jpg
+[2025-04-16T01:26:04.569Z] 📥 GET /api/colaboradores/1
+[2025-04-16T01:26:06.370Z] 📥 PUT /api/colaboradores/1
+[2025-04-16T01:26:07.701Z] 📥 GET /api/colaboradores
+[2025-04-16T01:26:07.714Z] 📥 GET /uploads//uploads/foto.jpg
+[2025-04-16T01:30:48.033Z] 📥 GET /api/colaboradores/1
+[2025-04-16T01:30:48.789Z] 📥 PUT /api/colaboradores/1
+[2025-04-16T01:30:49.944Z] 📥 GET /api/colaboradores
+[2025-04-16T01:30:49.959Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:42:42.566Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T01:42:42.578Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T01:42:42.579Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:42:42.579Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:42:50.163Z] 📥 GET /api/colaboradores
+[2025-04-16T01:42:50.260Z] 📥 GET /favicon.ico
+[2025-04-16T01:42:52.656Z] 📥 GET /api/colaboradores
+[2025-04-16T01:42:54.301Z] 📥 GET /api/colaboradores
+[2025-04-16T01:42:54.307Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:42:56.972Z] 📥 GET /styles.css
+[2025-04-16T01:43:18.190Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T01:43:18.203Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T01:43:18.203Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:43:18.203Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T01:43:21.016Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:22.144Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:22.152Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:43:23.706Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:23.714Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:43:25.339Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:25.344Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:43:25.980Z] 📥 GET /styles.css
+[2025-04-16T01:43:26.832Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:26.837Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:43:27.651Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:34.304Z] 📥 GET /api/colaboradores
+[2025-04-16T01:43:34.309Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T01:45:59.323Z] 📥 GET /api/atividades
+[2025-04-16T01:51:23.276Z] 📥 GET /api/colaboradores
+[2025-04-16T01:51:23.570Z] 📥 GET /api/colaboradores
+[2025-04-16T18:11:48.703Z] 📥 GET /api/colaboradores
+[2025-04-16T18:11:48.717Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:11:56.432Z] 📥 GET /api/colaboradores
+[2025-04-16T18:11:59.424Z] 📥 GET /api/colaboradores
+[2025-04-16T18:11:59.434Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:12:00.618Z] 📥 GET /api/colaboradores/1
+[2025-04-16T18:12:58.168Z] 📥 GET /editar-colaborador.css
+[2025-04-16T18:13:01.856Z] 📥 GET /colaboradores.html
+[2025-04-16T18:13:04.603Z] 📥 GET /editar-colaborador.css
+[2025-04-16T18:13:09.850Z] 📥 GET /colaboradores.html
+[2025-04-16T18:13:34.890Z] 📥 GET /api/colaboradores
+[2025-04-16T18:13:36.069Z] 📥 GET /api/colaboradores
+[2025-04-16T18:13:36.079Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:13:36.678Z] 📥 GET /api/colaboradores/1
+[2025-04-16T18:14:44.202Z] 📥 GET /colaboradores.html
+[2025-04-16T18:15:01.071Z] 📥 GET /colaboradores.html
+[2025-04-16T18:15:03.262Z] 📥 GET /api/colaboradores
+[2025-04-16T18:15:04.265Z] 📥 GET /api/colaboradores
+[2025-04-16T18:15:04.272Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:15:04.941Z] 📥 GET /api/colaboradores/1
+[2025-04-16T18:15:04.952Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:15:10.721Z] 📥 GET /api/colaboradores/2
+[2025-04-16T18:15:15.664Z] 📥 DELETE /api/colaboradores/2
+[2025-04-16T18:15:17.078Z] 📥 GET /colaboradores.html
+[2025-04-16T18:15:20.007Z] 📥 GET /api/colaboradores
+[2025-04-16T18:15:21.295Z] 📥 GET /api/colaboradores
+[2025-04-16T18:15:21.302Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:15:55.123Z] 📥 GET /api/colaboradores
+[2025-04-16T18:15:55.128Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:17:10.235Z] 📥 GET /api/colaboradores
+[2025-04-16T18:17:10.243Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:17:11.394Z] 📥 GET /api/colaboradores/1
+[2025-04-16T18:17:11.411Z] 📥 GET /uploads//uploads//uploads/foto.jpg
+[2025-04-16T18:17:14.046Z] 📥 DELETE /api/colaboradores/1
+[2025-04-16T18:17:14.941Z] 📥 GET /api/colaboradores
+[2025-04-16T18:17:44.171Z] 📥 GET /api/colaboradores
+[2025-04-16T18:24:20.691Z] 📥 GET /api/colaboradores
+[2025-04-16T18:24:59.821Z] 📥 GET /api/atividades/$%7BatividadeSelecionada.id%7D
+[2025-04-16T18:25:19.353Z] 📥 GET /api/atividades/$%7BatividadeSelecionada.id%7D
+[2025-04-16T18:32:35.486Z] 📥 GET /api/colaboradores
+[2025-04-16T18:32:43.853Z] 📥 GET /api/atividades/$%7BatividadeSelecionada.id%7D
+[2025-04-16T18:33:23.968Z] 📥 GET /api/colaboradores
+[2025-04-16T18:33:34.834Z] 📥 GET /api/atividades/$%7Baula.id%7D/confirmar
+[2025-04-16T18:36:25.851Z] 📥 GET /api/colaboradores
+[2025-04-16T18:36:30.150Z] 📥 GET /api/colaboradores
+[2025-04-16T18:38:07.967Z] 📥 GET /api/colaboradores
+[2025-04-16T18:39:17.339Z] 📥 GET /api/colaboradores
+[2025-04-16T18:39:41.369Z] 📥 GET /api/colaboradores
+[2025-04-16T18:39:50.890Z] 📥 GET /api/colaboradores
+[2025-04-16T18:40:00.481Z] 📥 GET /api/colaboradores
+[2025-04-16T18:40:01.496Z] 📥 GET /styles.css
+[2025-04-16T18:40:22.875Z] 📥 GET /api/colaboradores
+[2025-04-16T18:41:07.653Z] 📥 GET /api/atividades
+[2025-04-16T18:47:09.018Z] 📥 GET /api/colaboradores
+[2025-04-16T18:49:56.228Z] 📥 GET /api/colaboradores
+[2025-04-16T18:50:21.266Z] 📥 GET /api/colaboradores
+[2025-04-16T18:51:42.727Z] 📥 GET /api/atividades
+[2025-04-16T18:53:07.930Z] 📥 GET /api/colaboradores
+[2025-04-16T18:53:40.196Z] 📥 GET /api/colaboradores
+[2025-04-16T18:53:40.469Z] 📥 GET /favicon.ico
+[2025-04-16T18:57:19.488Z] 📥 GET /api/colaboradores
+[2025-04-16T19:00:34.484Z] 📥 GET /api/colaboradores
+[2025-04-16T19:04:51.100Z] 📥 GET /api/colaboradores
+[2025-04-16T19:05:08.610Z] 📥 GET /api/colaboradores
+[2025-04-16T19:05:34.363Z] 📥 GET /api/colaboradores
+[2025-04-16T19:05:40.638Z] 📥 GET /api/colaboradores
+[2025-04-16T19:05:57.265Z] 📥 GET /api/colaboradores
+[2025-04-16T19:06:11.929Z] 📥 GET /api/colaboradores
+[2025-04-16T19:06:34.611Z] 📥 GET /api/colaboradores
+[2025-04-16T19:06:50.536Z] 📥 GET /api/colaboradores
+[2025-04-16T19:07:07.630Z] 📥 GET /api/colaboradores
+[2025-04-16T19:07:12.796Z] 📥 GET /api/colaboradores
+[2025-04-16T19:10:47.301Z] 📥 GET /api/colaboradores
+[2025-04-16T19:11:51.649Z] 📥 GET /api/colaboradores
+[2025-04-16T19:12:03.731Z] 📥 GET /api/atividades
+[2025-04-16T19:14:27.983Z] 📥 GET /api/colaboradores
+[2025-04-16T19:15:09.127Z] 📥 GET /api/colaboradores
+[2025-04-16T19:16:40.496Z] 📥 GET /api/colaboradores
+[2025-04-16T19:20:18.719Z] 📥 GET /api/colaboradores
+[2025-04-16T19:20:28.266Z] 📥 GET /api/colaboradores
+[2025-04-16T19:20:39.405Z] 📥 GET /api/colaboradores
+[2025-04-16T19:20:41.290Z] 📥 GET /api/colaboradores
+[2025-04-16T19:20:41.631Z] 📥 GET /api/colaboradores
+[2025-04-16T19:21:00.689Z] 📥 GET /api/colaboradores
+[2025-04-16T19:21:38.407Z] 📥 GET /api/colaboradores
+[2025-04-16T19:22:16.319Z] 📥 GET /api/colaboradores
+[2025-04-16T19:26:11.954Z] 📥 GET /api/colaboradores
+[2025-04-16T19:28:13.181Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T19:28:13.197Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T19:28:13.198Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T19:28:13.198Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T19:28:49.100Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T19:28:49.113Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T19:28:51.472Z] 📥 GET /api/colaboradores
+[2025-04-16T19:28:55.657Z] 📥 GET /api/colaboradores
+[2025-04-16T19:28:59.003Z] 📥 GET /api/colaboradores
+[2025-04-16T19:31:55.777Z] 📥 GET /api/colaboradores
+[2025-04-16T19:31:56.958Z] 📥 GET /api/colaboradores
+[2025-04-16T19:31:58.846Z] 📥 GET /api/colaboradores
+[2025-04-16T19:35:07.336Z] 📥 GET /api/colaboradores
+[2025-04-16T19:35:43.129Z] 📥 GET /api/colaboradores
+[2025-04-16T19:38:15.019Z] 📥 GET /api/colaboradores
+[2025-04-16T19:38:22.690Z] 📥 GET /api/colaboradores
+[2025-04-16T19:40:54.500Z] 📥 GET /api/colaboradores
+[2025-04-16T19:41:11.721Z] 📥 GET /api/atividades
+[2025-04-16T19:44:10.509Z] 📥 GET /api/colaboradores
+[2025-04-16T19:44:18.666Z] 📥 GET /api/atividades
+[2025-04-16T19:46:39.146Z] 📥 GET /api/colaboradores
+[2025-04-16T19:46:42.712Z] 📥 GET /api/atividades
+[2025-04-16T19:48:09.475Z] 📥 POST /api/criar-colaborador
+[2025-04-16T19:48:16.994Z] 📥 POST /api/criar-colaborador
+[2025-04-16T19:53:32.008Z] 📥 GET /api/colaboradores
+[2025-04-16T19:53:33.813Z] 📥 GET /api/colaboradores
+[2025-04-16T19:53:49.054Z] 📥 POST /api/criar-colaborador
+[2025-04-16T19:54:31.353Z] 📥 GET /api/criar-colaborador
+[2025-04-16T19:54:42.441Z] 📥 GET /api/colaboradores
+[2025-04-16T19:55:00.407Z] 📥 GET /api/criar-colaborador
+[2025-04-16T19:55:05.018Z] 📥 GET /api/colaboradores
+[2025-04-16T19:55:15.660Z] 📥 POST /api/criar-colaborador
+[2025-04-16T20:11:20.642Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:11:20.654Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:11:20.654Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:11:20.654Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:11:28.434Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:11:28.446Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:11:28.447Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:11:28.447Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:11:44.373Z] 📥 GET /api/colaboradores
+[2025-04-16T20:11:51.011Z] 📥 GET /api/colaboradores
+[2025-04-16T20:12:28.325Z] 📥 POST /api/criar-colaborador
+[2025-04-16T20:15:08.672Z] 📥 GET /api/colaboradores
+[2025-04-16T20:15:09.966Z] 📥 GET /api/colaboradores/3
+[2025-04-16T20:15:55.823Z] 📥 GET /api/colaboradores
+[2025-04-16T20:15:56.466Z] 📥 GET /api/colaboradores
+[2025-04-16T20:15:57.272Z] 📥 GET /api/colaboradores/3
+[2025-04-16T20:15:59.073Z] 📥 PUT /api/colaboradores/3
+[2025-04-16T20:20:58.222Z] 📥 GET /api/colaboradores
+[2025-04-16T20:21:01.008Z] 📥 GET /api/colaboradores
+[2025-04-16T20:21:17.086Z] 📥 GET /api/colaboradores
+[2025-04-16T20:21:17.831Z] 📥 GET /api/colaboradores
+[2025-04-16T20:21:48.410Z] 📥 GET /api/colaboradores
+[2025-04-16T20:22:03.663Z] 📥 GET /api/colaboradores
+[2025-04-16T20:22:04.965Z] 📥 GET /api/colaboradores
+[2025-04-16T20:22:44.086Z] 📥 GET /api/colaboradores
+[2025-04-16T20:23:18.222Z] 📥 GET /api/colaboradores
+[2025-04-16T20:25:56.584Z] 📥 GET /api/colaboradores
+[2025-04-16T20:26:04.864Z] 📥 GET /api/colaboradores
+[2025-04-16T20:26:29.386Z] 📥 GET /api/colaboradores
+[2025-04-16T20:26:30.344Z] 📥 GET /api/colaboradores
+[2025-04-16T20:26:54.678Z] 📥 GET /api/colaboradores
+[2025-04-16T20:26:54.789Z] 📥 GET /api/colaboradores
+[2025-04-16T20:27:04.389Z] 📥 GET /api/colaboradores
+[2025-04-16T20:27:33.864Z] 📥 GET /api/colaboradores
+[2025-04-16T20:27:44.029Z] 📥 GET /api/colaboradores
+[2025-04-16T20:27:52.420Z] 📥 GET /api/colaboradores
+[2025-04-16T20:28:15.947Z] 📥 GET /api/colaboradores
+[2025-04-16T20:28:34.934Z] 📥 GET /api/colaboradores
+[2025-04-16T20:28:35.062Z] 📥 GET /favicon.ico
+[2025-04-16T20:33:05.666Z] 📥 GET /api/atividades
+[2025-04-16T20:34:47.849Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:34:47.861Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:34:47.862Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:34:47.862Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:36:19.178Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:36:19.191Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:36:19.191Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:36:19.191Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:36:27.466Z] 📥 GET /api/colaboradores
+[2025-04-16T20:37:39.153Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:37:39.165Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:37:39.165Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:37:39.166Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:38:32.608Z] 📥 GET /api/colaboradores
+[2025-04-16T20:39:54.089Z] 📥 GET /api/colaboradores
+[2025-04-16T20:40:04.532Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:40:04.543Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:40:04.544Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:40:04.544Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:40:30.171Z] 📥 GET /api/colaboradores
+[2025-04-16T20:42:54.853Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:42:54.867Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:42:54.868Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:42:54.868Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:43:15.691Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:43:15.703Z] 🚀 Servidor rodando em http://localhost:5501
+[2025-04-16T20:43:15.704Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5501
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:43:15.704Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5501
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:47:10.082Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:47:34.139Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:47:50.278Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:48:05.190Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:48:05.202Z] 🚀 Servidor rodando em http://localhost:5501
+[2025-04-16T20:48:05.202Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5501
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:48:05.203Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5501
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T20:48:25.612Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:49:46.255Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:49:46.267Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:49:48.945Z] 📥 GET /api/colaboradores
+[2025-04-16T20:49:49.022Z] 📥 GET /favicon.ico
+[2025-04-16T20:49:51.938Z] 📥 GET /api/colaboradores
+[2025-04-16T20:49:53.625Z] 📥 GET /api/colaboradores/3
+[2025-04-16T20:50:12.224Z] 📥 GET /api/atividades
+[2025-04-16T20:52:30.024Z] 📥 GET /api/colaboradores
+[2025-04-16T20:52:37.871Z] 📥 POST /api/criar-colaborador
+[2025-04-16T20:52:40.529Z] 📥 GET /api/colaboradores
+[2025-04-16T20:52:44.505Z] 📥 GET /api/colaboradores
+[2025-04-16T20:54:52.340Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T20:54:52.351Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T20:54:54.304Z] 📥 GET /api/colaboradores
+[2025-04-16T20:55:08.521Z] 📥 GET /api/atividades
+[2025-04-16T21:36:32.788Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T21:36:32.857Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T21:36:36.988Z] 📥 GET /api/colaboradores
+[2025-04-16T21:36:37.159Z] 📥 GET /favicon.ico
+[2025-04-16T21:37:20.026Z] 📥 GET /assets/default-profile.png
+[2025-04-16T21:37:38.667Z] 📥 GET /api/colaboradores
+[2025-04-16T21:37:42.120Z] 📥 GET /api/colaboradores/3
+[2025-04-16T21:37:51.576Z] 📥 DELETE /api/colaboradores/3
+[2025-04-16T21:37:52.784Z] 📥 GET /api/colaboradores
+[2025-04-16T21:37:55.217Z] 📥 GET /api/colaboradores
+[2025-04-16T21:38:36.865Z] 📥 GET /styles.css
+[2025-04-16T21:43:55.333Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T21:43:55.345Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T21:43:57.475Z] 📥 GET /api/colaboradores
+[2025-04-16T21:45:54.728Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T21:45:54.742Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T21:45:58.192Z] 📥 GET /api/colaboradores
+[2025-04-16T22:15:01.338Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T22:15:01.348Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T22:15:03.924Z] 📥 GET /api/colaboradores
+[2025-04-16T22:15:13.621Z] 📥 GET /api/colaboradores
+[2025-04-16T22:17:03.170Z] 📥 GET /api/colaboradores
+[2025-04-16T22:17:41.007Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T22:17:41.018Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T22:17:43.373Z] 📥 GET /api/colaboradores
+[2025-04-16T22:18:06.827Z] 📥 GET /styles.css
+[2025-04-16T22:18:09.160Z] 📥 GET /api/colaboradores
+[2025-04-16T22:18:11.278Z] 📥 GET /api/colaboradores/4
+[2025-04-16T22:19:11.079Z] 📥 GET /api/atividades
+[2025-04-16T22:19:40.608Z] 📥 GET /api/colaboradores
+[2025-04-16T22:19:42.367Z] 📥 GET /api/colaboradores/4
+[2025-04-16T22:19:53.357Z] 📥 GET /api/colaboradores
+[2025-04-16T22:19:53.500Z] 📥 GET /favicon.ico
+[2025-04-16T22:22:50.291Z] 📥 GET /api/colaboradores
+[2025-04-16T22:22:50.368Z] 📥 GET /favicon.ico
+[2025-04-16T22:24:19.456Z] 📥 GET /api/colaboradores
+[2025-04-16T22:28:03.796Z] 📥 GET /api/colaboradores
+[2025-04-16T22:28:05.240Z] 📥 GET /api/colaboradores/4
+[2025-04-16T22:28:11.195Z] 📥 GET /api/colaboradores
+[2025-04-16T22:28:25.293Z] 📥 GET /api/colaboradores
+[2025-04-16T22:28:27.053Z] 📥 GET /styles.css
+[2025-04-16T22:28:30.958Z] 📥 GET /assets/default-profile.png
+[2025-04-16T22:28:32.451Z] 📥 GET /assets/default-profile.png
+[2025-04-16T22:33:10.988Z] 📥 GET /api/colaboradores
+[2025-04-16T22:33:28.035Z] 📥 GET /api/colaboradores
+[2025-04-16T22:33:58.321Z] 📥 GET /api/colaboradores
+[2025-04-16T22:36:36.347Z] 📥 GET /api/colaboradores
+[2025-04-16T22:37:13.272Z] 📥 GET /api/colaboradores
+[2025-04-16T22:37:15.095Z] 📥 GET /styles.css
+[2025-04-16T22:37:34.106Z] 📥 GET /api/atividades
+[2025-04-16T22:42:23.402Z] 📥 GET /api/atividades
+[2025-04-16T22:45:41.734Z] 📥 GET /api/colaboradores
+[2025-04-16T22:53:03.185Z] 📥 GET /api/colaboradores
+[2025-04-16T22:53:03.246Z] 📥 GET /favicon.ico
+[2025-04-16T22:53:04.387Z] 📥 GET /api/colaboradores
+[2025-04-16T22:53:52.421Z] 📥 GET /api/colaboradores
+[2025-04-16T23:00:11.628Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T23:00:11.640Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T23:00:16.447Z] 📥 GET /api/colaboradores
+[2025-04-16T23:00:38.472Z] 📥 GET /api/colaboradores
+[2025-04-16T23:01:20.857Z] 📥 GET /api/colaboradores
+[2025-04-16T23:03:19.853Z] 📥 GET /api/atividades
+[2025-04-16T23:04:42.959Z] 📥 GET /api/atividades
+[2025-04-16T23:11:31.816Z] 📥 GET /api/colaboradores
+[2025-04-16T23:13:24.901Z] 📥 GET /api/colaboradores
+[2025-04-16T23:13:30.044Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T23:13:30.054Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T23:13:32.241Z] 📥 GET /api/colaboradores
+[2025-04-16T23:20:53.917Z] 📥 GET /api/colaboradores
+[2025-04-16T23:20:54.000Z] 📥 GET /favicon.ico
+[2025-04-16T23:27:02.044Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T23:27:02.055Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-16T23:27:17.532Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-16T23:27:17.542Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-16T23:27:19.483Z] 📥 GET /api/colaboradores
+[2025-04-16T23:27:21.177Z] 📥 GET /api/colaboradores
+[2025-04-16T23:27:44.705Z] 📥 GET /api/colaboradores
+[2025-04-16T23:30:23.270Z] 📥 GET /api/colaboradores
+[2025-04-16T23:30:24.508Z] 📥 GET /api/colaboradores
+[2025-04-16T23:31:00.156Z] 📥 GET /api/atividades
+[2025-04-16T23:32:15.257Z] 📥 GET /api/colaboradores
