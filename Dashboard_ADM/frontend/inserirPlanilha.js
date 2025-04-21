@@ -1,12 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const processButton = document.getElementById('processButton');
     const fileNameDisplay = document.getElementById('fileName');
     const feedbackDiv = document.getElementById('uploadFeedback');
 
-    // Mostra o nome do arquivo selecionado
+    // Verifica se todos elementos existem
+    if (!form || !fileInput || !processButton || !fileNameDisplay || !feedbackDiv) {
+        console.error('Elementos não encontrados! Verifique os IDs no HTML');
+        return;
+    }
+
+    // Configura o evento change do input de arquivo
     fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
+        console.log('Arquivo selecionado:', this.files);
+        
+        if (this.files && this.files.length > 0) {
             fileNameDisplay.textContent = this.files[0].name;
             processButton.disabled = false;
             feedbackDiv.style.display = 'none';
@@ -16,7 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    processButton.addEventListener('click', handleFile);
+    // Configura o evento submit do formulário
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (fileInput.files.length > 0) {
+            handleFile();
+        }
+    });
 });
 
 function showFeedback(message, type) {
@@ -26,7 +41,6 @@ function showFeedback(message, type) {
     feedbackDiv.style.display = 'block';
 }
 
-// Função para converter horário decimal do Excel para formato HH:MM
 function converterHorarioExcel(valor) {
     if (valor === undefined || valor === null) return null;
     
@@ -60,16 +74,21 @@ function handleFile() {
     // Desabilita o botão durante o processamento
     processButton.disabled = true;
     processButton.textContent = 'Processando...';
+    showFeedback("Processando planilha...", "info");
 
     const reader = new FileReader();
+    
     reader.onload = function(e) {
         try {
+            console.log("Iniciando processamento do arquivo...");
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
 
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(sheet);
+            
+            console.log("Dados extraídos:", jsonData);
 
             // Transforma os dados - cria um registro para cada data
             const atividades = jsonData.flatMap(item => {
@@ -96,13 +115,15 @@ function handleFile() {
                     diasAgendados: item['Dias agendados'] || '',
                     horaInicioAgendada: converterHorarioExcel(item['Hora de início agendada']),
                     fimAgendado: converterHorarioExcel(item['Fim Agendado']),
-                    datasAtividadeIndividual: data, // Apenas uma data por registro
+                    datasAtividadeIndividual: data,
                     descricaoLocalizacaoAtribuida: item['Descrição da localização atribuída'] || ''
                 }));
             });
 
+            console.log("Dados processados:", atividades);
             displayData(atividades);
             sendDataToServer(atividades);
+
         } catch (error) {
             console.error('Erro ao processar arquivo:', error);
             showFeedback('Erro ao processar o arquivo: ' + error.message, 'error');
@@ -125,26 +146,35 @@ function displayData(atividades) {
     const outputDiv = document.getElementById('output');
     outputDiv.innerHTML = '';
 
+    if (!atividades || atividades.length === 0) {
+        outputDiv.innerHTML = '<div class="atividade">Nenhum dado encontrado na planilha.</div>';
+        return;
+    }
+
     atividades.forEach(atividade => {
         const div = document.createElement('div');
         div.className = 'atividade';
         div.innerHTML = `
             <p><strong>Descrição:</strong> ${atividade.descricao}</p>
             <p><strong>Nome:</strong> ${atividade.nomePessoalAtribuido}</p>
-            <p><strong>Início:</strong> ${atividade.horaInicioAgendada}</p>
-            <p><strong>Fim:</strong> ${atividade.fimAgendado}</p>
+            <p><strong>Dias:</strong> ${atividade.diasAgendados}</p>
+            <p><strong>Início:</strong> ${atividade.horaInicioAgendada || 'Não especificado'}</p>
+            <p><strong>Fim:</strong> ${atividade.fimAgendado || 'Não especificado'}</p>
             <p><strong>Data:</strong> ${atividade.datasAtividadeIndividual || 'Nenhuma data especificada'}</p>
+            <p><strong>Localização:</strong> ${atividade.descricaoLocalizacaoAtribuida || 'Não especificada'}</p>
         `;
         outputDiv.appendChild(div);
     });
 }
 
 function sendDataToServer(atividades) {
-    // Verifique se há atividades antes de enviar
     if (!atividades || atividades.length === 0) {
         showFeedback('Nenhum dado válido para enviar.', 'error');
         return;
     }
+
+    console.log('Enviando dados para o servidor:', atividades);
+    showFeedback('Enviando dados para o servidor...', 'info');
 
     fetch('http://localhost:5500/api/atividades', {
         method: 'POST',
@@ -153,21 +183,80 @@ function sendDataToServer(atividades) {
         },
         body: JSON.stringify(atividades),
     })
-    .then(response => {
+    .then(async response => {
+        const data = await response.json();
+        
         if (!response.ok) {
-            // Captura mais detalhes do erro
-            return response.text().then(text => {
-                throw new Error(`Status: ${response.status} - ${text}`);
-            });
+            let errorMsg = `Erro ${response.status}`;
+            if (data && data.error) errorMsg += `: ${data.error}`;
+            if (data && data.errorsList) errorMsg += `\nErros detalhados:\n${data.errorsList.join('\n')}`;
+            
+            throw new Error(errorMsg);
         }
-        return response.json();
+        
+        return data;
     })
     .then(data => {
-        console.log('Sucesso:', data);
-        showFeedback('Dados enviados com sucesso para o banco de dados!', 'success');
+        console.log('Resposta do servidor:', data);
+        let message = 'Dados enviados com sucesso!';
+        if (data.inserted) message += `\nRegistros inseridos: ${data.inserted}`;
+        if (data.errors) message += `\nRegistros com erro: ${data.errors}`;
+        
+        showFeedback(message, 'success');
+        
+        if (data.errorsList && data.errorsList.length > 0) {
+            const errorDetails = document.createElement('div');
+            errorDetails.className = 'error-details';
+            errorDetails.innerHTML = `<h4>Erros detalhados:</h4><ul>${
+                data.errorsList.map(e => `<li>${e}</li>`).join('')
+            }</ul>`;
+            document.getElementById('output').appendChild(errorDetails);
+        }
     })
     .catch(error => {
-        console.error('Erro completo:', error);
+        console.error('Erro ao enviar dados:', error);
         showFeedback(`Falha ao enviar dados: ${error.message}`, 'error');
     });
+}
+
+function initializeUploadForm() {
+    console.log('Inicializando formulário de upload...');
+    
+    const fileInput = document.getElementById('fileInput');
+    const processButton = document.getElementById('processButton');
+    const fileNameDisplay = document.getElementById('fileName');
+    
+    if (!fileInput || !processButton || !fileNameDisplay) {
+        console.error('Elementos não encontrados! Verifique os IDs:',
+            { fileInput, processButton, fileNameDisplay });
+        return;
+    }
+
+    fileInput.addEventListener('change', function() {
+        console.log('Evento change disparado');
+        
+        if (this.files && this.files.length > 0) {
+            console.log('Arquivo selecionado:', this.files[0].name);
+            fileNameDisplay.textContent = this.files[0].name;
+            processButton.disabled = false;
+        } else {
+            console.log('Nenhum arquivo selecionado ou seleção cancelada');
+            fileNameDisplay.textContent = '';
+            processButton.disabled = true;
+        }
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (fileInput.files.length > 0) {
+            handleFile();
+        }
+    });
+}
+
+// Aguarda o DOM estar totalmente carregado
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeUploadForm);
+} else {
+    initializeUploadForm();
 }

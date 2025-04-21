@@ -93,7 +93,8 @@ app.get('/api/atividades', async (req, res) => {
 });
 
 app.post('/api/atividades', async (req, res) => {
-  console.log('Recebendo dados:', req.body);
+  console.log('Dados recebidos:', JSON.stringify(req.body, null, 2));
+  
   try {
     if (!Array.isArray(req.body)) {
       return res.status(400).json({ 
@@ -103,56 +104,64 @@ app.post('/api/atividades', async (req, res) => {
     }
 
     const conn = await dbInstituicao.getConnection();
-    let inserted = 0, skipped = 0;
+    let inserted = 0, errors = 0;
+    const errorsList = [];
     
-    for (const atividade of req.body) {
-      console.log('Processando atividade:', atividade);
-      const datas = Array.isArray(atividade.datasAtividadeIndividual) 
-        ? atividade.datasAtividadeIndividual 
-        : (atividade.datasAtividadeIndividual ? atividade.datasAtividadeIndividual.split(';') : []);
-      
-      for (const data of datas) {
-        if (!data) continue;
-        
+    for (const [index, atividade] of req.body.entries()) {
+      try {
+        // Verifica se já existe uma atividade igual
         const [existing] = await conn.query(
           `SELECT * FROM atividades WHERE 
            descricao = ? AND nomePessoalAtribuido = ? AND datasAtividadeIndividual = ?`,
-          [atividade.descricao, atividade.nomePessoalAtribuido, data]
+          [
+            atividade.descricao || '', 
+            atividade.nomePessoalAtribuido || '', 
+            atividade.datasAtividadeIndividual || ''
+          ]
         );
 
         if (existing.length === 0) {
           await conn.query(`INSERT INTO atividades SET ?`, {
-            descricao: atividade.descricao,
-            nomePessoalAtribuido: atividade.nomePessoalAtribuido,
+            descricao: atividade.descricao || '',
+            nomePessoalAtribuido: atividade.nomePessoalAtribuido || '',
+            diasAgendados: atividade.diasAgendados || '',
             horaInicioAgendada: atividade.horaInicioAgendada || '00:00:00',
             fimAgendado: atividade.fimAgendado || '00:00:00',
-            datasAtividadeIndividual: data,
+            datasAtividadeIndividual: atividade.datasAtividadeIndividual || '',
             descricaoLocalizacaoAtribuida: atividade.descricaoLocalizacaoAtribuida || '',
             confirmada: atividade.confirmada || false
           });
           inserted++;
         } else {
-          skipped++;
+          errors++;
+          errorsList.push(`Linha ${index + 1}: Registro duplicado`);
         }
+      } catch (error) {
+        errors++;
+        errorsList.push(`Linha ${index + 1}: ${error.message}`);
+        console.error(`Erro na linha ${index + 1}:`, error);
       }
     }
+    
     conn.release();
+    
     res.json({ 
       success: true, 
       inserted, 
-      skipped,
-      message: `Dados processados com sucesso. Inseridos: ${inserted}, Ignorados: ${skipped}`
+      errors,
+      errorsList,
+      message: `Processamento completo. Inseridos: ${inserted}, Erros: ${errors}`
     });
   } catch (error) {
-    console.error('Erro ao processar a requisição:', error);
+    console.error('Erro geral ao processar a requisição:', error);
     res.status(500).json({ 
       success: false,
       error: 'Erro interno no servidor',
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
-
 // Outras rotas (colaboradores, etc.) permanecem as mesmas...
 
 // Inicialização do servidor

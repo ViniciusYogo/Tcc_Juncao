@@ -54,50 +54,72 @@ toggler.addEventListener("change", function () {
 
 async function loadPage(page) {
   try {
-    const response = await fetch(page);
+    // Adiciona timestamp para evitar cache
+    const response = await fetch(`${page}?_=${Date.now()}`);
+    
+    if (!response.ok) {
+      throw new Error(`Erro ${response.status} ao carregar a página`);
+    }
+    
     const html = await response.text();
     const content = document.getElementById('content');
     content.innerHTML = html;
 
+    // Processa scripts da nova página
     const scripts = content.querySelectorAll("script");
     scripts.forEach(oldScript => {
       const newScript = document.createElement("script");
-      newScript.text = oldScript.textContent;
-      document.body.appendChild(newScript).parentNode.removeChild(newScript);
+      // Copia todos os atributos
+      Array.from(oldScript.attributes).forEach(attr => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+      // Copia o conteúdo
+      newScript.textContent = oldScript.textContent;
+      // Substitui o script antigo
+      oldScript.parentNode.replaceChild(newScript, oldScript);
     });
 
-    initFormColaborador();
-
-    if (page === 'colaboradores.html') {
-      carregarColaboradores();
+    // Força recarregamento de componentes específicos
+    if (page.includes('colaboradores.html')) {
+      await carregarColaboradores();
     }
+
+    // Reinicializa componentes comuns
+    initFormColaborador();
+    
+    // Rolagem para o topo (como em um refresh normal)
+    window.scrollTo(0, 0);
 
   } catch (error) {
     console.error("Erro ao carregar página:", error);
-    document.getElementById('content').innerHTML = '<p>Erro ao carregar a página.</p>';
+    document.getElementById('content').innerHTML = `
+      <div class="error-message">
+        <h3>Erro ao carregar a página</h3>
+        <p>${error.message}</p>
+        <button onclick="window.location.reload()">Tentar novamente</button>
+      </div>
+    `;
   }
 }
 
+// Navegação do menu
 const menuItems = document.querySelectorAll('.side-menu li a');
 menuItems.forEach(item => {
   item.addEventListener('click', function (e) {
     e.preventDefault();
-    const page = this.getAttribute('data-page');
-    if (page) {
+    const page = this.getAttribute('data-page') || this.getAttribute('href');
+    if (page && !page.startsWith('#')) {
       loadPage(page);
     }
   });
 });
 
-const inicioButton = document.getElementById('inicio');
-if (inicioButton) {
-  inicioButton.addEventListener('click', function (e) {
-    e.preventDefault();
-    loadPage('dashboard.html');
-  });
+// Carrega a página inicial
+if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
+  loadPage('dashboard.html');
+} else {
+  loadPage(window.location.pathname.split('/').pop());
 }
-
-loadPage('dashboard.html');
 
 function initFormColaborador() {
   const form = document.getElementById("form-colaborador");
@@ -114,6 +136,10 @@ function initFormColaborador() {
         if (response.ok) {
           alert("Colaborador cadastrado com sucesso!");
           form.reset();
+          // Recarrega a lista após cadastro
+          if (document.getElementById("tabela-colaboradores")) {
+            await carregarColaboradores();
+          }
         } else {
           throw new Error(result.error || "Erro ao cadastrar colaborador.");
         }
@@ -136,7 +162,17 @@ function initFormColaborador() {
 
 async function carregarColaboradores() {
   try {
-    const response = await fetch("/api/colaboradores");
+    const response = await fetch(`/api/colaboradores?_=${Date.now()}`);
+    
+    if (!response.ok) {
+      throw new Error(`Erro HTTP! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new TypeError("A resposta não é JSON");
+    }
+    
     const data = await response.json();
     const tabela = document.querySelector("#tabela-colaboradores tbody");
     if (!tabela) return;
@@ -163,7 +199,18 @@ async function carregarColaboradores() {
       tabela.appendChild(row);
     });
   } catch (error) {
-    console.error("Erro ao carregar colaboradores:", error);
+    console.error("Erro ao carregar colaboradores:", error.message);
+    const tabela = document.querySelector("#tabela-colaboradores tbody");
+    if (tabela) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="9" class="error">
+            Erro ao carregar dados: ${error.message}
+            <button onclick="carregarColaboradores()">Tentar novamente</button>
+          </td>
+        </tr>
+      `;
+    }
   }
 }
 
@@ -179,7 +226,7 @@ async function confirmarExclusao(id) {
     const result = await response.json();
     if (response.ok) {
       alert("Colaborador excluído com sucesso.");
-      carregarColaboradores();
+      await carregarColaboradores(); // Recarrega a lista atualizada
     } else {
       throw new Error(result.error || "Erro ao excluir colaborador.");
     }
@@ -188,11 +235,6 @@ async function confirmarExclusao(id) {
     alert("Erro ao excluir colaborador.");
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  carregarColaboradores();
-  // Removida a chamada para carregarHorarios() que não existe
-});
 
 // Controle do menu de perfil
 const profileBtn = document.getElementById("profile-btn");
