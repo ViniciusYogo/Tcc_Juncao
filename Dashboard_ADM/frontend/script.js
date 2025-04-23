@@ -2,11 +2,22 @@ const sideLinks = document.querySelectorAll(".sidebar .side-menu li a:not(.logou
 
 sideLinks.forEach((item) => {
   const li = item.parentElement;
-  item.addEventListener("click", () => {
+  item.addEventListener("click", (e) => {
+    // Se for o link de visualizar horários, permite o comportamento padrão
+    if (item.getAttribute('data-page') === 'visualizar-horarios.html') {
+      return;
+    }
+    
+    e.preventDefault();
     sideLinks.forEach((i) => {
       i.parentElement.classList.remove("active");
     });
     li.classList.add("active");
+    
+    const page = item.getAttribute('data-page');
+    if (page) {
+      loadPage(page);
+    }
   });
 });
 
@@ -52,9 +63,49 @@ toggler.addEventListener("change", function () {
   this.checked ? document.body.classList.add("dark") : document.body.classList.remove("dark");
 });
 
+// Sistema de navegação
+const menuItems = document.querySelectorAll('.side-menu li a');
+menuItems.forEach(item => {
+  item.addEventListener('click', function (e) {
+    e.preventDefault();
+    const page = this.getAttribute('data-page') || this.getAttribute('href');
+    if (page && !page.startsWith('#')) {
+      loadPage(page);
+    }
+  });
+});
+
+// Carregamento inicial
+if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
+  loadPage('dashboard.html');
+}
+
+async function initCalendar() {
+  if (document.querySelector('.calendario')) {
+    // Carrega o CSS dinamicamente
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'visualizar-horarios.css';
+    document.head.appendChild(link);
+    
+    // Carrega o script do calendário
+    await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'visualizar-horarios.js';
+      script.onload = resolve;
+      document.body.appendChild(script);
+    });
+  }
+}
+
 async function loadPage(page) {
   try {
-    // Adiciona timestamp para evitar cache
+    // Se for a página de horários, redireciona para a página dedicada
+    if (page.includes('visualizar-horarios.html')) {
+      window.location.href = 'visualizar-horarios.html';
+      return;
+    }
+
     const response = await fetch(`${page}?_=${Date.now()}`);
     
     if (!response.ok) {
@@ -65,31 +116,35 @@ async function loadPage(page) {
     const content = document.getElementById('content');
     content.innerHTML = html;
 
-    // Processa scripts da nova página
+    // Processa scripts da nova página de forma mais segura
     const scripts = content.querySelectorAll("script");
     scripts.forEach(oldScript => {
       const newScript = document.createElement("script");
-      // Copia todos os atributos
+      
+      // Copia todos os atributos exceto 'src' se já estiver carregado
       Array.from(oldScript.attributes).forEach(attr => {
-        newScript.setAttribute(attr.name, attr.value);
+        if (attr.name !== 'src' || !document.querySelector(`script[src="${attr.value}"]`)) {
+          newScript.setAttribute(attr.name, attr.value);
+        }
       });
-      // Copia o conteúdo
-      newScript.textContent = oldScript.textContent;
-      // Substitui o script antigo
+      
+      // Verifica se é um script inline
+      if (!oldScript.src && oldScript.textContent) {
+        // Usa um bloco try-catch para evitar erros de sintaxe
+        newScript.textContent = `try { ${oldScript.textContent} } catch(e) { console.error('Error in inline script:', e); }`;
+      }
+      
       oldScript.parentNode.replaceChild(newScript, oldScript);
     });
 
-    // Força recarregamento de componentes específicos
+    // Inicializa componentes específicos
     if (page.includes('colaboradores.html')) {
       await carregarColaboradores();
     }
-
-    // Reinicializa componentes comuns
-    initFormColaborador();
     
-    // Rolagem para o topo (como em um refresh normal)
+    initFormColaborador();
     window.scrollTo(0, 0);
-
+    
   } catch (error) {
     console.error("Erro ao carregar página:", error);
     document.getElementById('content').innerHTML = `
@@ -102,64 +157,7 @@ async function loadPage(page) {
   }
 }
 
-// Navegação do menu
-const menuItems = document.querySelectorAll('.side-menu li a');
-menuItems.forEach(item => {
-  item.addEventListener('click', function (e) {
-    e.preventDefault();
-    const page = this.getAttribute('data-page') || this.getAttribute('href');
-    if (page && !page.startsWith('#')) {
-      loadPage(page);
-    }
-  });
-});
-
-// Carrega a página inicial
-if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
-  loadPage('dashboard.html');
-} else {
-  loadPage(window.location.pathname.split('/').pop());
-}
-
-function initFormColaborador() {
-  const form = document.getElementById("form-colaborador");
-  if (form) {
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const formData = new FormData(form);
-      try {
-        const response = await fetch("/api/colaboradores/criar", {
-          method: "POST",
-          body: formData
-        });
-        const result = await response.json();
-        if (response.ok) {
-          alert("Colaborador cadastrado com sucesso!");
-          form.reset();
-          // Recarrega a lista após cadastro
-          if (document.getElementById("tabela-colaboradores")) {
-            await carregarColaboradores();
-          }
-        } else {
-          throw new Error(result.error || "Erro ao cadastrar colaborador.");
-        }
-      } catch (error) {
-        console.error("Erro:", error);
-        alert("Erro ao cadastrar colaborador. Verifique o console.");
-      }
-    });
-  }
-
-  const inputFile = document.getElementById("profile-picture");
-  const fileNameDisplay = document.getElementById("file-name");
-  if (inputFile && fileNameDisplay) {
-    inputFile.addEventListener("change", function(event) {
-      const file = event.target.files[0];
-      fileNameDisplay.textContent = file ? file.name : 'Nenhum arquivo escolhido';
-    });
-  }
-}
-
+// Gestão de Colaboradores
 async function carregarColaboradores() {
   try {
     const response = await fetch(`/api/colaboradores?_=${Date.now()}`);
@@ -180,26 +178,25 @@ async function carregarColaboradores() {
 
     data.forEach(colaborador => {
       const row = document.createElement("tr");
-
       row.innerHTML = `
-        <td>${colaborador.nome}</td>
-        <td>${colaborador.email}</td>
-        <td>${colaborador.telefone}</td>
-        <td>${colaborador.turma}</td>
-        <td>${colaborador.sala}</td>
-        <td>${new Date(colaborador.data).toLocaleDateString()}</td>
-        <td>${colaborador.horario}</td>
-        <td><img src="${colaborador.foto}" style="width: 50px;" /></td>
+        <td>${colaborador.primeiro_nome} ${colaborador.ultimo_nome || ''}</td>
+        <td>${colaborador.email || '-'}</td>
+        <td>${colaborador.numero_contato || '-'}</td>
+        <td>${colaborador.turma || '-'}</td>
+        <td>${colaborador.sala || '-'}</td>
+        <td>${colaborador.data ? new Date(colaborador.data).toLocaleDateString() : '-'}</td>
+        <td>${colaborador.horario || '-'}</td>
+        <td><img src="${colaborador.foto || 'https://i.pravatar.cc/50'}" style="width: 50px;" /></td>
         <td>
           <button onclick="abrirEdicao(${colaborador.id})">Editar</button>
           <button onclick="confirmarExclusao(${colaborador.id})">Excluir</button>
         </td>
       `;
-
       tabela.appendChild(row);
     });
+    
   } catch (error) {
-    console.error("Erro ao carregar colaboradores:", error.message);
+    console.error("Erro ao carregar colaboradores:", error);
     const tabela = document.querySelector("#tabela-colaboradores tbody");
     if (tabela) {
       tabela.innerHTML = `
@@ -214,29 +211,159 @@ async function carregarColaboradores() {
   }
 }
 
+function initFormColaborador() {
+  const form = document.getElementById("form-colaborador");
+  if (!form) return;
+
+  // Elementos da UI
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const fileNameDisplay = document.getElementById("file-name");
+  const previewImg = document.getElementById("preview");
+  const tabelaColaboradores = document.getElementById("tabela-colaboradores");
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    
+    // Desabilita o botão durante o processamento
+    submitBtn.disabled = true;
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.textContent = "Cadastrando...";
+    
+    try {
+      const formData = new FormData(form);
+      
+      // Validação básica dos campos obrigatórios
+      const requiredFields = ['primeiro_nome', 'ultimo_nome', 'email', 'nome_usuario', 'senha'];
+      for (const field of requiredFields) {
+        if (!formData.get(field)) {
+          throw new Error(`O campo ${field.replace('_', ' ')} é obrigatório`);
+        }
+      }
+
+      // Validação de e-mail
+      const email = formData.get('email');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error('Por favor, insira um e-mail válido');
+      }
+
+      const response = await fetch("/api/colaboradores", {
+        method: "POST",
+        body: formData
+      });
+
+      // Verifica se a resposta é JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(text || 'Resposta inválida do servidor');
+      }
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || result.message || "Erro ao cadastrar colaborador");
+      }
+
+      // Sucesso no cadastro
+      alert(result.message || "Colaborador cadastrado com sucesso!");
+      
+      // Reset do formulário
+      form.reset();
+      if (fileNameDisplay) fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+      if (previewImg) previewImg.style.display = 'none';
+      
+      // Atualiza a tabela se existir
+      if (tabelaColaboradores) {
+        await carregarColaboradores();
+      }
+      
+    } catch (error) {
+      console.error("Erro:", error);
+      
+      // Mostra mensagem de erro amigável
+      let errorMessage = error.message;
+      
+      // Tratamento específico para erros de rede
+      if (error.message.includes('Failed to fetch')) {
+        errorMessage = "Não foi possível conectar ao servidor. Verifique sua conexão.";
+      }
+      
+      alert(`Erro: ${errorMessage}`);
+      
+    } finally {
+      // Reabilita o botão independente do resultado
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  });
+
+  // Mostrar nome do arquivo e pré-visualização da imagem
+  const inputFile = document.getElementById("profile-picture");
+  if (inputFile && fileNameDisplay) {
+    inputFile.addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      
+      if (file) {
+        // Validação do tipo de arquivo
+        if (!file.type.match('image.*')) {
+          alert('Por favor, selecione uma imagem (JPEG, PNG, etc.)');
+          event.target.value = '';
+          fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+          if (previewImg) previewImg.style.display = 'none';
+          return;
+        }
+        
+        // Validação do tamanho do arquivo (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('A imagem deve ter no máximo 5MB');
+          event.target.value = '';
+          fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+          if (previewImg) previewImg.style.display = 'none';
+          return;
+        }
+        
+        fileNameDisplay.textContent = file.name;
+        
+        // Mostra pré-visualização se o elemento existir
+        if (previewImg) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      } else {
+        fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+        if (previewImg) previewImg.style.display = 'none';
+      }
+    });
+  }
+}
+
 async function confirmarExclusao(id) {
-  const confirmacao = confirm("Tem certeza que deseja excluir este colaborador?");
-  if (!confirmacao) return;
+  if (!confirm("Tem certeza que deseja excluir este colaborador?")) return;
 
   try {
     const response = await fetch(`/api/colaboradores/${id}`, {
       method: "DELETE"
     });
-
+    
     const result = await response.json();
+    
     if (response.ok) {
-      alert("Colaborador excluído com sucesso.");
-      await carregarColaboradores(); // Recarrega a lista atualizada
+      alert(result.message || "Colaborador excluído com sucesso.");
+      await carregarColaboradores();
     } else {
-      throw new Error(result.error || "Erro ao excluir colaborador.");
+      throw new Error(result.error || "Erro ao excluir colaborador");
     }
   } catch (error) {
     console.error("Erro:", error);
-    alert("Erro ao excluir colaborador.");
+    alert(error.message || "Erro ao excluir colaborador.");
   }
 }
 
-// Controle do menu de perfil
+// Menu de perfil
 const profileBtn = document.getElementById("profile-btn");
 const profileMenu = document.getElementById("profile-menu");
 
@@ -247,8 +374,7 @@ if (profileBtn && profileMenu) {
   });
 
   document.addEventListener("click", function (event) {
-    const isClickInside = profileBtn.contains(event.target) || profileMenu.contains(event.target);
-    if (!isClickInside) {
+    if (!profileBtn.contains(event.target) && !profileMenu.contains(event.target)) {
       profileMenu.style.display = "none";
     }
   });

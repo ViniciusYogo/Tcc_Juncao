@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const app = express();
-const port = 5500;
+const PORT = 5500;
 
 // Configurações gerais
 const logDir = path.join(__dirname, 'logs');
@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024
+    fileSize: 5 * 1024 * 1024 // 5MB
   }
 });
 
@@ -48,7 +48,7 @@ let dbInstituicao;
 
 (async function initializeDatabase() {
   try {
-    dbInstituicao = mysql.createPool({
+    dbInstituicao = await mysql.createPool({
       host: 'localhost',
       user: 'root',
       password: '102030',
@@ -77,29 +77,269 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Middleware de logging aprimorado
 app.use((req, res, next) => {
   log(`📥 ${req.method} ${req.url}`);
+  log(`Headers: ${JSON.stringify(req.headers)}`);
   next();
 });
 
-// Rotas para Atividades
+// Rota POST /api/colaboradores corrigida
+app.post('/api/colaboradores', upload.single('profile-picture'), async (req, res) => {
+  try {
+    log('Recebendo requisição para /api/colaboradores');
+    
+    // Extrai os campos do formulário
+    const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha } = req.body;
+    
+    // Validação dos campos obrigatórios
+    if (!primeiro_nome || !email || !nome_usuario || !senha) {
+      return res.status(400).json({
+        success: false,
+        error: 'Campos obrigatórios faltando',
+        message: 'Por favor, preencha todos os campos obrigatórios'
+      });
+    }
+
+    const conn = await dbInstituicao.getConnection();
+    
+    try {
+      // Verifica se o usuário já existe
+      const [existing] = await conn.query(
+        'SELECT id FROM colaboradores WHERE email = ? OR nome_usuario = ? LIMIT 1',
+        [email, nome_usuario]
+      );
+
+      if (existing.length > 0) {
+        return res.status(409).json({
+          success: false,
+          error: 'Usuário já existe',
+          message: 'E-mail ou nome de usuário já cadastrado'
+        });
+      }
+
+      // Processa a foto se foi enviada
+      let foto_perfil = null;
+      if (req.file) {
+        foto_perfil = `/uploads/${req.file.filename}`;
+        log(`Arquivo recebido: ${foto_perfil}`);
+      }
+
+      // Insere no banco de dados
+      const [result] = await conn.query(
+        `INSERT INTO colaboradores 
+        (primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto_perfil) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          primeiro_nome,
+          ultimo_nome || null,
+          numero_contato || null,
+          email,
+          nome_usuario,
+          senha, // Na prática, você deve usar bcrypt para hashear a senha
+          foto_perfil
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Colaborador cadastrado com sucesso',
+        data: {
+          id: result.insertId,
+          primeiro_nome,
+          email,
+          nome_usuario
+        }
+      });
+    } finally {
+      conn.release();
+    }
+  } catch (error) {
+    log(`Erro no cadastro de colaborador: ${error.stack}`);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor',
+      message: 'Ocorreu um erro ao cadastrar o colaborador'
+    });
+  }
+});
+
+app.delete('/api/colaboradores/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        error: 'ID inválido',
+        message: 'Por favor, forneça um ID válido'
+      });
+    }
+
+    const conn = await dbInstituicao.getConnection();
+    
+    try {
+      // Verifica se o colaborador existe
+      const [colaborador] = await conn.query(
+        'SELECT id, foto_perfil FROM colaboradores WHERE id = ?',
+        [id]
+      );
+
+      if (colaborador.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Não encontrado',
+          message: 'Colaborador não encontrado'
+        });
+      }
+
+      // Remove o colaborador
+      await conn.query('DELETE FROM colaboradores WHERE id = ?', [id]);
+
+      // Se tiver foto, remove o arquivo
+      if (colaborador[0].foto_perfil) {
+        const fotoPath = path.join(__dirname, colaborador[0].foto_perfil.replace('/uploads/', 'uploads/'));
+        if (fs.existsSync(fotoPath)) {
+          fs.unlinkSync(fotoPath);
+        }
+      }
+
+      res.json({
+        success: true,
+        message: 'Colaborador removido com sucesso'
+      });
+    } finally {
+      conn.release();
+    }
+  } catch (error) {
+    log(`Erro ao excluir colaborador: ${error.stack}`);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor',
+      message: 'Ocorreu um erro ao excluir o colaborador',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Rota consolidada para atividades - substitui as duas versões
 app.get('/api/atividades', async (req, res) => {
   try {
-    const [rows] = await dbInstituicao.query('SELECT * FROM atividades');
-    res.json({ success: true, data: rows });
+    const { dia, mes, ano } = req.query;
+    const conn = await dbInstituicao.getConnection();
+    
+    let query = `
+      SELECT 
+        id,
+        descricao,
+        nomePessoalAtribuido as responsavel,
+        diasAgendados,
+        horaInicioAgendada as horario_inicio,
+        fimAgendado as horario_fim,
+        datasAtividadeIndividual as data,
+        descricaoLocalizacaoAtribuida as localizacao,
+        confirmada as status
+    `;
+
+    // Se for consulta detalhada por data, adiciona campos específicos
+    if (dia && mes && ano) {
+      query = `
+        SELECT 
+          id,
+          descricao as atividade,
+          DATE_FORMAT(horaInicioAgendada, '%H:%i') as hora,
+          nomePessoalAtribuido as instrutor,
+          descricaoLocalizacaoAtribuida as localizacao,
+          confirmada as status,
+          10 as vagas
+      `;
+    }
+
+    query += ` FROM atividades `;
+
+    // Filtro por data se existir nos parâmetros
+    if (dia && mes && ano) {
+      const dataFormatada = `${ano}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+      query += ` WHERE DATE(datasAtividadeIndividual) = ? `;
+      var params = [dataFormatada];
+    }
+
+    query += ` ORDER BY datasAtividadeIndividual ASC`;
+    
+    const [atividades] = await conn.query(query, params || []);
+    conn.release();
+
+    if (!atividades || atividades.length === 0) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Nenhuma atividade encontrada' 
+      });
+    }
+
+    res.json({
+      success: true,
+      data: atividades
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    log(`Erro ao buscar atividades: ${error.stack}`);
+    res.status(500).json({ 
+      success: false,
+      error: 'Erro ao buscar atividades',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+
+
+
+
+
+app.get('/api/atividades/por-data', async (req, res) => {
+  try {
+    const { data } = req.query;
+    
+    if (!data) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'Parâmetro "data" é obrigatório',
+        message: 'Por favor, forneça uma data para consulta'
+      });
+    }
+
+    const conn = await dbInstituicao.getConnection();
+    const [atividades] = await conn.query(
+      `SELECT * FROM atividades 
+       WHERE DATE(datasAtividadeIndividual) = ? 
+       ORDER BY horaInicioAgendada ASC`,
+      [data]
+    );
+    conn.release();
+
+    res.json({
+      success: true,
+      data: atividades
+    });
+  } catch (error) {
+    log(`Erro ao buscar atividades por data: ${error.stack}`);
+    res.status(500).json({ 
+      success: false,
+      error: 'Erro ao buscar atividades por data',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
 app.post('/api/atividades', async (req, res) => {
-  console.log('Dados recebidos:', JSON.stringify(req.body, null, 2));
+  log('Dados recebidos: ' + JSON.stringify(req.body, null, 2));
   
   try {
     if (!Array.isArray(req.body)) {
       return res.status(400).json({ 
         success: false,
-        error: 'O corpo da requisição deve ser um array' 
+        error: 'Formato inválido',
+        message: 'O corpo da requisição deve ser um array' 
       });
     }
 
@@ -111,8 +351,9 @@ app.post('/api/atividades', async (req, res) => {
       try {
         // Verifica se já existe uma atividade igual
         const [existing] = await conn.query(
-          `SELECT * FROM atividades WHERE 
-           descricao = ? AND nomePessoalAtribuido = ? AND datasAtividadeIndividual = ?`,
+          `SELECT id FROM atividades WHERE 
+           descricao = ? AND nomePessoalAtribuido = ? AND datasAtividadeIndividual = ?
+           LIMIT 1`,
           [
             atividade.descricao || '', 
             atividade.nomePessoalAtribuido || '', 
@@ -139,7 +380,7 @@ app.post('/api/atividades', async (req, res) => {
       } catch (error) {
         errors++;
         errorsList.push(`Linha ${index + 1}: ${error.message}`);
-        console.error(`Erro na linha ${index + 1}:`, error);
+        log(`Erro na linha ${index + 1}: ${error.message}`);
       }
     }
     
@@ -153,26 +394,48 @@ app.post('/api/atividades', async (req, res) => {
       message: `Processamento completo. Inseridos: ${inserted}, Erros: ${errors}`
     });
   } catch (error) {
-    console.error('Erro geral ao processar a requisição:', error);
+    log(`Erro geral ao processar a requisição: ${error.stack}`);
     res.status(500).json({ 
       success: false,
       error: 'Erro interno no servidor',
-      details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      message: 'Ocorreu um erro ao processar as atividades',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
-// Outras rotas (colaboradores, etc.) permanecem as mesmas...
+
+// Tratamento para rotas não encontradas
+app.use((req, res) => {
+  res.status(404).json({ 
+    success: false,
+    error: 'Rota não encontrada',
+    message: `A rota ${req.method} ${req.url} não foi encontrada`
+  });
+});
+
+// Tratamento global de erros
+app.use((error, req, res, next) => {
+  log(`Erro não tratado: ${error.stack}`);
+  res.status(500).json({ 
+    success: false,
+    error: 'Erro interno no servidor',
+    message: 'Ocorreu um erro inesperado no servidor',
+    details: process.env.NODE_ENV === 'development' ? error.message : undefined
+  });
+});
 
 // Inicialização do servidor
-app.listen(port, '0.0.0.0', () => {
-  log(`🚀 Servidor rodando em http://localhost:${port}`);
+app.listen(PORT, '0.0.0.0', () => {
+  log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
 
+// Tratamento de eventos não capturados
 process.on('uncaughtException', (err) => {
   log(`🔥 ERRO GRAVE: ${err.stack}`);
+  // Você pode querer reiniciar o servidor aqui em produção
 });
 
-process.on('unhandledRejection', (reason) => {
+process.on('unhandledRejection', (reason, promise) => {
   log(`⚠️ PROMISE REJEITADA: ${reason}`);
+  log(`Promise: ${promise}`);
 });

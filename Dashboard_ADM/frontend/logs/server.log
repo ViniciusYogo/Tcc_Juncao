@@ -588,3 +588,465 @@
 [2025-04-21T20:21:19.214Z] 📥 POST /api/atividades
 [2025-04-21T20:21:28.105Z] 📥 POST /api/atividades
 [2025-04-21T20:21:40.030Z] 📥 POST /api/atividades
+[2025-04-21T21:39:05.389Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-21T21:39:05.400Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-21T21:39:07.562Z] 📥 GET /favicon.ico
+[2025-04-21T21:39:11.096Z] 📥 GET /api/colaboradores
+[2025-04-21T21:40:22.017Z] 📥 GET /favicon.ico
+[2025-04-21T21:40:23.566Z] 📥 GET /api/colaboradores
+[2025-04-21T21:40:58.663Z] 📥 GET /api/colaboradores/$%7Bid%7D
+[2025-04-21T21:41:14.316Z] 📥 GET /api/colaboradores
+[2025-04-21T21:41:15.314Z] 📥 GET /api/colaboradores
+[2025-04-21T21:42:31.223Z] 📥 GET /api/colaboradores
+[2025-04-21T21:43:08.984Z] 📥 GET /api/colaboradores
+[2025-04-21T21:43:21.417Z] 📥 GET /api/colaboradores
+[2025-04-21T21:43:54.656Z] 📥 GET /api/colaboradores
+[2025-04-21T21:45:19.822Z] 📥 GET /api/colaboradores
+[2025-04-21T21:45:26.172Z] 📥 GET /api/colaboradores
+[2025-04-21T21:47:24.900Z] 📥 GET /api/colaboradores
+[2025-04-21T21:47:27.075Z] 📥 GET /api/colaboradores
+[2025-04-21T21:48:22.179Z] 📥 GET /api/colaboradores
+[2025-04-21T21:48:25.904Z] 📥 GET /api/colaboradores
+[2025-04-21T21:48:27.238Z] 📥 GET /api/colaboradores
+[2025-04-21T21:48:29.916Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-21T21:48:29.927Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-21T21:48:35.740Z] 📥 GET /api/colaboradores
+[2025-04-21T21:48:47.283Z] 📥 GET /favicon.ico
+[2025-04-21T21:48:53.857Z] 📥 GET /favicon.ico
+[2025-04-21T21:48:58.105Z] 📥 GET /api/colaboradores
+[2025-04-21T21:49:08.891Z] 📥 GET /api/colaboradores
+[2025-04-21T21:49:50.352Z] 📥 GET /api/colaboradores
+[2025-04-21T21:49:56.912Z] 📥 GET /api/colaboradores
+[2025-04-21T21:49:56.916Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:01.776Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:01.783Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:09.306Z] 📥 PUT /api/colaboradores/1
+[2025-04-21T21:50:14.670Z] 📥 PUT /api/colaboradores/1
+[2025-04-21T21:50:22.220Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:22.224Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:23.876Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:23.882Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:24.275Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:24.280Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:24.627Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:24.634Z] 📥 GET /foto.jpg
+[2025-04-21T21:50:24.670Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:50:24.675Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:26.154Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:51:26.160Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:30.369Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:51:30.372Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:38.015Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:51:38.020Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:42.247Z] 📥 GET /api/colaboradores
+[2025-04-21T21:51:42.250Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:46.496Z] 📥 GET /foto.jpg
+[2025-04-21T21:51:49.415Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:51:49.420Z] 📥 GET /foto.jpg
+[2025-04-21T21:52:22.936Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:52:22.941Z] 📥 GET /foto.jpg
+[2025-04-21T21:52:48.109Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:52:48.113Z] 📥 GET /foto.jpg
+[2025-04-21T21:52:49.246Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:52:49.270Z] 📥 GET /foto.jpg
+[2025-04-21T21:53:01.516Z] 📥 PUT /api/colaboradores/1
+[2025-04-21T21:54:38.157Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:55:01.130Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:55:43.759Z] 📥 GET /api/colaboradores
+[2025-04-21T21:55:43.763Z] 📥 GET /foto.jpg
+[2025-04-21T21:55:44.606Z] 📥 GET /api/colaboradores
+[2025-04-21T21:55:44.610Z] 📥 GET /foto.jpg
+[2025-04-21T21:55:46.240Z] 📥 GET /api/colaboradores/1
+[2025-04-21T21:55:46.246Z] 📥 GET /foto.jpg
+[2025-04-21T21:55:47.661Z] 📥 PUT /api/colaboradores/1
+[2025-04-21T21:57:28.209Z] 📥 GET /api/colaboradores
+[2025-04-21T21:57:28.212Z] 📥 GET /foto.jpg
+[2025-04-21T21:57:40.992Z] 📥 POST /api/criar-colaborador
+[2025-04-21T21:57:48.370Z] 📥 POST /api/criar-colaborador
+[2025-04-21T21:57:51.476Z] 📥 GET /api/colaboradores
+[2025-04-21T21:57:51.479Z] 📥 GET /foto.jpg
+[2025-04-21T21:58:03.301Z] 📥 POST /api/criar-colaborador
+[2025-04-21T21:58:31.129Z] 📥 GET /api/criar-colaborador
+[2025-04-21T22:02:17.675Z] 📥 GET /api/colaboradores
+[2025-04-21T22:02:17.678Z] 📥 GET /foto.jpg
+[2025-04-21T22:02:21.900Z] 📥 POST /api/atividades
+[2025-04-21T22:02:25.844Z] 📥 GET /api/colaboradores
+[2025-04-21T22:02:25.848Z] 📥 GET /foto.jpg
+[2025-04-21T22:02:27.235Z] 📥 GET /api/colaboradores
+[2025-04-21T22:02:27.239Z] 📥 GET /foto.jpg
+[2025-04-21T22:02:46.674Z] 📥 GET /api/colaboradores
+[2025-04-21T22:02:46.677Z] 📥 GET /foto.jpg
+[2025-04-21T22:02:55.040Z] 📥 GET /api/colaboradores
+[2025-04-21T22:02:55.046Z] 📥 GET /foto.jpg
+[2025-04-21T22:03:10.934Z] 📥 GET /api/colaboradores
+[2025-04-21T22:03:10.937Z] 📥 GET /foto.jpg
+[2025-04-21T22:03:32.766Z] 📥 POST /api/criar-colaborador
+[2025-04-21T22:05:00.058Z] 📥 GET /api/criar-colaboradores
+[2025-04-21T22:05:43.839Z] 📥 GET /api/colaboradores
+[2025-04-21T22:05:43.842Z] 📥 GET /foto.jpg
+[2025-04-21T22:05:58.131Z] 📥 POST /api/colaboradores
+[2025-04-21T22:06:28.928Z] 📥 GET /api/colaboradores
+[2025-04-21T22:06:28.931Z] 📥 GET /foto.jpg
+[2025-04-21T22:06:29.938Z] 📥 GET /api/colaboradores
+[2025-04-21T22:06:29.942Z] 📥 GET /foto.jpg
+[2025-04-21T22:06:53.260Z] 📥 POST /api/colaboradores
+[2025-04-21T22:07:02.711Z] 📥 GET /api/colaboradores
+[2025-04-21T22:07:02.718Z] 📥 GET /foto.jpg
+[2025-04-21T22:07:03.304Z] 📥 GET /api/colaboradores/2
+[2025-04-21T22:07:07.138Z] 📥 GET /api/colaboradores/1
+[2025-04-21T22:07:07.141Z] 📥 GET /foto.jpg
+[2025-04-21T22:07:23.556Z] 📥 GET /api/atividades/$%7Baula.id%7D/confirmar
+[2025-04-21T22:08:08.967Z] 📥 GET /api/atividades
+[2025-04-21T22:11:47.984Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-21T22:11:47.997Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-21T22:14:55.900Z] GET /api/atividades
+[2025-04-22T01:41:18.094Z] GET /api/colaboradores
+[2025-04-22T01:41:18.102Z] GET /foto.jpg
+[2025-04-22T01:41:20.577Z] GET /styles.css
+[2025-04-22T01:41:22.225Z] GET /styles.css
+[2025-04-22T01:42:14.677Z] GET /api/atividades/$%7BatividadeSelecionada.id%7D
+[2025-04-22T01:42:43.919Z] GET /api/atividades/$%7BatividadeSelecionada.id%7D
+[2025-04-22T01:43:55.518Z] GET /api/atividades
+[2025-04-22T01:52:59.285Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T01:52:59.297Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T01:53:08.156Z] POST /api/atividades
+[2025-04-22T02:13:43.795Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T02:13:43.807Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T02:13:45.712Z] GET /favicon.ico
+[2025-04-22T02:40:55.287Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T02:40:55.298Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T17:35:20.641Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T17:35:20.653Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T17:35:22.663Z] GET /favicon.ico
+[2025-04-22T18:01:28.999Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T18:01:29.010Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T18:12:18.832Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T18:12:18.845Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T18:12:24.473Z] GET /api/colaboradores
+[2025-04-22T18:12:24.506Z] GET /foto.jpg
+[2025-04-22T18:12:25.651Z] GET /api/colaboradores
+[2025-04-22T18:12:25.655Z] GET /foto.jpg
+[2025-04-22T18:12:27.296Z] GET /api/colaboradores/1
+[2025-04-22T18:12:27.303Z] GET /foto.jpg
+[2025-04-22T18:12:32.393Z] GET /styles.css
+[2025-04-22T18:19:51.074Z] GET /styles.css
+[2025-04-22T18:21:03.055Z] POST /api/atividades
+[2025-04-22T18:23:39.540Z] ✅ Conexão com o banco de dados estabelecida!
+[2025-04-22T18:23:39.551Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T18:40:40.795Z] GET /api/atividades
+[2025-04-22T18:40:40.821Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:45.605Z] GET /api/atividades
+[2025-04-22T18:40:45.606Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:45.775Z] GET /api/atividades
+[2025-04-22T18:40:45.776Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:45.957Z] GET /api/atividades
+[2025-04-22T18:40:45.958Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:46.118Z] GET /api/atividades
+[2025-04-22T18:40:46.119Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:46.286Z] GET /api/atividades
+[2025-04-22T18:40:46.287Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:40:46.471Z] GET /api/atividades
+[2025-04-22T18:40:46.472Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:41:14.697Z] GET /api/atividades
+[2025-04-22T18:41:14.698Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:41:28.301Z] GET /api/atividades
+[2025-04-22T18:41:28.302Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:41:48.786Z] GET /api/atividades
+[2025-04-22T18:41:48.787Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:41:48.876Z] GET /favicon.ico
+[2025-04-22T18:41:51.546Z] GET /api/atividades
+[2025-04-22T18:41:51.547Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:45:28.018Z] GET /api/atividades
+[2025-04-22T18:45:28.019Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:49:50.657Z] GET /api/atividades
+[2025-04-22T18:49:50.658Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:50:05.216Z] GET /api/atividades
+[2025-04-22T18:50:05.217Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T18:50:23.682Z] GET /api/atividades
+[2025-04-22T18:50:23.683Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:02:34.426Z] GET /api/atividades
+[2025-04-22T19:02:34.429Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:02:49.291Z] GET /api/colaboradores
+[2025-04-22T19:02:49.298Z] GET /api/colaboradores
+[2025-04-22T19:02:49.302Z] GET /foto.jpg
+[2025-04-22T19:02:51.783Z] GET /api/colaboradores
+[2025-04-22T19:02:51.785Z] GET /api/colaboradores
+[2025-04-22T19:02:51.788Z] GET /foto.jpg
+[2025-04-22T19:04:14.186Z] GET /api/colaboradores
+[2025-04-22T19:04:14.190Z] GET /foto.jpg
+[2025-04-22T19:04:36.152Z] POST /api/colaboradores
+[2025-04-22T19:07:00.091Z] GET /api/atividades
+[2025-04-22T19:07:00.092Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:12:21.844Z] GET /api/colaboradores
+[2025-04-22T19:12:21.846Z] GET /api/colaboradores
+[2025-04-22T19:12:35.540Z] GET /api/colaboradores
+[2025-04-22T19:12:35.541Z] GET /api/colaboradores
+[2025-04-22T19:12:35.544Z] GET /foto.jpg
+[2025-04-22T19:13:11.556Z] GET /api/colaboradores
+[2025-04-22T19:13:11.560Z] GET /foto.jpg
+[2025-04-22T19:13:13.008Z] GET /api/colaboradores
+[2025-04-22T19:13:13.011Z] GET /foto.jpg
+[2025-04-22T19:13:31.038Z] POST /api/colaboradores
+[2025-04-22T19:13:52.611Z] GET /api/colaboradores
+[2025-04-22T19:13:52.613Z] GET /api/colaboradores
+[2025-04-22T19:13:52.616Z] GET /foto.jpg
+[2025-04-22T19:13:58.788Z] GET /api/colaboradores
+[2025-04-22T19:13:58.792Z] GET /api/colaboradores
+[2025-04-22T19:13:58.793Z] GET /foto.jpg
+[2025-04-22T19:14:06.897Z] GET /api/colaboradores
+[2025-04-22T19:14:06.902Z] GET /foto.jpg
+[2025-04-22T19:14:57.238Z] GET /api/colaboradores
+[2025-04-22T19:14:57.243Z] GET /foto.jpg
+[2025-04-22T19:15:00.969Z] GET /api/colaboradores
+[2025-04-22T19:15:00.974Z] GET /foto.jpg
+[2025-04-22T19:15:03.861Z] GET /api/colaboradores/2
+[2025-04-22T19:15:05.838Z] GET /api/colaboradores
+[2025-04-22T19:15:05.841Z] GET /foto.jpg
+[2025-04-22T19:15:31.080Z] GET /api/colaboradores
+[2025-04-22T19:15:31.085Z] GET /foto.jpg
+[2025-04-22T19:16:16.840Z] GET /api/colaboradores
+[2025-04-22T19:16:16.845Z] GET /foto.jpg
+[2025-04-22T19:16:19.287Z] GET /api/colaboradores
+[2025-04-22T19:16:19.294Z] GET /foto.jpg
+[2025-04-22T19:16:26.046Z] GET /api/colaboradores
+[2025-04-22T19:16:26.052Z] GET /foto.jpg
+[2025-04-22T19:16:29.618Z] GET /api/colaboradores
+[2025-04-22T19:16:29.622Z] GET /foto.jpg
+[2025-04-22T19:16:37.963Z] GET /api/colaboradores
+[2025-04-22T19:16:37.969Z] GET /foto.jpg
+[2025-04-22T19:16:39.340Z] GET /api/colaboradores
+[2025-04-22T19:16:39.345Z] GET /foto.jpg
+[2025-04-22T19:16:40.168Z] GET /api/colaboradores
+[2025-04-22T19:16:40.173Z] GET /foto.jpg
+[2025-04-22T19:16:41.987Z] GET /api/colaboradores
+[2025-04-22T19:16:41.992Z] GET /foto.jpg
+[2025-04-22T19:16:42.568Z] GET /api/colaboradores
+[2025-04-22T19:16:42.572Z] GET /foto.jpg
+[2025-04-22T19:16:50.134Z] GET /api/colaboradores
+[2025-04-22T19:16:50.139Z] GET /foto.jpg
+[2025-04-22T19:16:51.067Z] GET /api/colaboradores
+[2025-04-22T19:16:51.071Z] GET /foto.jpg
+[2025-04-22T19:16:57.555Z] GET /api/colaboradores
+[2025-04-22T19:16:57.560Z] GET /foto.jpg
+[2025-04-22T19:17:22.693Z] GET /api/colaboradores
+[2025-04-22T19:17:22.697Z] GET /foto.jpg
+[2025-04-22T19:19:20.521Z] GET /api/colaboradores
+[2025-04-22T19:19:20.523Z] GET /api/colaboradores
+[2025-04-22T19:19:20.527Z] GET /foto.jpg
+[2025-04-22T19:19:23.433Z] GET /api/colaboradores
+[2025-04-22T19:19:23.437Z] GET /foto.jpg
+[2025-04-22T19:19:24.885Z] GET /api/colaboradores
+[2025-04-22T19:19:24.890Z] GET /foto.jpg
+[2025-04-22T19:19:37.665Z] POST /api/colaboradores
+[2025-04-22T19:20:04.842Z] GET /api/colaboradores
+[2025-04-22T19:20:04.849Z] GET /foto.jpg
+[2025-04-22T19:20:11.027Z] GET /styles.css
+[2025-04-22T19:24:41.024Z] GET /api/atividades
+[2025-04-22T19:24:41.025Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:24:48.464Z] POST /api/atividades
+[2025-04-22T19:26:30.657Z] GET /api/colaboradores
+[2025-04-22T19:26:30.660Z] GET /api/colaboradores
+[2025-04-22T19:26:30.664Z] GET /foto.jpg
+[2025-04-22T19:26:40.847Z] POST /api/colaboradores
+[2025-04-22T19:26:54.258Z] GET /styles.css
+[2025-04-22T19:26:54.271Z] GET /styles.css
+[2025-04-22T19:34:07.834Z] GET /api/atividades
+[2025-04-22T19:34:07.835Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:34:08.472Z] GET /api/atividades
+[2025-04-22T19:34:08.473Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:34:08.701Z] GET /api/atividades
+[2025-04-22T19:34:08.702Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:34:08.809Z] GET /api/atividades
+[2025-04-22T19:34:08.809Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:34:09.023Z] GET /api/atividades
+[2025-04-22T19:34:09.023Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:38:49.392Z] GET /api/atividades
+[2025-04-22T19:38:49.393Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:38:49.643Z] GET /favicon.ico
+[2025-04-22T19:40:22.891Z] GET /api/atividades
+[2025-04-22T19:40:22.899Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:23.853Z] GET /api/atividades
+[2025-04-22T19:40:23.861Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:24.385Z] GET /api/atividades
+[2025-04-22T19:40:24.386Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:24.975Z] GET /api/atividades
+[2025-04-22T19:40:24.976Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:47.601Z] GET /api/atividades
+[2025-04-22T19:40:47.602Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:48.116Z] GET /api/atividades
+[2025-04-22T19:40:48.117Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:40:48.344Z] GET /api/atividades
+[2025-04-22T19:40:48.347Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:30.181Z] GET /api/atividades
+[2025-04-22T19:45:30.182Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:30.759Z] GET /api/atividades
+[2025-04-22T19:45:30.760Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:30.885Z] GET /api/atividades
+[2025-04-22T19:45:30.886Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:31.026Z] GET /api/atividades
+[2025-04-22T19:45:31.027Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:31.201Z] GET /api/atividades
+[2025-04-22T19:45:31.202Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T19:45:36.391Z] GET /api/colaboradores
+[2025-04-22T19:45:36.910Z] GET /api/colaboradores
+[2025-04-22T19:50:19.897Z] GET /api/atividades
+[2025-04-22T19:50:19.898Z] Erro GET /atividades: Error: Unknown column 'hora_inicio' in 'field list'
+[2025-04-22T21:15:50.510Z] POST /api/colaboradores
+[2025-04-22T21:16:08.129Z] GET /api/colaboradores
+[2025-04-22T21:16:08.132Z] GET /api/colaboradores
+[2025-04-22T21:16:08.134Z] GET /foto.jpg
+[2025-04-22T21:16:08.140Z] GET /foto.jpg
+[2025-04-22T21:16:11.622Z] GET /api/colaboradores/2
+[2025-04-22T22:19:37.792Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-22T22:19:37.803Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T22:19:37.804Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T22:19:37.804Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T22:19:45.756Z] 📥 GET /api/colaboradores
+[2025-04-22T22:19:45.796Z] 📥 GET /api/colaboradores
+[2025-04-22T22:19:45.805Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T22:19:49.644Z] 📥 GET /api/colaboradores
+[2025-04-22T22:19:49.653Z] 📥 GET /api/colaboradores
+[2025-04-22T22:19:49.664Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T22:22:28.730Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:04.520Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-22T22:51:04.532Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T22:51:04.532Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T22:51:04.533Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T22:51:18.826Z] 📥 POST /api/colaboradores
+[2025-04-22T22:51:24.511Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:24.569Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T22:51:29.216Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:29.226Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:29.236Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T22:51:32.907Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:32.913Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:32.925Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T22:51:37.866Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:37.874Z] 📥 GET /api/colaboradores
+[2025-04-22T22:51:37.883Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T23:00:26.620Z] 📥 GET /api/colaboradores
+[2025-04-22T23:00:26.626Z] 📥 GET /api/colaboradores
+[2025-04-22T23:00:26.634Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T23:00:29.303Z] 📥 GET /api/colaboradores/3
+[2025-04-22T23:00:31.142Z] 📥 DELETE /api/colaboradores/3
+[2025-04-22T23:00:40.872Z] 📥 POST /api/colaboradores
+[2025-04-22T23:01:56.764Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-22T23:01:56.774Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-22T23:01:56.775Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T23:01:56.775Z] 🔥 ERRO GRAVE: Error: listen EADDRINUSE: address already in use 0.0.0.0:5500
+    at Server.setupListenHandle [as _listen2] (net.js:1331:16)
+    at listenInCluster (net.js:1379:12)
+    at doListen (net.js:1516:7)
+    at processTicksAndRejections (internal/process/task_queues.js:83:21)
+[2025-04-22T23:02:12.594Z] 📥 POST /api/colaboradores
+[2025-04-22T23:02:35.096Z] 📥 POST /api/colaboradores
+[2025-04-22T23:04:05.555Z] 📥 GET /api/colaboradores
+[2025-04-22T23:04:05.595Z] 📥 GET /api/colaboradores
+[2025-04-22T23:04:05.601Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T23:04:48.703Z] 📥 POST /api/colaboradores
+[2025-04-22T23:13:52.150Z] 📥 POST /api/colaboradores
+[2025-04-22T23:14:01.906Z] 📥 GET /api/colaboradores
+[2025-04-22T23:19:39.726Z] 📥 POST /api/colaboradores
+[2025-04-22T23:20:30.097Z] 📥 GET /api/colaboradores
+[2025-04-22T23:20:41.328Z] 📥 POST /api/atividades
+[2025-04-22T23:20:46.776Z] 📥 GET /api/atividades
+[2025-04-22T23:28:09.121Z] 📥 POST /api/colaboradores
+[2025-04-22T23:33:51.183Z] 📥 GET /api/colaboradores
+[2025-04-22T23:33:51.189Z] 📥 GET /api/colaboradores
+[2025-04-22T23:33:51.194Z] 📥 GET /uploads/foto.jpg
+[2025-04-22T23:34:13.926Z] 📥 POST /api/colaboradores
+[2025-04-22T23:34:22.045Z] 📥 GET /api/colaboradores
+[2025-04-23T18:37:41.269Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-23T18:37:41.271Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-23T18:37:44.874Z] 📥 GET /favicon.ico
+[2025-04-23T18:37:44.875Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","sec-fetch-site":"same-origin","sec-fetch-mode":"no-cors","sec-fetch-dest":"image","referer":"http://localhost:5500/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T18:54:45.433Z] 📥 GET /api/atividades
+[2025-04-23T18:54:45.435Z] Headers: {"host":"localhost:5500","user-agent":"insomnia/11.0.2","accept":"*/*"}
+[2025-04-23T19:35:55.455Z] 📥 GET /favicon.ico
+[2025-04-23T19:35:55.455Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","sec-fetch-site":"same-origin","sec-fetch-mode":"no-cors","sec-fetch-dest":"image","referer":"http://localhost:5500/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:25.992Z] 🚀 Servidor rodando em http://localhost:5500
+[2025-04-23T20:51:25.993Z] ✅ Conexão com o banco de dados estabelecida com sucesso!
+[2025-04-23T20:51:28.379Z] 📥 GET /api/atividades/por-data-detalhada?dia=21&mes=4&ano=2025
+[2025-04-23T20:51:28.380Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:28.435Z] 📥 GET /api/atividades/por-data-detalhada?dia=22&mes=4&ano=2025
+[2025-04-23T20:51:28.436Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:28.441Z] 📥 GET /api/atividades/por-data-detalhada?dia=23&mes=4&ano=2025
+[2025-04-23T20:51:28.441Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:28.447Z] 📥 GET /api/atividades/por-data-detalhada?dia=24&mes=4&ano=2025
+[2025-04-23T20:51:28.447Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:28.452Z] 📥 GET /api/atividades/por-data-detalhada?dia=25&mes=4&ano=2025
+[2025-04-23T20:51:28.452Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:28.457Z] 📥 GET /api/atividades/por-data-detalhada?dia=26&mes=4&ano=2025
+[2025-04-23T20:51:28.457Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:51:31.470Z] 📥 GET /api/atividades/por-data-detalhada?dia=21&mes=4&ano=2025
+[2025-04-23T20:51:31.470Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:31.487Z] 📥 GET /api/atividades/por-data-detalhada?dia=22&mes=4&ano=2025
+[2025-04-23T20:51:31.488Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:31.499Z] 📥 GET /api/atividades/por-data-detalhada?dia=23&mes=4&ano=2025
+[2025-04-23T20:51:31.499Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:31.509Z] 📥 GET /api/atividades/por-data-detalhada?dia=24&mes=4&ano=2025
+[2025-04-23T20:51:31.509Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:31.517Z] 📥 GET /api/atividades/por-data-detalhada?dia=25&mes=4&ano=2025
+[2025-04-23T20:51:31.517Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:31.522Z] 📥 GET /api/atividades/por-data-detalhada?dia=26&mes=4&ano=2025
+[2025-04-23T20:51:31.522Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.012Z] 📥 GET /api/atividades/por-data-detalhada?dia=21&mes=4&ano=2025
+[2025-04-23T20:51:32.012Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.030Z] 📥 GET /api/atividades/por-data-detalhada?dia=22&mes=4&ano=2025
+[2025-04-23T20:51:32.031Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.037Z] 📥 GET /api/atividades/por-data-detalhada?dia=23&mes=4&ano=2025
+[2025-04-23T20:51:32.037Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.044Z] 📥 GET /api/atividades/por-data-detalhada?dia=24&mes=4&ano=2025
+[2025-04-23T20:51:32.044Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.051Z] 📥 GET /api/atividades/por-data-detalhada?dia=25&mes=4&ano=2025
+[2025-04-23T20:51:32.052Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:51:32.057Z] 📥 GET /api/atividades/por-data-detalhada?dia=26&mes=4&ano=2025
+[2025-04-23T20:51:32.057Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1a-s3B6blipWxCo2IriQlJeaz0uh7I\""}
+[2025-04-23T20:52:05.121Z] 📥 GET /api/atividades/por-data-detalhada
+[2025-04-23T20:52:05.121Z] Headers: {"host":"localhost:5500","user-agent":"insomnia/11.0.2","accept":"*/*"}
+[2025-04-23T20:52:22.173Z] 📥 GET /api/atividades?dia=21&mes=4&ano=2025
+[2025-04-23T20:52:22.173Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:52:22.203Z] 📥 GET /api/atividades?dia=22&mes=4&ano=2025
+[2025-04-23T20:52:22.203Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:52:22.239Z] 📥 GET /api/atividades?dia=23&mes=4&ano=2025
+[2025-04-23T20:52:22.239Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:52:22.278Z] 📥 GET /api/atividades?dia=24&mes=4&ano=2025
+[2025-04-23T20:52:22.279Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:52:22.316Z] 📥 GET /api/atividades?dia=25&mes=4&ano=2025
+[2025-04-23T20:52:22.316Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:52:22.355Z] 📥 GET /api/atividades?dia=26&mes=4&ano=2025
+[2025-04-23T20:52:22.356Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:58:26.781Z] 📥 GET /api/atividades?dia=21&mes=4&ano=2025
+[2025-04-23T20:58:26.781Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}
+[2025-04-23T20:58:26.806Z] 📥 GET /favicon.ico
+[2025-04-23T20:58:26.807Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","sec-fetch-site":"same-origin","sec-fetch-mode":"no-cors","sec-fetch-dest":"image","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined"}
+[2025-04-23T20:58:26.812Z] 📥 GET /api/atividades?dia=22&mes=4&ano=2025
+[2025-04-23T20:58:26.813Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}
+[2025-04-23T20:58:26.844Z] 📥 GET /api/atividades?dia=23&mes=4&ano=2025
+[2025-04-23T20:58:26.844Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}
+[2025-04-23T20:58:26.876Z] 📥 GET /api/atividades?dia=24&mes=4&ano=2025
+[2025-04-23T20:58:26.877Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}
+[2025-04-23T20:58:26.917Z] 📥 GET /api/atividades?dia=25&mes=4&ano=2025
+[2025-04-23T20:58:26.917Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}
+[2025-04-23T20:58:26.961Z] 📥 GET /api/atividades?dia=26&mes=4&ano=2025
+[2025-04-23T20:58:26.962Z] Headers: {"host":"localhost:5500","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0 (Edition std-2)","sec-ch-ua":"\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Opera GX\";v=\"117\"","sec-ch-ua-mobile":"?0","accept":"*/*","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:5500/visualizar-horarios.html","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7","cookie":"SLG_G_WPT_TO=pt; SLG_GWPT_Show_Hide_tmp=undefined; SLG_wptGlobTipTmp=undefined","if-none-match":"W/\"1dfd4-rCDsLTd8Pu3tQfd8BueEcGtmnAQ\""}

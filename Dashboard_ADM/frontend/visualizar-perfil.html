@@ -5,106 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lista de Colaboradores</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .cards-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
     .card-colaborador {
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       border-radius: 10px;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
-      width: 220px;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
+      width: 200px;
+      margin: 10px;
+      cursor: pointer;
+      display: inline-block;
     }
-    .card-colaborador:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
+
     .card-img {
       width: 100px;
-      height: 100px;
       border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid #4CAF50;
     }
+
     .zap-btn {
       display: inline-block;
-      margin-top: 15px;
-      padding: 8px 15px;
+      margin-top: 10px;
+      padding: 5px 10px;
       background-color: #25d366;
       color: white;
       border-radius: 5px;
       text-decoration: none;
-      transition: background-color 0.3s;
     }
-    .zap-btn:hover {
-      background-color: #128C7E;
-    }
-    .card-colaborador h3 {
-      margin: 10px 0;
-      color: #333;
-    }
-    .error-message {
-      text-align: center;
-      color: #dc3545;
-      font-size: 16px;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .edit-btn {
-      margin-top: 10px;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .edit-btn:hover {
-      background-color: #0056b3;
-    }
-    .retry-btn {
-      padding: 8px 16px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .retry-btn:hover {
-      background-color: #1e7e34;
-    }
-    .empty-message {
-      text-align: center;
-      color: #6c757d;
-      font-size: 18px;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: 0 auto;
+
+    .cards-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
   </style>
 </head>
@@ -113,46 +43,46 @@
   <h1>Colaboradores Cadastrados</h1>
 
   <div id="colaboradores-container" class="cards-wrapper">
-    <!-- Os cards serão inseridos aqui via JavaScript -->
+    <!-- Cards gerados via JS -->
   </div>
 
   <script>
     fetch("http://localhost:5500/api/colaboradores")
-    .then(res => res.json())
-    .then(colaboradores => {
-      const container = document.getElementById("colaboradores-container");
-  
-      if (!Array.isArray(colaboradores) || colaboradores.length === 0) {
-        container.innerHTML = `
-          <p style="text-align: center; width: 100%;">
-            Nenhum colaborador encontrado.
+      .then(res => res.json())
+      .then(colaboradores => {
+        const container = document.getElementById("colaboradores-container");
+
+        if (colaboradores.length === 0) {
+          container.innerHTML = `
+            <p style="text-align: center; width: 100%;">
+              Nenhum colaborador encontrado.
+            </p>
+          `;
+          return;
+        }
+
+        container.innerHTML = colaboradores.map(c => {
+          const avatar = c.foto || 'https://i.pravatar.cc/100';
+          const numeroLimpo = (c.numero_contato || '').replace(/\D/g, '');
+          const whatsapp = numeroLimpo ? `https://wa.me/55${numeroLimpo}` : '#';
+
+          return `
+            <div class="card-colaborador" onclick="window.location.href='edicao_colaborador.html?id=${c.id}'">
+              <img src="${avatar}" alt="Foto de ${c.primeiro_nome}" class="card-img" />
+              <h3>${c.primeiro_nome} ${c.ultimo_nome}</h3>
+              <a href="${whatsapp}" target="_blank" class="zap-btn" onclick="event.stopPropagation()">WhatsApp</a>
+            </div>
+          `;
+        }).join('');
+      })
+      .catch(error => {
+        console.error("Erro ao buscar colaboradores:", error);
+        document.getElementById("colaboradores-container").innerHTML = `
+          <p style="text-align: center; width: 100%; color: red;">
+            Erro ao carregar colaboradores.
           </p>
         `;
-        return;
-      }
-  
-      container.innerHTML = colaboradores.map(c => {
-        const avatar = c.foto || 'https://i.pravatar.cc/100';
-        const numeroLimpo = (c.numero_contato || '').replace(/\D/g, '');
-        const whatsapp = numeroLimpo ? `https://wa.me/55${numeroLimpo}` : '#';
-  
-        return `
-          <div class="card-colaborador" onclick="window.location.href='edicao_colaborador.html?id=${c.id}'">
-            <img src="${avatar}" alt="Foto de ${c.primeiro_nome}" class="card-img" />
-            <h3>${c.primeiro_nome} ${c.ultimo_nome}</h3>
-            <a href="${whatsapp}" target="_blank" class="zap-btn" onclick="event.stopPropagation()">WhatsApp</a>
-          </div>
-        `;
-      }).join('');
-    })
-    .catch(error => {
-      console.error("Erro ao buscar colaboradores:", error);
-      document.getElementById("colaboradores-container").innerHTML = `
-        <p style="text-align: center; width: 100%; color: red;">
-          Erro ao carregar colaboradores.
-        </p>
-      `;
-    });
+      });
   </script>
 
 </body>
