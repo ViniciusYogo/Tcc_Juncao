@@ -222,187 +222,57 @@ app.delete('/api/colaboradores/:id', async (req, res) => {
   }
 });
 
-// Rota consolidada para atividades - substitui as duas versões
+
+// Rota GET para buscar todas as atividades (coloque isso ANTES das rotas genéricas de erro)
 app.get('/api/atividades', async (req, res) => {
   try {
-    const { dia, mes, ano } = req.query;
+    const { start, end } = req.query;
     const conn = await dbInstituicao.getConnection();
     
-    let query = `
-      SELECT 
-        id,
-        descricao,
-        nomePessoalAtribuido as responsavel,
-        diasAgendados,
-        horaInicioAgendada as horario_inicio,
-        fimAgendado as horario_fim,
-        datasAtividadeIndividual as data,
-        descricaoLocalizacaoAtribuida as localizacao,
-        confirmada as status
-    `;
-
-    // Se for consulta detalhada por data, adiciona campos específicos
-    if (dia && mes && ano) {
-      query = `
+    try {
+      let query = `
         SELECT 
           id,
           descricao as atividade,
-          DATE_FORMAT(horaInicioAgendada, '%H:%i') as hora,
+          DATE_FORMAT(datasAtividadeIndividual, '%Y-%m-%d') as data,
+          DATE_FORMAT(horaInicioAgendada, '%H:%i') as horaInicio,
+          DATE_FORMAT(fimAgendado, '%H:%i') as horaFim,
           nomePessoalAtribuido as instrutor,
-          descricaoLocalizacaoAtribuida as localizacao,
-          confirmada as status,
-          10 as vagas
+          descricaoLocalizacaoAtribuida as local,
+          confirmada as status
+        FROM atividades
       `;
-    }
-
-    query += ` FROM atividades `;
-
-    // Filtro por data se existir nos parâmetros
-    if (dia && mes && ano) {
-      const dataFormatada = `${ano}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
-      query += ` WHERE DATE(datasAtividadeIndividual) = ? `;
-      var params = [dataFormatada];
-    }
-
-    query += ` ORDER BY datasAtividadeIndividual ASC`;
-    
-    const [atividades] = await conn.query(query, params || []);
-    conn.release();
-
-    if (!atividades || atividades.length === 0) {
-      return res.status(404).json({ 
-        success: false,
-        message: 'Nenhuma atividade encontrada' 
-      });
-    }
-
-    res.json({
-      success: true,
-      data: atividades
-    });
-
-  } catch (error) {
-    log(`Erro ao buscar atividades: ${error.stack}`);
-    res.status(500).json({ 
-      success: false,
-      error: 'Erro ao buscar atividades',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-});
-
-
-
-
-
-
-app.get('/api/atividades/por-data', async (req, res) => {
-  try {
-    const { data } = req.query;
-    
-    if (!data) {
-      return res.status(400).json({ 
-        success: false,
-        error: 'Parâmetro "data" é obrigatório',
-        message: 'Por favor, forneça uma data para consulta'
-      });
-    }
-
-    const conn = await dbInstituicao.getConnection();
-    const [atividades] = await conn.query(
-      `SELECT * FROM atividades 
-       WHERE DATE(datasAtividadeIndividual) = ? 
-       ORDER BY horaInicioAgendada ASC`,
-      [data]
-    );
-    conn.release();
-
-    res.json({
-      success: true,
-      data: atividades
-    });
-  } catch (error) {
-    log(`Erro ao buscar atividades por data: ${error.stack}`);
-    res.status(500).json({ 
-      success: false,
-      error: 'Erro ao buscar atividades por data',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-});
-
-app.post('/api/atividades', async (req, res) => {
-  log('Dados recebidos: ' + JSON.stringify(req.body, null, 2));
-  
-  try {
-    if (!Array.isArray(req.body)) {
-      return res.status(400).json({ 
-        success: false,
-        error: 'Formato inválido',
-        message: 'O corpo da requisição deve ser um array' 
-      });
-    }
-
-    const conn = await dbInstituicao.getConnection();
-    let inserted = 0, errors = 0;
-    const errorsList = [];
-    
-    for (const [index, atividade] of req.body.entries()) {
-      try {
-        // Verifica se já existe uma atividade igual
-        const [existing] = await conn.query(
-          `SELECT id FROM atividades WHERE 
-           descricao = ? AND nomePessoalAtribuido = ? AND datasAtividadeIndividual = ?
-           LIMIT 1`,
-          [
-            atividade.descricao || '', 
-            atividade.nomePessoalAtribuido || '', 
-            atividade.datasAtividadeIndividual || ''
-          ]
-        );
-
-        if (existing.length === 0) {
-          await conn.query(`INSERT INTO atividades SET ?`, {
-            descricao: atividade.descricao || '',
-            nomePessoalAtribuido: atividade.nomePessoalAtribuido || '',
-            diasAgendados: atividade.diasAgendados || '',
-            horaInicioAgendada: atividade.horaInicioAgendada || '00:00:00',
-            fimAgendado: atividade.fimAgendado || '00:00:00',
-            datasAtividadeIndividual: atividade.datasAtividadeIndividual || '',
-            descricaoLocalizacaoAtribuida: atividade.descricaoLocalizacaoAtribuida || '',
-            confirmada: atividade.confirmada || false
-          });
-          inserted++;
-        } else {
-          errors++;
-          errorsList.push(`Linha ${index + 1}: Registro duplicado`);
-        }
-      } catch (error) {
-        errors++;
-        errorsList.push(`Linha ${index + 1}: ${error.message}`);
-        log(`Erro na linha ${index + 1}: ${error.message}`);
+      
+      let params = [];
+      
+      if (start && end) {
+        query += ' WHERE datasAtividadeIndividual BETWEEN ? AND ?';
+        params.push(start, end);
       }
+      
+      query += ' ORDER BY datasAtividadeIndividual, horaInicioAgendada';
+      
+      const [atividades] = await conn.query(query, params);
+      
+      console.log(`Retornando ${atividades.length} atividades`); // Log para depuração
+      
+      res.json({
+        success: true,
+        data: atividades
+      });
+    } finally {
+      conn.release();
     }
-    
-    conn.release();
-    
-    res.json({ 
-      success: true, 
-      inserted, 
-      errors,
-      errorsList,
-      message: `Processamento completo. Inseridos: ${inserted}, Erros: ${errors}`
-    });
   } catch (error) {
-    log(`Erro geral ao processar a requisição: ${error.stack}`);
-    res.status(500).json({ 
+    console.error('Erro completo:', error);
+    res.status(500).json({
       success: false,
       error: 'Erro interno no servidor',
-      message: 'Ocorreu um erro ao processar as atividades',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: error.message
     });
   }
 });
+
 
 // Tratamento para rotas não encontradas
 app.use((req, res) => {
@@ -439,3 +309,115 @@ process.on('unhandledRejection', (reason, promise) => {
   log(`⚠️ PROMISE REJEITADA: ${reason}`);
   log(`Promise: ${promise}`);
 });
+
+
+// Rota PUT para atualizar atividades (adicione junto com as outras rotas)
+app.put('/api/atividades/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { 
+      descricao, 
+      nomePessoalAtribuido, 
+      horaInicioAgendada, 
+      descricaoLocalizacaoAtribuida,
+    } = req.body;
+
+    const conn = await dbInstituicao.getConnection();
+    
+    try {
+      const [result] = await conn.query(
+        `UPDATE atividades SET
+          descricao = ?,
+          nomePessoalAtribuido = ?,
+          horaInicioAgendada = ?,
+          descricaoLocalizacaoAtribuida = ?
+        WHERE id = ?`,
+        [
+          descricao,
+          nomePessoalAtribuido,
+          horaInicioAgendada,
+          descricaoLocalizacaoAtribuida,
+          id
+        ]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Atividade não encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Atividade atualizada com sucesso'
+      });
+    } finally {
+      conn.release();
+    }
+  } catch (error) {
+    log(`Erro ao atualizar atividade: ${error.stack}`);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor'
+    });
+  }
+});
+
+
+// Rota GET para buscar uma atividade específica por ID
+app.get('/api/atividades/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        error: 'ID inválido',
+        message: 'Por favor, forneça um ID válido'
+      });
+    }
+
+    const conn = await dbInstituicao.getConnection();
+    
+    try {
+      const [atividades] = await conn.query(
+        `SELECT 
+          id,
+          descricao as atividade,
+          DATE_FORMAT(horaInicioAgendada, '%H:%i') as hora,
+          nomePessoalAtribuido as instrutor,
+          descricaoLocalizacaoAtribuida as local,
+          confirmada as status,
+
+          datasAtividadeIndividual as data
+        FROM atividades
+        WHERE id = ?`,
+        [id]
+      );
+
+      if (atividades.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Não encontrado',
+          message: 'Atividade não encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: atividades[0]
+      });
+    } finally {
+      conn.release();
+    }
+  } catch (error) {
+    log(`Erro ao buscar atividade: ${error.stack}`);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor',
+      message: 'Ocorreu um erro ao buscar a atividade'
+    });
+  }
+});
+

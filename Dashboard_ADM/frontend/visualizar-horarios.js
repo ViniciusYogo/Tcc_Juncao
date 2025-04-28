@@ -1,206 +1,181 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Verifica se estamos na página correta antes de executar
-  if (!document.querySelector('.calendario')) {
-    console.log('Elemento .calendario não encontrado - saindo do script');
-    return;
-  }
+  // Inicializa o calendário
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    locale: 'pt-br',
+    initialView: 'timeGridWeek',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    buttonText: {
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Dia',
+      list: 'Lista'
+    },
+    eventDisplay: 'block', // Mostra todos os eventos como blocos
+    eventOrder: 'start', // Ordena por horário de início
+    eventOverlap: false, // Evita sobreposição
+    slotEventOverlap: false, // Mostra todos os eventos mesmo que sobrepostos
+    allDaySlot: false,
+    slotMinTime: '07:00:00',
+    slotMaxTime: '22:00:00',
+    slotDuration: '00:30:00',
+    slotLabelInterval: '01:00:00',
+    nowIndicator: true,
+    navLinks: true,
+    editable: true,
+    dayMaxEvents: true,
+    events: async function (fetchInfo, successCallback, failureCallback) {
+      try {
+        const start = fetchInfo.start.toISOString().split('T')[0];
+        const end = fetchInfo.end.toISOString().split('T')[0];
 
-  // Elementos do calendário
-  const mesAnoElemento = document.getElementById('mes-ano');
-  const semanaAnteriorBtn = document.getElementById('semana-anterior');
-  const hojeBtn = document.getElementById('hoje');
-  const proximaSemanaBtn = document.getElementById('proxima-semana');
+        console.log(`Buscando aulas de ${start} até ${end}`);
 
-  // Verifica se todos os elementos necessários existem
-  if (!mesAnoElemento || !semanaAnteriorBtn || !hojeBtn || !proximaSemanaBtn) {
-    console.error('Elementos essenciais do calendário não encontrados');
-    return;
-  }
+        const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
 
-  // Variáveis de estado
-  let dataAtual = new Date();
-  let dataInicioSemana = getInicioSemana(dataAtual);
+        if (!response.ok) {
+          throw new Error(`Erro HTTP! status: ${response.status}`);
+        }
 
-  // Nomes dos meses para exibição
-  const meses = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ];
+        const data = await response.json();
+        console.log('Total de aulas recebidas:', data.data.length); // Verifique a quantidade
 
-  /**
-   * Obtém a data de início da semana (segunda-feira)
-   * @param {Date} date - Data de referência
-   * @returns {Date} Data do início da semana
-   */
-  function getInicioSemana(date) {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Ajuste para segunda-feira
-    return new Date(d.setDate(diff));
-  }
+        if (data.success) {
+          console.log('Dados recebidos:', data.data); // Antes do map
+          const events = data.data.map(aula => {
+            // Verifique se os campos estão corretos
+            if (!aula.data || !aula.horaInicio) {
+              console.warn('Aula com dados incompletos:', aula);
+              return null;
+            }
 
-  /**
-   * Renderiza a semana começando na data especificada
-   * @param {Date} dataInicio - Data de início da semana
-   */
-  async function renderizarSemana(dataInicio) {
-    try {
-      // Atualiza o cabeçalho com mês/ano
-      const mes = dataInicio.getMonth();
-      const ano = dataInicio.getFullYear();
-      mesAnoElemento.textContent = `${meses[mes]} ${ano}`;
+            const startDateTime = `${aula.data}T${aula.horaInicio}:00`; // Adicione segundos
+            const endDateTime = aula.horaFim ? `${aula.data}T${aula.horaFim}:00` : null;
 
-      // Para cada dia da semana (segunda a sábado)
-      for (let i = 0; i < 6; i++) {
-        const dataDia = new Date(dataInicio);
-        dataDia.setDate(dataInicio.getDate() + i);
+            return {
+              id: aula.id,
+              title: `${aula.atividade} - ${aula.instrutor}`,
+              start: startDateTime,
+              end: endDateTime,
+              extendedProps: {
+                descricao: aula.atividade,
+                instrutor: aula.instrutor,
+                local: aula.local,
+                status: aula.status
+              },
+              backgroundColor: aula.status ? '#28a745' : '#dc3545',
+              borderColor: aula.status ? '#218838' : '#c82333',
+              textColor: '#ffffff'
+            };
+          }).filter(event => event !== null); // Remove eventos inválidos
 
-        const diaElemento = document.querySelector(`.dias .dia:nth-child(${i + 1})`);
-        if (!diaElemento) continue;
-
-        // Atualiza a data no cabeçalho do dia
-        diaElemento.querySelector('.numero-data').textContent = dataDia.getDate();
-        diaElemento.querySelector('.mes-data').textContent = meses[dataDia.getMonth()].substring(0, 3);
-
-        // Limpa eventos anteriores
-        const eventosElemento = diaElemento.querySelector('.eventos');
-        eventosElemento.innerHTML = '';
-
-        // Busca os horários para o dia
-        const horarios = await buscarHorarios(dataDia.getDate(), dataDia.getMonth() + 1, dataDia.getFullYear());
-
-        // Adiciona os eventos ao dia
-        adicionarEventosAoDia(eventosElemento, horarios);
+          console.log('Eventos processados:', events.length); // Verifique quantos eventos foram criados
+          successCallback(events);
+        } else {
+          failureCallback(data.message || 'Erro ao carregar aulas');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar aulas:', error);
+        failureCallback(error.message);
       }
+    },
+    eventClick: function (info) {
+      const evento = info.event;
+      const startDate = evento.start;
 
-    } catch (error) {
-      console.error('Erro ao renderizar semana:', error);
+      abrirModalEdicao({
+        id: evento.id,
+        atividade: evento.extendedProps.descricao,
+        instrutor: evento.extendedProps.instrutor,
+        data: formatDate(startDate),
+        horaInicio: formatTime(startDate),
+        horaFim: evento.end ? formatTime(evento.end) : '',
+        local: evento.extendedProps.local || '',
+        status: evento.extendedProps.status || false
+      });
     }
+  });
+
+  calendar.render();
+
+  // Funções auxiliares para formatar data e hora
+  function formatDate(date) {
+    return date.toISOString().split('T')[0];
   }
 
-  /**
-   * Adiciona eventos a um dia do calendário
-   * @param {HTMLElement} container - Elemento onde os eventos serão inseridos
-   * @param {Array} eventos - Array de eventos
-   */
-  function adicionarEventosAoDia(container, eventos) {
-    if (!eventos || eventos.length === 0) {
-      const semEventos = document.createElement('div');
-      semEventos.className = 'sem-eventos';
-      semEventos.textContent = 'Sem atividades';
-      container.appendChild(semEventos);
-      return;
-    }
-
-    eventos.forEach(evento => {
-      const eventoElement = document.createElement('div');
-      eventoElement.className = 'evento';
-      eventoElement.innerHTML = `
-        <div class="evento-hora">${evento.hora}</div>
-        <div class="evento-titulo">${evento.atividade}</div>
-        <div class="evento-vagas">${evento.vagas} vagas</div>
-      `;
-
-      // Adiciona clique para edição
-      eventoElement.addEventListener('click', () => abrirModalEdicao(evento));
-
-      container.appendChild(eventoElement);
-    });
+  function formatTime(date) {
+    return date.toTimeString().substring(0, 5);
   }
 
-  /**
-   * Abre o modal de edição com os dados do evento
-   * @param {Object} evento - Dados do evento
-   */
-  function abrirModalEdicao(evento) {
+  // Função para abrir modal de edição
+  function abrirModalEdicao(aula) {
     const modal = document.getElementById('modalEdicao');
-    if (!modal) return;
 
-    // Preenche o formulário com os dados do evento
-    document.getElementById('editDescricao').value = evento.atividade;
-    document.getElementById('editProfessor').value = evento.instrutor || '';
-    document.getElementById('editHoraInicio').value = evento.hora + ':00';
-    // Adicione outros campos conforme necessário
+    document.getElementById('editDescricao').value = aula.atividade;
+    document.getElementById('editProfessor').value = aula.instrutor;
+    document.getElementById('editData').value = aula.data;
+    document.getElementById('editHoraInicio').value = aula.horaInicio;
+    document.getElementById('editHoraFim').value = aula.horaFim;
+    document.getElementById('editLocal').value = aula.local;
+    document.getElementById('editStatus').checked = aula.status;
 
+    modal.dataset.eventId = aula.id;
     modal.style.display = 'block';
   }
 
-  async function buscarHorarios(dia, mes, ano) {
-    try {
-      // Faz a chamada para a API real
-      const response = await fetch(`/api/atividades?dia=${dia}&mes=${mes}&ano=${ano}`);
-      // Verifica se a resposta foi bem sucedida
-      if (!response.ok) {
-        throw new Error(`Erro HTTP! status: ${response.status}`);
-      }
+  // Fechar modal
+  document.querySelector('.close').addEventListener('click', function () {
+    document.getElementById('modalEdicao').style.display = 'none';
+  });
 
-      // Verifica se o conteúdo é JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new TypeError('A resposta não é JSON');
-      }
+  document.querySelector('.botao-cancelar').addEventListener('click', function () {
+    document.getElementById('modalEdicao').style.display = 'none';
+  });
 
-      // Extrai os dados da resposta
-      const data = await response.json();
-
-      // Retorna os horários ou array vazio se não houver dados
-      return data.success ? data.data : [];
-
-    } catch (error) {
-      console.error('Erro na requisição de atividades:', error);
-      // Retorna array vazio em caso de erro para não quebrar a interface
-      return [];
+  window.addEventListener('click', function (event) {
+    if (event.target === document.getElementById('modalEdicao')) {
+      document.getElementById('modalEdicao').style.display = 'none';
     }
-  }
+  });
 
-  /**
-   * Configura os eventos para fechar o modal
-   */
-  function configurarFechamentoModal() {
-    const modal = document.getElementById('modalEdicao');
-    const closeBtn = document.querySelector('.botao-cancelar');
+  // Enviar formulário de edição
+  document.getElementById('formEdicao').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    if (!modal || !closeBtn) return;
+    const eventId = document.getElementById('modalEdicao').dataset.eventId;
+    const formData = {
+      descricao: document.getElementById('editDescricao').value,
+      nomePessoalAtribuido: document.getElementById('editProfessor').value,
+      datasAtividadeIndividual: document.getElementById('editData').value,
+      horaInicioAgendada: document.getElementById('editHoraInicio').value,
+      fimAgendado: document.getElementById('editHoraFim').value,
+      descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value,
+      confirmada: document.getElementById('editStatus').checked
+    };
 
-    // Fechar ao clicar no botão Cancelar
-    closeBtn.addEventListener('click', function () {
-      modal.style.display = 'none';
-    });
+    try {
+      const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
 
-    // Fechar ao clicar fora do modal
-    window.addEventListener('click', function (event) {
-      if (event.target === modal) {
-        modal.style.display = 'none';
+      if (response.ok) {
+        calendar.refetchEvents();
+        document.getElementById('modalEdicao').style.display = 'none';
+      } else {
+        throw new Error('Erro ao atualizar aula');
       }
-    });
-
-    // Fechar com a tecla ESC
-    window.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && modal.style.display === 'block') {
-        modal.style.display = 'none';
-      }
-    });
-  }
-
-  // Event listeners para navegação entre semanas
-  semanaAnteriorBtn.addEventListener('click', function () {
-    dataInicioSemana.setDate(dataInicioSemana.getDate() - 7);
-    renderizarSemana(dataInicioSemana);
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao atualizar aula: ' + error.message);
+    }
   });
-
-  hojeBtn.addEventListener('click', function () {
-    dataInicioSemana = getInicioSemana(new Date());
-    renderizarSemana(dataInicioSemana);
-  });
-
-  proximaSemanaBtn.addEventListener('click', function () {
-    dataInicioSemana.setDate(dataInicioSemana.getDate() + 7);
-    renderizarSemana(dataInicioSemana);
-  });
-
-  // Configura o fechamento do modal
-  configurarFechamentoModal();
-
-  // Renderiza a semana inicial
-  renderizarSemana(dataInicioSemana);
 });
