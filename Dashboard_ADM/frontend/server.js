@@ -51,7 +51,7 @@ let dbInstituicao;
     dbInstituicao = await mysql.createPool({
       host: 'localhost',
       user: 'root',
-      password: '102030',
+      password: 'cimatec',
       database: 'INSTITUICAO',
       waitForConnections: true,
       connectionLimit: 10,
