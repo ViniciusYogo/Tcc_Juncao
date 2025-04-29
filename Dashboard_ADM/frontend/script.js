@@ -100,9 +100,12 @@ async function initCalendar() {
 
 async function loadPage(page) {
   try {
-    // Se for a página de horários, redireciona para a página dedicada
-    if (page.includes('visualizar-horarios.html')) {
-      window.location.href = 'visualizar-horarios.html';
+    // Lista de páginas que devem ser redirecionadas (carregamento completo)
+    const fullLoadPages = ['visualizar-horarios.html', 'inserirPlanilha.html'];
+    
+    // Verifica se a página solicitada está na lista de redirecionamento
+    if (fullLoadPages.some(fullPage => page.includes(fullPage))) {
+      window.location.href = page;
       return;
     }
 
@@ -130,7 +133,6 @@ async function loadPage(page) {
       
       // Verifica se é um script inline
       if (!oldScript.src && oldScript.textContent) {
-        // Usa um bloco try-catch para evitar erros de sintaxe
         newScript.textContent = `try { ${oldScript.textContent} } catch(e) { console.error('Error in inline script:', e); }`;
       }
       
@@ -157,11 +159,48 @@ async function loadPage(page) {
   }
 }
 
+
+loadPage('dashboard.html');
+
+function initFormColaborador() {
+  const form = document.getElementById("form-colaborador");
+  if (form) {
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const formData = new FormData(form);
+      try {
+        const response = await fetch("/api/colaboradores/criar", {
+          method: "POST",
+          body: formData
+        });
+        const result = await response.json();
+        if (response.ok) {
+          alert("Colaborador cadastrado com sucesso!");
+          form.reset();
+        } else {
+          throw new Error(result.error || "Erro ao cadastrar colaborador.");
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro ao cadastrar colaborador. Verifique o console.");
+      }
+    });
+  }
+
+  const inputFile = document.getElementById("profile-picture");
+  const fileNameDisplay = document.getElementById("file-name");
+  if (inputFile && fileNameDisplay) {
+    inputFile.addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      fileNameDisplay.textContent = file ? file.name : 'Nenhum arquivo escolhido';
+    });
+  }
+}
+
 // Gestão de Colaboradores
 async function carregarColaboradores() {
   try {
-    const response = await fetch(`/api/colaboradores?_=${Date.now()}`);
-    
+    const response = await fetch(`/api/colaboradores?_=${Date.now()}`);    
     if (!response.ok) {
       throw new Error(`Erro HTTP! status: ${response.status}`);
     }
