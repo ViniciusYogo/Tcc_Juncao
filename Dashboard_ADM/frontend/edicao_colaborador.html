@@ -1,13 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editar Colaborador</title>
   <link rel="stylesheet" href="editar-colaborador.css">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/your-code-here.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
   <div class="app-container">
     <header class="app-header">
@@ -22,17 +23,17 @@
         <div class="profile-header">
           <div class="avatar-upload">
             <div class="avatar-preview" id="avatarPreview">
-              <img id="previewImage" src="https://i.pravatar.cc/150" alt="Foto"/>
+              <img id="previewImage" src="https://i.pravatar.cc/150" alt="Foto" />
             </div>
             <label for="fotoInput" class="btn-upload">
               <i class="fas fa-camera"></i> Alterar foto
             </label>
-            <input type="file" id="fotoInput" accept="image/*" hidden/>
+            <input type="file" id="fotoInput" accept="image/*" hidden />
           </div>
           <h2 id="profileName">Carregando...</h2>
           <p id="profileEmail">carregando...</p>
         </div>
-        
+
         <div class="profile-info">
           <div class="info-item">
             <i class="fas fa-id-card"></i>
@@ -109,7 +110,7 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const urlParams = new URLSearchParams(window.location.search);
       const colaboradorId = urlParams.get('id');
 
@@ -125,17 +126,17 @@
       const fotoInput = document.getElementById('fotoInput');
       const previewImage = document.getElementById('previewImage');
 
-      togglePassword.addEventListener('click', function() {
+      togglePassword.addEventListener('click', function () {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
         this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
       });
 
-      fotoInput.addEventListener('change', function() {
+      fotoInput.addEventListener('change', function () {
         const file = this.files[0];
         if (file) {
           const reader = new FileReader();
-          reader.onload = function(e) {
+          reader.onload = function (e) {
             previewImage.src = e.target.result;
           }
           reader.readAsDataURL(file);
@@ -172,66 +173,66 @@
         }
       }
 
-      form.addEventListener('submit', async function(e) {
-  e.preventDefault();
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-  const btnSubmit = form.querySelector('button[type="submit"]');
-  const btnOriginalText = btnSubmit.innerHTML;
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        const btnOriginalText = btnSubmit.innerHTML;
 
-  try {
-    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
-    btnSubmit.disabled = true;
+        try {
+          btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+          btnSubmit.disabled = true;
 
-    const formData = new FormData(form); // Usando o formulário diretamente
-    
-    // Se uma nova foto foi selecionada, adiciona ao FormData
-    if (fotoInput.files[0]) {
-      formData.append('foto', fotoInput.files[0]);
-    }
+          const formData = new FormData(form); // Usando o formulário diretamente
 
-    const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
-      method: 'PUT',
-      body: formData
-      // Não definir Content-Type manualmente - o browser fará isso automaticamente
-      // com o boundary correto para multipart/form-data
-    });
+          // Se uma nova foto foi selecionada, adiciona ao FormData
+          if (fotoInput.files[0]) {
+            formData.append('foto', fotoInput.files[0]);
+          }
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Erro ao salvar alterações');
-    }
+          const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
+            method: 'PUT',
+            body: formData
+            // Não definir Content-Type manualmente - o browser fará isso automaticamente
+            // com o boundary correto para multipart/form-data
+          });
 
-    const data = await response.json();
-    alert('Alterações salvas com sucesso!');
-    
-    // Atualiza a visualização da foto se foi alterada
-    if (data.fotoUrl) {
-      previewImage.src = data.fotoUrl;
-    }
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Erro ao salvar alterações');
+          }
 
-  } catch (error) {
-    console.error('Erro:', error);
-    alert(error.message || 'Erro ao salvar alterações');
-  } finally {
-    btnSubmit.innerHTML = btnOriginalText;
-    btnSubmit.disabled = false;
-  }
-});
+          const data = await response.json();
+          alert('Alterações salvas com sucesso!');
 
-      document.getElementById('btn-excluir').addEventListener('click', function() {
+          // Atualiza a visualização da foto se foi alterada
+          if (data.fotoUrl) {
+            previewImage.src = data.fotoUrl;
+          }
+
+        } catch (error) {
+          console.error('Erro:', error);
+          alert(error.message || 'Erro ao salvar alterações');
+        } finally {
+          btnSubmit.innerHTML = btnOriginalText;
+          btnSubmit.disabled = false;
+        }
+      });
+
+      document.getElementById('btn-excluir').addEventListener('click', function () {
         if (confirm('Tem certeza que deseja excluir este colaborador?')) {
           fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
             method: 'DELETE'
           })
-          .then(response => {
-            if (!response.ok) throw new Error('Erro ao excluir');
-            alert('Colaborador excluído com sucesso!');
-            window.location.href = 'index.html';
-          })
-          .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao excluir colaborador');
-          });
+            .then(response => {
+              if (!response.ok) throw new Error('Erro ao excluir');
+              alert('Colaborador excluído com sucesso!');
+              window.location.href = 'index.html';
+            })
+            .catch(error => {
+              console.error('Erro:', error);
+              alert('Erro ao excluir colaborador');
+            });
         }
       });
 
@@ -239,4 +240,5 @@
     });
   </script>
 </body>
+
 </html>

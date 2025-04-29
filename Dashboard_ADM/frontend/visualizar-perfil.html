@@ -64,7 +64,7 @@
         container.innerHTML = colaboradores.map(c => {
           const avatar = c.foto || 'https://i.pravatar.cc/100';
           const numeroLimpo = (c.numero_contato || '').replace(/\D/g, '');
-          const whatsapp = numeroLimpo ? `https://wa.me/55${numeroLimpo}` : '#';
+          const whatsapp = numeroLimpo ? `https://wa.me/+55${numeroLimpo}` : '#';
 
           return `
             <div class="card-colaborador" onclick="window.location.href='edicao_colaborador.html?id=${c.id}'">

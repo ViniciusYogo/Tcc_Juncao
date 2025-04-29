@@ -439,23 +439,32 @@ app.post('/api/criar-colaborador', upload.single('profile-picture'), async (req,
 
 app.get('/api/colaboradores', async (req, res) => {
   try {
-    console.log('Iniciando consulta ao banco de dados...');
-    const [colaboradores] = await dbInstituicao.query('SELECT * FROM colaboradores');
-    console.log('Colaboradores encontrados:', colaboradores);
+    const [colaboradores] = await dbInstituicao.query(`
+      SELECT 
+        id,
+        primeiro_nome,
+        ultimo_nome,
+        numero_contato,
+        email,
+        nome_usuario,
+        foto
+      FROM colaboradores
+      ORDER BY primeiro_nome
+    `);
 
     res.json(colaboradores.map(c => ({
       ...c,
       foto: c.foto ? `/uploads/${c.foto}` : null
     })));
-  } catch (err) {
-    console.error('Erro na consulta:', err);
+  } catch (error) {
+    log(`Erro ao buscar colaboradores: ${error.stack}`);
     res.status(500).json({
-      error: 'Erro ao buscar colaboradores',
-      details: err.message
+      success: false,
+      error: 'Erro interno no servidor',
+      message: error.message
     });
   }
 });
-
 app.get('/api/colaboradores/:id', async (req, res) => {
   try {
     const [rows] = await dbInstituicao.query('SELECT * FROM colaboradores WHERE id = ?', [req.params.id]);
@@ -534,40 +543,3 @@ process.on('unhandledRejection', (reason, promise) => {
   log(`Promise: ${promise}`);
 });
 
-
-// Rota para listar colaboradores (GET)
-app.get('/api/colaboradores', async (req, res) => {
-  try {
-    const conn = await dbInstituicao.getConnection();
-
-    try {
-      const [colaboradores] = await conn.query(`
-        SELECT 
-          id,
-          primeiro_nome,
-          ultimo_nome,
-          numero_contato,
-          email,
-          nome_usuario,
-          foto_perfil,
-          DATE_FORMAT(created_at, '%d/%m/%Y %H:%i') as data_cadastro
-        FROM colaboradores
-        ORDER BY primeiro_nome
-      `);
-
-      res.json({
-        success: true,
-        data: colaboradores
-      });
-    } finally {
-      conn.release();
-    }
-  } catch (error) {
-    log(`Erro ao buscar colaboradores: ${error.stack}`);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor',
-      message: error.message
-    });
-  }
-});
