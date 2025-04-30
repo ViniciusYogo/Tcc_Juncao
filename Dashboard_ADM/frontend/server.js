@@ -225,7 +225,7 @@ app.delete('/api/colaboradores/:id', async (req, res) => {
 
 // Rota GET para buscar todas as atividades (coloque isso ANTES das rotas genéricas de erro)
 app.get('/api/atividades', async (req, res) => {
-  try {
+  try { 
     const { start, end } = req.query;
     const conn = await dbInstituicao.getConnection();
     

@@ -22,6 +22,10 @@
   "author": "Vinicius <seu-email@dominio.com>",
   "license": "ISC",
   "dependencies": {
+    "@fullcalendar/core": "^6.1.17",
+    "@fullcalendar/daygrid": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.17",
+    "@fullcalendar/timegrid": "^6.1.17",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "fullcalendar": "^6.1.17",

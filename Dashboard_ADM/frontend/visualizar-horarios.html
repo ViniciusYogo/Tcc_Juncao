@@ -5,11 +5,12 @@
   <title>Agenda de Aulas</title>
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* Estilos básicos para o calendário */
     body {
       padding: 20px;
       font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
     }
     
     #calendar {
@@ -23,17 +24,116 @@
     
     .fc-event {
       cursor: pointer;
-      border-radius: 4px;
-      padding: 2px 5px;
+      border-radius: 8px;
+      padding: 8px;
+      margin: 2px 0;
+      border: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     
-    .fc-event-title {
-      white-space: normal;
+    .fc-event-main {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .event-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .event-professor {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .event-time {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #f8f9fa;
+    }
+    
+    .event-description {
+      font-size: 12px;
+      margin-top: 4px;
+      color: #f8f9fa;
+    }
+    
+    .fc-timegrid-slot {
+      height: 60px !important;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 50%;
+      max-width: 600px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
   <div id='calendar'></div>
+  
+  <!-- Modal de Edição -->
+  <div id="modalEdicao" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Editar Aula</h3>
+      <form id="formEdicao">
+        <div class="form-group">
+          <label for="editDescricao">Descrição:</label>
+          <input type="text" id="editDescricao" required>
+        </div>
+        <div class="form-group">
+          <label for="editProfessor">Professor:</label>
+          <input type="text" id="editProfessor" required>
+        </div>
+        <div class="form-group">
+          <label for="editData">Data:</label>
+          <input type="date" id="editData" required>
+        </div>
+        <div class="form-group">
+          <label for="editHoraInicio">Hora Início:</label>
+          <input type="time" id="editHoraInicio" required>
+        </div>
+        <div class="form-group">
+          <label for="editHoraFim">Hora Fim:</label>
+          <input type="time" id="editHoraFim">
+        </div>
+        <div class="form-group">
+          <label for="editLocal">Local:</label>
+          <input type="text" id="editLocal">
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="editStatus"> Confirmada
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary botao-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="visualizar-horarios.js"></script>
 </body>
 </html>
