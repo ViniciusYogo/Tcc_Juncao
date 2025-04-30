@@ -71,10 +71,25 @@ function handleFile() {
             const sheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(sheet);
 
+            // Função para converter data BR para ISO
+            function converterDataBrParaIso(dataBr) {
+                if (!dataBr) return '';
+                // Remove espaços em branco e divide em partes
+                const partes = dataBr.toString().trim().split('/');
+                if (partes.length !== 3) return '';
+                
+                // Garante que dia e mês tenham 2 dígitos
+                const dia = partes[0].padStart(2, '0');
+                const mes = partes[1].padStart(2, '0');
+                const ano = partes[2];
+                
+                return `${ano}-${mes}-${dia}`;
+            }
+
             // Transforma os dados - cria um registro para cada data
             const atividades = jsonData.flatMap(item => {
                 const datas = item['Datas da atividade (Individual)'] 
-                    ? item['Datas da atividade (Individual)'].toString().split(';').map(d => d.trim())
+                    ? item['Datas da atividade (Individual)'].toString().split(';').map(d => converterDataBrParaIso(d.trim()))
                     : [];
                 
                 // Se não houver datas, retorna pelo menos um registro
@@ -96,7 +111,7 @@ function handleFile() {
                     diasAgendados: item['Dias agendados'] || '',
                     horaInicioAgendada: converterHorarioExcel(item['Hora de início agendada']),
                     fimAgendado: converterHorarioExcel(item['Fim Agendado']),
-                    datasAtividadeIndividual: data, // Apenas uma data por registro
+                    datasAtividadeIndividual: data, // Já no formato yyyy-mm-dd
                     descricaoLocalizacaoAtribuida: item['Descrição da localização atribuída'] || ''
                 }));
             });
@@ -120,7 +135,6 @@ function handleFile() {
 
     reader.readAsArrayBuffer(file);
 }
-
 function displayData(atividades) {
     const outputDiv = document.getElementById('output');
     outputDiv.innerHTML = '';

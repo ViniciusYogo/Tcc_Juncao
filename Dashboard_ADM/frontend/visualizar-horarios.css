@@ -146,3 +146,54 @@
       text-align: center;
       padding: 20px;
   }
+
+  /* Estilo para os eventos */
+.fc-event {
+  box-sizing: border-box;
+  margin: 1px;
+  overflow: hidden;
+}
+
+/* Versão normal do evento */
+.fc-event-content {
+  padding: 2px 4px;
+  height: 100%;
+}
+
+.fc-event-title {
+  font-weight: bold;
+  font-size: 0.8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-event-time {
+  font-size: 0.7em;
+}
+
+.fc-event-location {
+  font-size: 0.6em;
+  font-style: italic;
+}
+
+/* Versão compacta para eventos sobrepostos */
+.fc-event-compact {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 0 2px;
+}
+
+.fc-event-title-compact {
+  font-weight: bold;
+  font-size: 0.7em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-event-time-compact {
+  font-size: 0.6em;
+}

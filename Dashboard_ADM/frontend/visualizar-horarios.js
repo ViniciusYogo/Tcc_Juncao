@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
   var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'pt-br',
-    initialView: 'timeGridWeek', // Visualização semanal como padrão
+    initialView: 'timeGridWeek',
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay' // Botões para alternar entre visualizações
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     buttonText: {
       today: 'Hoje',
@@ -25,16 +25,20 @@ document.addEventListener('DOMContentLoaded', function() {
       day: 'Dia'
     },
     
-    // Configurações específicas para a visualização semanal
+    // Configurações de visualização
     views: {
       timeGridWeek: {
-        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short' }, // Formato do cabeçalho dos dias
-        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false }, // Formato das horas
-        allDaySlot: false // Oculta o slot "dia inteiro"
+        eventMinHeight: 30,
+        slotEventOverlap: false,
+        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short' },
+        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+        allDaySlot: false
       },
       timeGridDay: {
-        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' }, // Formato completo para visualização diária
-        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false }
+        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' },
+        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+        eventMinHeight: 30,
+        slotEventOverlap: false
       }
     },
     
@@ -43,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     eventOrder: 'start',
     eventOverlap: false,
     slotEventOverlap: false,
+    allDaySlot: false,
     slotMinTime: '07:00:00',
     slotMaxTime: '22:00:00',
     slotDuration: '00:30:00',
@@ -51,19 +56,59 @@ document.addEventListener('DOMContentLoaded', function() {
     editable: true,
     dayMaxEvents: true,
     
-    // Personalização da aparência dos eventos
+    // Personalização dos eventos
     eventContent: function(arg) {
       const evento = arg.event;
       const eventEl = document.createElement('div');
       eventEl.className = 'fc-event-content';
-      
-      eventEl.innerHTML = `
-        <div class="fc-event-title">${evento.title}</div>
-        <div class="fc-event-time">${arg.timeText}</div>
-        ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
-      `;
+
+      // Verifica eventos sobrepostos
+      const eventosSobrepostos = calendar.getEvents().filter(e => 
+        e.id !== evento.id && 
+        e.start < evento.end && 
+        e.end > evento.start
+      );
+
+      const temSobreposicao = eventosSobrepostos.length > 0;
+
+      if (temSobreposicao) {
+        // Versão compacta para eventos sobrepostos
+        const numEventos = eventosSobrepostos.length + 1;
+        const posicao = eventosSobrepostos.findIndex(e => e.id > evento.id) + 1 || 0;
+        
+        eventEl.style.width = `calc(${100/numEventos}% - 2px)`;
+        eventEl.style.left = `calc(${100/numEventos}% * ${posicao})`;
+        eventEl.style.zIndex = 1;
+        
+        eventEl.innerHTML = `
+          <div class="fc-event-compact">
+            <div class="fc-event-title-compact">${evento.title.split(' - ')[0]}</div>
+            <div class="fc-event-time-compact">${arg.timeText}</div>
+          </div>
+        `;
+      } else {
+        // Versão normal para eventos sem sobreposição
+        eventEl.innerHTML = `
+          <div class="fc-event-title">${evento.title}</div>
+          <div class="fc-event-time">${arg.timeText}</div>
+          ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
+        `;
+      }
       
       return { domNodes: [eventEl] };
+    },
+
+    // Garante que o texto não ultrapasse os limites
+    eventDidMount: function(info) {
+      const elementos = info.el.querySelectorAll('.fc-event-title, .fc-event-title-compact');
+      elementos.forEach(el => {
+        el.style.whiteSpace = 'nowrap';
+        el.style.overflow = 'hidden';
+        el.style.textOverflow = 'ellipsis';
+      });
+      
+      // Tooltip com informações completas
+      info.el.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}`;
     },
     
     // Carregamento dos eventos
@@ -117,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const evento = info.event;
       const modal = document.getElementById('modalEdicao');
       
-      // Preenche o modal com os dados do evento
       document.getElementById('editDescricao').value = evento.extendedProps.descricao;
       document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
       document.getElementById('editData').value = formatDate(evento.start);
@@ -129,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
       modal.dataset.eventId = evento.id;
       modal.style.display = 'block';
       
-      // Impede a propagação do clique para o calendário
       info.jsEvent.stopPropagation();
     }
   });
