@@ -1,109 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
-  // Inicializa o calendário
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    locale: 'pt-br',
-    initialView: 'timeGridWeek',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    buttonText: {
-      today: 'Hoje',
-      month: 'Mês',
-      week: 'Semana',
-      day: 'Dia',
-      list: 'Lista'
-    },
-    eventDisplay: 'block', // Mostra todos os eventos como blocos
-    eventOrder: 'start', // Ordena por horário de início
-    eventOverlap: false, // Evita sobreposição
-    slotEventOverlap: false, // Mostra todos os eventos mesmo que sobrepostos
-    allDaySlot: false,
-    slotMinTime: '07:00:00',
-    slotMaxTime: '22:00:00',
-    slotDuration: '00:30:00',
-    slotLabelInterval: '01:00:00',
-    nowIndicator: true,
-    navLinks: true,
-    editable: true,
-    dayMaxEvents: true,
-    events: async function (fetchInfo, successCallback, failureCallback) {
-      try {
-        const start = fetchInfo.start.toISOString().split('T')[0];
-        const end = fetchInfo.end.toISOString().split('T')[0];
-
-        console.log(`Buscando aulas de ${start} até ${end}`);
-
-        const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
-
-        if (!response.ok) {
-          throw new Error(`Erro HTTP! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Total de aulas recebidas:', data.data.length); // Verifique a quantidade
-
-        if (data.success) {
-          console.log('Dados recebidos:', data.data); // Antes do map
-          const events = data.data.map(aula => {
-            // Verifique se os campos estão corretos
-            if (!aula.data || !aula.horaInicio) {
-              console.warn('Aula com dados incompletos:', aula);
-              return null;
-            }
-
-            const startDateTime = `${aula.data}T${aula.horaInicio}:00`; // Adicione segundos
-            const endDateTime = aula.horaFim ? `${aula.data}T${aula.horaFim}:00` : null;
-
-            return {
-              id: aula.id,
-              title: `${aula.atividade} - ${aula.instrutor}`,
-              start: startDateTime,
-              end: endDateTime,
-              extendedProps: {
-                descricao: aula.atividade,
-                instrutor: aula.instrutor,
-                local: aula.local,
-                status: aula.status
-              },
-              backgroundColor: aula.status ? '#28a745' : '#dc3545',
-              borderColor: aula.status ? '#218838' : '#c82333',
-              textColor: '#ffffff'
-            };
-          }).filter(event => event !== null); // Remove eventos inválidos
-
-          console.log('Eventos processados:', events.length); // Verifique quantos eventos foram criados
-          successCallback(events);
-        } else {
-          failureCallback(data.message || 'Erro ao carregar aulas');
-        }
-      } catch (error) {
-        console.error('Erro ao carregar aulas:', error);
-        failureCallback(error.message);
-      }
-    },
-    eventClick: function (info) {
-      const evento = info.event;
-      const startDate = evento.start;
-
-      abrirModalEdicao({
-        id: evento.id,
-        atividade: evento.extendedProps.descricao,
-        instrutor: evento.extendedProps.instrutor,
-        data: formatDate(startDate),
-        horaInicio: formatTime(startDate),
-        horaFim: evento.end ? formatTime(evento.end) : '',
-        local: evento.extendedProps.local || '',
-        status: evento.extendedProps.status || false
-      });
-    }
-  });
-
-  calendar.render();
-
-  // Funções auxiliares para formatar data e hora
+document.addEventListener('DOMContentLoaded', function() {
+  // Funções auxiliares
   function formatDate(date) {
     return date.toISOString().split('T')[0];
   }
@@ -112,70 +8,188 @@ document.addEventListener('DOMContentLoaded', function () {
     return date.toTimeString().substring(0, 5);
   }
 
-  // Função para abrir modal de edição
-  function abrirModalEdicao(aula) {
-    const modal = document.getElementById('modalEdicao');
+  // Inicializa o calendário
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    locale: 'pt-br',
+    initialView: 'timeGridWeek', // Visualização semanal como padrão
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay' // Botões para alternar entre visualizações
+    },
+    buttonText: {
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Dia'
+    },
+    
+    // Configurações específicas para a visualização semanal
+    views: {
+      timeGridWeek: {
+        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short' }, // Formato do cabeçalho dos dias
+        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false }, // Formato das horas
+        allDaySlot: false // Oculta o slot "dia inteiro"
+      },
+      timeGridDay: {
+        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' }, // Formato completo para visualização diária
+        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false }
+      }
+    },
+    
+    // Configurações gerais
+    eventDisplay: 'block',
+    eventOrder: 'start',
+    eventOverlap: false,
+    slotEventOverlap: false,
+    slotMinTime: '07:00:00',
+    slotMaxTime: '22:00:00',
+    slotDuration: '00:30:00',
+    nowIndicator: true,
+    navLinks: true,
+    editable: true,
+    dayMaxEvents: true,
+    
+    // Personalização da aparência dos eventos
+    eventContent: function(arg) {
+      const evento = arg.event;
+      const eventEl = document.createElement('div');
+      eventEl.className = 'fc-event-content';
+      
+      eventEl.innerHTML = `
+        <div class="fc-event-title">${evento.title}</div>
+        <div class="fc-event-time">${arg.timeText}</div>
+        ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
+      `;
+      
+      return { domNodes: [eventEl] };
+    },
+    
+    // Carregamento dos eventos
+    events: async function(fetchInfo, successCallback, failureCallback) {
+      try {
+        const start = formatDate(fetchInfo.start);
+        const end = formatDate(fetchInfo.end);
+        
+        const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
+        
+        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          const eventos = data.data.map(aula => {
+            if (!aula.data || !aula.horaInicio) {
+              console.warn('Aula incompleta:', aula);
+              return null;
+            }
+            
+            return {
+              id: aula.id,
+              title: `${aula.atividade} - ${aula.instrutor}`,
+              start: `${aula.data}T${aula.horaInicio}`,
+              end: aula.horaFim ? `${aula.data}T${aula.horaFim}` : null,
+              extendedProps: {
+                descricao: aula.atividade,
+                instrutor: aula.instrutor,
+                local: aula.local,
+                status: aula.status
+              },
+              backgroundColor: aula.status ? '#28a745' : '#dc3545',
+              borderColor: aula.status ? '#218838' : '#c82333',
+              textColor: '#fff'
+            };
+          }).filter(evento => evento !== null);
+          
+          successCallback(eventos);
+        } else {
+          throw new Error(data.message || 'Erro ao carregar aulas');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        failureCallback(error.message);
+      }
+    },
+    
+    // Manipulação de eventos
+    eventClick: function(info) {
+      const evento = info.event;
+      const modal = document.getElementById('modalEdicao');
+      
+      // Preenche o modal com os dados do evento
+      document.getElementById('editDescricao').value = evento.extendedProps.descricao;
+      document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
+      document.getElementById('editData').value = formatDate(evento.start);
+      document.getElementById('editHoraInicio').value = formatTime(evento.start);
+      document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
+      document.getElementById('editLocal').value = evento.extendedProps.local || '';
+      document.getElementById('editStatus').checked = evento.extendedProps.status;
+      
+      modal.dataset.eventId = evento.id;
+      modal.style.display = 'block';
+      
+      // Impede a propagação do clique para o calendário
+      info.jsEvent.stopPropagation();
+    }
+  });
 
-    document.getElementById('editDescricao').value = aula.atividade;
-    document.getElementById('editProfessor').value = aula.instrutor;
-    document.getElementById('editData').value = aula.data;
-    document.getElementById('editHoraInicio').value = aula.horaInicio;
-    document.getElementById('editHoraFim').value = aula.horaFim;
-    document.getElementById('editLocal').value = aula.local;
-    document.getElementById('editStatus').checked = aula.status;
-
-    modal.dataset.eventId = aula.id;
-    modal.style.display = 'block';
-  }
+  // Renderiza o calendário
+  calendar.render();
 
   // Fechar modal
-  document.querySelector('.close').addEventListener('click', function () {
+  document.querySelector('.close')?.addEventListener('click', function() {
     document.getElementById('modalEdicao').style.display = 'none';
   });
 
-  document.querySelector('.botao-cancelar').addEventListener('click', function () {
+  document.querySelector('.botao-cancelar')?.addEventListener('click', function() {
     document.getElementById('modalEdicao').style.display = 'none';
   });
 
-  window.addEventListener('click', function (event) {
+  window.addEventListener('click', function(event) {
     if (event.target === document.getElementById('modalEdicao')) {
       document.getElementById('modalEdicao').style.display = 'none';
     }
   });
 
   // Enviar formulário de edição
-  document.getElementById('formEdicao').addEventListener('submit', async function (e) {
+  document.getElementById('formEdicao')?.addEventListener('submit', async function(e) {
     e.preventDefault();
-
-    const eventId = document.getElementById('modalEdicao').dataset.eventId;
-    const formData = {
-      descricao: document.getElementById('editDescricao').value,
-      nomePessoalAtribuido: document.getElementById('editProfessor').value,
-      datasAtividadeIndividual: document.getElementById('editData').value,
-      horaInicioAgendada: document.getElementById('editHoraInicio').value,
-      fimAgendado: document.getElementById('editHoraFim').value,
-      descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value,
-      confirmada: document.getElementById('editStatus').checked
-    };
-
+    
+    const btnSubmit = this.querySelector('button[type="submit"]');
+    const btnOriginalText = btnSubmit.innerHTML;
+    
     try {
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+      btnSubmit.disabled = true;
+      
+      const eventId = document.getElementById('modalEdicao').dataset.eventId;
+      const formData = {
+        descricao: document.getElementById('editDescricao').value,
+        nomePessoalAtribuido: document.getElementById('editProfessor').value,
+        datasAtividadeIndividual: document.getElementById('editData').value,
+        horaInicioAgendada: document.getElementById('editHoraInicio').value,
+        fimAgendado: document.getElementById('editHoraFim').value,
+        descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value,
+        confirmada: document.getElementById('editStatus').checked
+      };
+      
       const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
-      if (response.ok) {
-        calendar.refetchEvents();
-        document.getElementById('modalEdicao').style.display = 'none';
-      } else {
-        throw new Error('Erro ao atualizar aula');
-      }
+      
+      if (!response.ok) throw new Error('Erro ao atualizar');
+      
+      calendar.refetchEvents();
+      document.getElementById('modalEdicao').style.display = 'none';
     } catch (error) {
       console.error('Erro:', error);
-      alert('Erro ao atualizar aula: ' + error.message);
+      alert('Erro ao salvar: ' + error.message);
+    } finally {
+      btnSubmit.innerHTML = btnOriginalText;
+      btnSubmit.disabled = false;
     }
   });
 });
