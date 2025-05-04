@@ -1,11 +1,38 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Funções auxiliares
+document.addEventListener('DOMContentLoaded', function () {
+  // Funções auxiliares para formatação
   function formatDate(date) {
     return date.toISOString().split('T')[0];
   }
 
   function formatTime(date) {
     return date.toTimeString().substring(0, 5);
+  }
+
+  // Função para gerar cores baseadas na descrição
+  function getColorFromDescription(description) {
+    // Gera um hash numérico a partir da string (para consistência)
+    let hash = 0;
+    for (let i = 0; i < description.length; i++) {
+      hash = description.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Converte o hash em um valor de matiz (Hue) HSL (0-360)
+    const hue = Math.abs(hash) % 360;
+
+    // Define saturação e luminosidade (ajuste conforme preferência)
+    const saturation = 70; // 70% de saturação (cores vibrantes)
+    const lightness = 50;  // 50% de luminosidade (nem muito claro, nem muito escuro)
+
+    // Cor principal (background)
+    const backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    
+    // Cor da borda (um pouco mais escura)
+    const borderColor = `hsl(${hue}, ${saturation}%, ${lightness - 10}%)`;
+    
+    // Cor do texto (branco ou preto, dependendo do contraste)
+    const textColor = (lightness > 60 || (hue > 40 && hue < 200)) ? '#000000' : '#FFFFFF';
+
+    return { backgroundColor, borderColor, textColor };
   }
 
   // Inicializa o calendário
@@ -24,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
       week: 'Semana',
       day: 'Dia'
     },
-    
+
     // Configurações de visualização
     views: {
       timeGridWeek: {
@@ -41,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         slotEventOverlap: false
       }
     },
-    
+
     // Configurações gerais
     eventDisplay: 'block',
     eventOrder: 'start',
@@ -55,17 +82,17 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks: true,
     editable: true,
     dayMaxEvents: true,
-    
+
     // Personalização dos eventos
-    eventContent: function(arg) {
+    eventContent: function (arg) {
       const evento = arg.event;
       const eventEl = document.createElement('div');
       eventEl.className = 'fc-event-content';
 
       // Verifica eventos sobrepostos
-      const eventosSobrepostos = calendar.getEvents().filter(e => 
-        e.id !== evento.id && 
-        e.start < evento.end && 
+      const eventosSobrepostos = calendar.getEvents().filter(e =>
+        e.id !== evento.id &&
+        e.start < evento.end &&
         e.end > evento.start
       );
 
@@ -75,11 +102,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Versão compacta para eventos sobrepostos
         const numEventos = eventosSobrepostos.length + 1;
         const posicao = eventosSobrepostos.findIndex(e => e.id > evento.id) + 1 || 0;
-        
-        eventEl.style.width = `calc(${100/numEventos}% - 2px)`;
-        eventEl.style.left = `calc(${100/numEventos}% * ${posicao})`;
+
+        eventEl.style.width = `calc(${100 / numEventos}% - 2px)`;
+        eventEl.style.left = `calc(${100 / numEventos}% * ${posicao})`;
         eventEl.style.zIndex = 1;
-        
+
         eventEl.innerHTML = `
           <div class="fc-event-compact">
             <div class="fc-event-title-compact">${evento.title.split(' - ')[0]}</div>
@@ -94,42 +121,45 @@ document.addEventListener('DOMContentLoaded', function() {
           ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
         `;
       }
-      
+
       return { domNodes: [eventEl] };
     },
 
     // Garante que o texto não ultrapasse os limites
-    eventDidMount: function(info) {
+    eventDidMount: function (info) {
       const elementos = info.el.querySelectorAll('.fc-event-title, .fc-event-title-compact');
       elementos.forEach(el => {
         el.style.whiteSpace = 'nowrap';
         el.style.overflow = 'hidden';
         el.style.textOverflow = 'ellipsis';
       });
-      
+
       // Tooltip com informações completas
       info.el.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}`;
     },
-    
+
     // Carregamento dos eventos
-    events: async function(fetchInfo, successCallback, failureCallback) {
+    events: async function (fetchInfo, successCallback, failureCallback) {
       try {
         const start = formatDate(fetchInfo.start);
         const end = formatDate(fetchInfo.end);
-        
+
         const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
-        
+
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
           const eventos = data.data.map(aula => {
             if (!aula.data || !aula.horaInicio) {
               console.warn('Aula incompleta:', aula);
               return null;
             }
-            
+
+            // Obtém as cores baseadas na descrição da atividade
+            const cores = getColorFromDescription(aula.atividade);
+
             return {
               id: aula.id,
               title: `${aula.atividade} - ${aula.instrutor}`,
@@ -141,12 +171,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 local: aula.local,
                 status: aula.status
               },
-              backgroundColor: aula.status ? '#28a745' : '#dc3545',
-              borderColor: aula.status ? '#218838' : '#c82333',
-              textColor: '#fff'
+              backgroundColor: cores.backgroundColor,
+              borderColor: cores.borderColor,
+              textColor: cores.textColor
             };
           }).filter(evento => evento !== null);
-          
+
           successCallback(eventos);
         } else {
           throw new Error(data.message || 'Erro ao carregar aulas');
@@ -156,12 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
         failureCallback(error.message);
       }
     },
-    
+
     // Manipulação de eventos
-    eventClick: function(info) {
+    eventClick: function (info) {
       const evento = info.event;
       const modal = document.getElementById('modalEdicao');
-      
+
       document.getElementById('editDescricao').value = evento.extendedProps.descricao;
       document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
       document.getElementById('editData').value = formatDate(evento.start);
@@ -169,10 +199,10 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
       document.getElementById('editLocal').value = evento.extendedProps.local || '';
       document.getElementById('editStatus').checked = evento.extendedProps.status;
-      
+
       modal.dataset.eventId = evento.id;
       modal.style.display = 'block';
-      
+
       info.jsEvent.stopPropagation();
     }
   });
@@ -181,31 +211,31 @@ document.addEventListener('DOMContentLoaded', function() {
   calendar.render();
 
   // Fechar modal
-  document.querySelector('.close')?.addEventListener('click', function() {
+  document.querySelector('.close')?.addEventListener('click', function () {
     document.getElementById('modalEdicao').style.display = 'none';
   });
 
-  document.querySelector('.botao-cancelar')?.addEventListener('click', function() {
+  document.querySelector('.botao-cancelar')?.addEventListener('click', function () {
     document.getElementById('modalEdicao').style.display = 'none';
   });
 
-  window.addEventListener('click', function(event) {
+  window.addEventListener('click', function (event) {
     if (event.target === document.getElementById('modalEdicao')) {
       document.getElementById('modalEdicao').style.display = 'none';
     }
   });
 
   // Enviar formulário de edição
-  document.getElementById('formEdicao')?.addEventListener('submit', async function(e) {
+  document.getElementById('formEdicao')?.addEventListener('submit', async function (e) {
     e.preventDefault();
-    
+
     const btnSubmit = this.querySelector('button[type="submit"]');
     const btnOriginalText = btnSubmit.innerHTML;
-    
+
     try {
       btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
       btnSubmit.disabled = true;
-      
+
       const eventId = document.getElementById('modalEdicao').dataset.eventId;
       const formData = {
         descricao: document.getElementById('editDescricao').value,
@@ -216,15 +246,15 @@ document.addEventListener('DOMContentLoaded', function() {
         descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value,
         confirmada: document.getElementById('editStatus').checked
       };
-      
+
       const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
+
       if (!response.ok) throw new Error('Erro ao atualizar');
-      
+
       calendar.refetchEvents();
       document.getElementById('modalEdicao').style.display = 'none';
     } catch (error) {

@@ -1,199 +1,116 @@
-
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    
-    #calendar {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    
-    /* Estilo para os eventos */
-    .fc-event {
-      border: none;
-      padding: 2px 5px;
-    }
-    
-    .fc-event .fc-event-content {
-      padding: 2px;
-    }
-    
-    .fc-event .fc-event-title {
-      font-weight: bold;
-      margin-bottom: 3px;
-    }
-    
-    .fc-event .fc-event-details {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85em;
-    }
-    
-    /* Modal de edição */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-    }
-    
-    .modal-content {
-      background-color: #fefefe;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 5px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    
-    input, select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    
-    .button-group {
-      text-align: right;
-      margin-top: 20px;
-    }
-    
-    button {
-      padding: 8px 15px;
-      margin-left: 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    
-    .botao-cancelar {
-      background-color: #f1f1f1;
-    }
-    
-    .botao-salvar {
-      background-color: #4CAF50;
-      color: white;
-    }
-    
-    .status-group {
-      display: flex;
-      align-items: center;
-    }
-    
-    .status-group input {
-      width: auto;
-      margin-right: 10px;
-    }
-
-
-    .modal {
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-  
-  .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      position: relative;
-  }
-  
-  .close {
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      font-size: 24px;
-      cursor: pointer;
-  }
-  
-  .loading {
-      text-align: center;
-      padding: 20px;
-  }
-
-  /* Estilo para os eventos */
+/* Estilo dos eventos no calendário */
 .fc-event {
-  box-sizing: border-box;
-  margin: 1px;
-  overflow: hidden;
-}
-
-/* Versão normal do evento */
-.fc-event-content {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
   padding: 2px 4px;
-  height: 100%;
 }
 
-.fc-event-title {
+.fc-event-title,
+.fc-event-title-compact {
+  font-size: 0.9rem;
   font-weight: bold;
-  font-size: 0.8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #fff;
 }
 
-.fc-event-time {
-  font-size: 0.7em;
+.fc-event-time,
+.fc-event-time-compact {
+  font-size: 0.8rem;
+  color: #f0f0f0;
 }
 
 .fc-event-location {
-  font-size: 0.6em;
-  font-style: italic;
+  font-size: 0.75rem;
+  color: #e0e0e0;
 }
 
-/* Versão compacta para eventos sobrepostos */
-.fc-event-compact {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  padding: 0 2px;
+/* Modal de edição */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
 }
 
-.fc-event-title-compact {
+.modal-content {
+  background-color: #fff;
+  margin: 8% auto;
+  padding: 30px 20px;
+  border: 1px solid #888;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 16px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.modal-content button {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #1565c0;
+}
+
+.botao-cancelar {
+  background-color: #ccc;
+  color: #333;
+  margin-left: 10px;
+}
+
+.botao-cancelar:hover {
+  background-color: #b0b0b0;
+}
+
+/* Botão de fechar */
+.close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: 0.7em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #aaa;
+  cursor: pointer;
 }
 
-.fc-event-time-compact {
-  font-size: 0.6em;
+.close:hover {
+  color: #000;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .modal-content {
+    margin: 20% auto;
+    width: 90%;
+  }
 }

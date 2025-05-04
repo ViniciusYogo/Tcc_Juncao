@@ -1,110 +1,132 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Colaborador</title>
-  <link rel="stylesheet" href="criar-colaborador.css">
- 
- 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    #preview {
+      max-width: 200px;
+      max-height: 200px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-
-  <div class="bodi">
-    <div class="conten">
-      <div class="registration-container">
-        <div class="registration-header">
-          <h2>Criar Colaborador</h2>
-          <span class="divider"></span>
-        </div>
-        <div class="registration-body">
-          <form id="registration-form" enctype="multipart/form-data">
-            <div class="registration-box">
-              <div class="input-box">
-                <label>Primeiro Nome</label>
-                <input type="text" class="input-field" name="primeiro_nome" placeholder="Primeiro Nome do Colaborador">
-              </div>
-              <div class="input-box">
-                <label>Último Nome</label>
-                <input type="text" class="input-field" name="ultimo_nome" placeholder="Último Nome do Colaborador">
-              </div>
-              <div class="input-box">
-                <label>Número de Contato</label>
-                <input type="tel" class="input-field" name="numero_contato" placeholder="Número de contato do Colaborador">
-              </div>
-              <div class="input-box">
-                <label>E-mail</label>
-                <input type="email" class="input-field" name="email" placeholder="E-mail do Colaborador">
-              </div>
-              <div class="input-box">
-                <label>Nome de Usuário</label>
-                <input type="text" class="input-field" name="nome_usuario" placeholder="Nome de usuário do Colaborador">
-              </div>
-              <div class="input-box">
-                <label>Senha</label>
-                <input type="password" class="input-field" name="senha" placeholder="Senha do Colaborador">
-              </div>
-            </div>
-
-            <div class="profile-picture-container">
-              <label for="profile-picture" class="photo-label">Foto</label>
-              <div class="photo-upload-box">
-                <input type="file" id="profile-picture" name="profile-picture" accept="image/*">
-                <span id="file-name">Nenhum arquivo escolhido</span>
-                <img id="preview" class="preview-img" />
-              </div>
-            </div>
-
-            <button type="submit" class="btn-register">Registrar Agora</button>
-          </form>
-        </div>
+  <div class="form-container">
+    <h2>Criar Colaborador</h2>
+    <form id="registration-form">
+      <div class="form-group">
+        <label for="primeiro_nome">Primeiro Nome</label>
+        <input type="text" id="primeiro_nome" name="primeiro_nome" required>
       </div>
-    </div>
+      
+      <div class="form-group">
+        <label for="ultimo_nome">Último Nome</label>
+        <input type="text" id="ultimo_nome" name="ultimo_nome" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="numero_contato">Número de Contato</label>
+        <input type="tel" id="numero_contato" name="numero_contato" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="nome_usuario">Nome de Usuário</label>
+        <input type="text" id="nome_usuario" name="nome_usuario" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="foto">Foto de Perfil</label>
+        <input type="file" id="foto" name="foto" accept="image/*">
+        <img id="preview" alt="Pré-visualização da imagem">
+      </div>
+      
+      <button type="submit">Cadastrar</button>
+    </form>
   </div>
 
   <script>
-    const fileInput = document.getElementById("profile-picture");
-    const fileNameDisplay = document.getElementById("file-name");
-    const previewImg = document.getElementById("preview");
-
-    fileInput.addEventListener("change", function () {
-      const file = this.files[0];
+    document.getElementById('foto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('preview');
+      
       if (file) {
-        fileNameDisplay.textContent = file.name;
-
         const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImg.src = e.target.result;
-          previewImg.style.display = "block";
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
         };
         reader.readAsDataURL(file);
       } else {
-        fileNameDisplay.textContent = "Nenhum arquivo escolhido";
-        previewImg.style.display = "none";
+        preview.style.display = 'none';
       }
     });
 
-    document.getElementById("registration-form").addEventListener("submit", function (e) {
+    document.getElementById('registration-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-
+      
       const formData = new FormData(this);
-
-      fetch("http://localhost:5500/api/criar-colaborador", {
-        method: "POST",
-        body: formData,
-      })
-        .then(response => response.json())
-        .then(data => {
-          alert(data.message || "Colaborador registrado!");
-          this.reset();
-          previewImg.style.display = "none";
-          fileNameDisplay.textContent = "Nenhum arquivo escolhido";
-        })
-        .catch(error => {
-          console.error("Erro ao registrar colaborador:", error);
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      
+      try {
+        const response = await fetch('http://localhost:5500/api/criar-colaborador', {
+          method: 'POST',
+          body: formData
         });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao cadastrar colaborador');
+        }
+        
+        const data = await response.json();
+        alert(data.message || 'Colaborador cadastrado com sucesso!');
+        this.reset();
+        document.getElementById('preview').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro: ' + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Cadastrar';
+      }
     });
   </script>
-
 </body>
 </html>

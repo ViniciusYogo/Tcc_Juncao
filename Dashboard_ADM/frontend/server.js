@@ -12,7 +12,7 @@ const PORT = 5500;
 const logDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
-}
+} 
 
 const logStream = fs.createWriteStream(path.join(logDir, 'server.log'), { flags: 'a' });
 
@@ -22,6 +22,8 @@ function log(message) {
   logStream.write(logMessage);
   console.log(logMessage);
 }
+
+
 
 // Configuração do Multer para upload de arquivos
 const storage = multer.diskStorage({
@@ -397,42 +399,55 @@ app.put('/api/atividades/:id', async (req, res) => {
 });
 
 // Rotas de Colaboradores
-app.post('/api/criar-colaborador', upload.single('profile-picture'), async (req, res) => {
+app.post('/api/criar-colaborador', upload.single('foto'), async (req, res) => {
   try {
-    console.log('Corpo da requisição:', req.body);
+    console.log('Dados do corpo:', req.body);
     console.log('Arquivo recebido:', req.file);
 
+    // Extrai os campos manualmente para evitar problemas de parsing
     const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha } = req.body;
     const foto = req.file ? req.file.filename : null;
 
-    if (!primeiro_nome || !ultimo_nome || !numero_contato || !email || !nome_usuario || !senha) {
-      return res.status(400).json({
-        success: false,
-        error: 'Todos os campos são obrigatórios.'
-      });
+    // Verificação adicional da conexão com o banco
+    if (!dbInstituicao) {
+      throw new Error('Database connection not established');
     }
+
+    // Verifique a estrutura da tabela
+    const [cols] = await dbInstituicao.query('DESCRIBE colaboradores');
+    console.log('Colunas da tabela:', cols);
 
     const [result] = await dbInstituicao.query(
       `INSERT INTO colaboradores 
        (primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto]
+      [
+        primeiro_nome,
+        ultimo_nome,
+        numero_contato,
+        email,
+        nome_usuario,
+        senha,
+        foto
+      ]
     );
 
     res.status(201).json({
       success: true,
       message: 'Colaborador criado com sucesso!',
-      id: result.insertId,
-      fotoPath: foto ? `/uploads/${foto}` : null
+      id: result.insertId
     });
+
   } catch (err) {
     console.error('Erro detalhado:', err);
     res.status(500).json({
       success: false,
-      error: err.code === 'ER_DUP_ENTRY' ?
-        'Dados duplicados. E-mail ou nome de usuário já existe.' :
-        'Erro ao criar colaborador.',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: 'Erro interno no servidor',
+      details: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        stack: err.stack,
+        sqlMessage: err.sqlMessage
+      } : undefined
     });
   }
 });
