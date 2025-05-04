@@ -1,4 +1,72 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // Variáveis globais para armazenar os dados originais
+  let todosEventos = [];
+  let disciplinasUnicas = [];
+  let instrutoresUnicos = [];
+
+  // Função para extrair valores únicos de uma propriedade
+  function extrairValoresUnicos(eventos, propriedade) {
+    const valores = eventos.map(e => e.extendedProps[propriedade] || e.extendedProps[propriedade.toLowerCase()]);
+    return [...new Set(valores)].filter(Boolean).sort();
+  }
+
+  // Função para popular selects de filtro
+  function popularFiltros() {
+    const selectDisciplina = document.getElementById('filtroDisciplina');
+    const selectInstrutor = document.getElementById('filtroInstrutor');
+    
+    // Limpa opções existentes (mantendo a primeira)
+    while (selectDisciplina.options.length > 1) selectDisciplina.remove(1);
+    while (selectInstrutor.options.length > 1) selectInstrutor.remove(1);
+    
+    // Adiciona disciplinas
+    disciplinasUnicas.forEach(disciplina => {
+      const option = document.createElement('option');
+      option.value = disciplina;
+      option.textContent = disciplina;
+      selectDisciplina.appendChild(option);
+    });
+    
+    // Adiciona instrutores
+    instrutoresUnicos.forEach(instrutor => {
+      const option = document.createElement('option');
+      option.value = instrutor;
+      option.textContent = instrutor;
+      selectInstrutor.appendChild(option);
+    });
+  }
+
+  // Função para aplicar filtros
+  function aplicarFiltros() {
+    const filtroDisciplina = document.getElementById('filtroDisciplina').value;
+    const filtroInstrutor = document.getElementById('filtroInstrutor').value;
+    
+    let eventosFiltrados = todosEventos;
+    
+    if (filtroDisciplina) {
+      eventosFiltrados = eventosFiltrados.filter(evento => 
+        evento.extendedProps.descricao === filtroDisciplina
+      );
+    }
+    
+    if (filtroInstrutor) {
+      eventosFiltrados = eventosFiltrados.filter(evento => 
+        evento.extendedProps.instrutor === filtroInstrutor
+      );
+    }
+    
+    calendar.removeAllEvents();
+    calendar.addEventSource(eventosFiltrados);
+  }
+
+  // Função para limpar filtros
+  function limparFiltros() {
+    document.getElementById('filtroDisciplina').value = '';
+    document.getElementById('filtroInstrutor').value = '';
+    calendar.removeAllEvents();
+    calendar.addEventSource(todosEventos);
+  }
+
   // Funções auxiliares para formatação
   function formatDate(date) {
     return date.toISOString().split('T')[0];
@@ -8,30 +76,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return date.toTimeString().substring(0, 5);
   }
 
+  function formatStatus(status) {
+    return status ? 'Confirmada' : 'Não confirmada';
+  }
+
   // Função para gerar cores baseadas na descrição
   function getColorFromDescription(description) {
-    // Gera um hash numérico a partir da string (para consistência)
     let hash = 0;
     for (let i = 0; i < description.length; i++) {
       hash = description.charCodeAt(i) + ((hash << 5) - hash);
     }
-
-    // Converte o hash em um valor de matiz (Hue) HSL (0-360)
     const hue = Math.abs(hash) % 360;
-
-    // Define saturação e luminosidade (ajuste conforme preferência)
-    const saturation = 70; // 70% de saturação (cores vibrantes)
-    const lightness = 50;  // 50% de luminosidade (nem muito claro, nem muito escuro)
-
-    // Cor principal (background)
+    const saturation = 70;
+    const lightness = 50;
     const backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    
-    // Cor da borda (um pouco mais escura)
     const borderColor = `hsl(${hue}, ${saturation}%, ${lightness - 10}%)`;
-    
-    // Cor do texto (branco ou preto, dependendo do contraste)
     const textColor = (lightness > 60 || (hue > 40 && hue < 200)) ? '#000000' : '#FFFFFF';
-
     return { backgroundColor, borderColor, textColor };
   }
 
@@ -43,7 +103,16 @@ document.addEventListener('DOMContentLoaded', function () {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      right: 'filtrosButton dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    customButtons: {
+      filtrosButton: {
+        text: 'Filtros',
+        click: function() {
+          document.getElementById('filtrosContainer').style.display = 
+            document.getElementById('filtrosContainer').style.display === 'block' ? 'none' : 'block';
+        }
+      }
     },
     buttonText: {
       today: 'Hoje',
@@ -80,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
     slotDuration: '00:30:00',
     nowIndicator: true,
     navLinks: true,
-    editable: true,
+    editable: false,
     dayMaxEvents: true,
 
     // Personalização dos eventos
@@ -89,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const eventEl = document.createElement('div');
       eventEl.className = 'fc-event-content';
 
-      // Verifica eventos sobrepostos
+      // Encontra eventos sobrepostos
       const eventosSobrepostos = calendar.getEvents().filter(e =>
         e.id !== evento.id &&
         e.start < evento.end &&
@@ -99,13 +168,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const temSobreposicao = eventosSobrepostos.length > 0;
 
       if (temSobreposicao) {
-        // Versão compacta para eventos sobrepostos
-        const numEventos = eventosSobrepostos.length + 1;
-        const posicao = eventosSobrepostos.findIndex(e => e.id > evento.id) + 1 || 0;
+        // Calcula a posição e largura proporcional
+        const totalEventos = eventosSobrepostos.length + 1;
+        const eventosOrdenados = [...eventosSobrepostos, evento].sort((a, b) => a.id.localeCompare(b.id));
+        const posicao = eventosOrdenados.findIndex(e => e.id === evento.id);
 
-        eventEl.style.width = `calc(${100 / numEventos}% - 2px)`;
-        eventEl.style.left = `calc(${100 / numEventos}% * ${posicao})`;
-        eventEl.style.zIndex = 1;
+        // Aplica estilos para visualização compacta
+        eventEl.style.width = `calc(${100 / totalEventos}% - 2px)`;
+        eventEl.style.left = `calc(${posicao * (100 / totalEventos)}%)`;
+        eventEl.style.zIndex = posicao + 1;
+        eventEl.style.height = '100%';
 
         eventEl.innerHTML = `
           <div class="fc-event-compact">
@@ -114,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         `;
       } else {
-        // Versão normal para eventos sem sobreposição
+        // Visualização normal quando não há sobreposição
         eventEl.innerHTML = `
           <div class="fc-event-title">${evento.title}</div>
           <div class="fc-event-time">${arg.timeText}</div>
@@ -125,9 +197,11 @@ document.addEventListener('DOMContentLoaded', function () {
       return { domNodes: [eventEl] };
     },
 
-    // Garante que o texto não ultrapasse os limites
     eventDidMount: function (info) {
-      const elementos = info.el.querySelectorAll('.fc-event-title, .fc-event-title-compact');
+      const eventEl = info.el;
+
+      // Garante que o texto não ultrapasse os limites
+      const elementos = eventEl.querySelectorAll('.fc-event-title, .fc-event-title-compact');
       elementos.forEach(el => {
         el.style.whiteSpace = 'nowrap';
         el.style.overflow = 'hidden';
@@ -135,7 +209,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       // Tooltip com informações completas
-      info.el.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}`;
+      eventEl.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}`;
+
+      // Ajusta altura para caber todo o conteúdo
+      eventEl.style.height = 'auto';
+      const contentHeight = eventEl.scrollHeight;
+      eventEl.style.height = `${contentHeight}px`;
     },
 
     // Carregamento dos eventos
@@ -151,13 +230,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const data = await response.json();
 
         if (data.success) {
-          const eventos = data.data.map(aula => {
+          todosEventos = data.data.map(aula => {
             if (!aula.data || !aula.horaInicio) {
               console.warn('Aula incompleta:', aula);
               return null;
             }
 
-            // Obtém as cores baseadas na descrição da atividade
             const cores = getColorFromDescription(aula.atividade);
 
             return {
@@ -177,7 +255,14 @@ document.addEventListener('DOMContentLoaded', function () {
             };
           }).filter(evento => evento !== null);
 
-          successCallback(eventos);
+          // Extrai valores únicos para os filtros
+          disciplinasUnicas = extrairValoresUnicos(todosEventos, 'descricao');
+          instrutoresUnicos = extrairValoresUnicos(todosEventos, 'instrutor');
+          
+          // Popula os selects de filtro
+          popularFiltros();
+          
+          successCallback(todosEventos);
         } else {
           throw new Error(data.message || 'Erro ao carregar aulas');
         }
@@ -190,18 +275,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Manipulação de eventos
     eventClick: function (info) {
       const evento = info.event;
-      const modal = document.getElementById('modalEdicao');
 
-      document.getElementById('editDescricao').value = evento.extendedProps.descricao;
-      document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
-      document.getElementById('editData').value = formatDate(evento.start);
-      document.getElementById('editHoraInicio').value = formatTime(evento.start);
-      document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
-      document.getElementById('editLocal').value = evento.extendedProps.local || '';
-      document.getElementById('editStatus').checked = evento.extendedProps.status;
+      // Preenche a modal de detalhes
+      document.getElementById('detalhesAtividade').textContent = evento.extendedProps.descricao;
+      document.getElementById('detalhesInstrutor').textContent = evento.extendedProps.instrutor;
+      document.getElementById('detalhesData').textContent = formatDate(evento.start);
+      document.getElementById('detalhesHorario').textContent = `${formatTime(evento.start)} - ${evento.end ? formatTime(evento.end) : ''}`;
+      document.getElementById('detalhesLocal').textContent = evento.extendedProps.local || 'Não especificado';
+      document.getElementById('detalhesStatus').textContent = formatStatus(evento.extendedProps.status);
 
-      modal.dataset.eventId = evento.id;
-      modal.style.display = 'block';
+      // Mostra a modal de detalhes
+      const modalDetalhes = document.getElementById('modalDetalhes');
+      modalDetalhes.style.display = 'block';
+      modalDetalhes.dataset.eventId = evento.id;
 
       info.jsEvent.stopPropagation();
     }
@@ -210,59 +296,168 @@ document.addEventListener('DOMContentLoaded', function () {
   // Renderiza o calendário
   calendar.render();
 
-  // Fechar modal
-  document.querySelector('.close')?.addEventListener('click', function () {
-    document.getElementById('modalEdicao').style.display = 'none';
+  // Configuração dos botões de ação
+  document.getElementById('btnEditar').addEventListener('click', function () {
+    const modalDetalhes = document.getElementById('modalDetalhes');
+    const eventId = modalDetalhes.dataset.eventId;
+    const evento = calendar.getEventById(eventId);
+
+    if (evento) {
+      // Preenche a modal de edição
+      document.getElementById('editDescricao').value = evento.extendedProps.descricao;
+      document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
+      document.getElementById('editData').value = formatDate(evento.start);
+      document.getElementById('editHoraInicio').value = formatTime(evento.start);
+      document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
+      document.getElementById('editLocal').value = evento.extendedProps.local || '';
+      document.getElementById('editStatus').checked = evento.extendedProps.status;
+
+      // Fecha a modal de detalhes e abre a de edição
+      modalDetalhes.style.display = 'none';
+      document.getElementById('modalEdicao').style.display = 'block';
+      document.getElementById('modalEdicao').dataset.eventId = eventId;
+    }
   });
 
-  document.querySelector('.botao-cancelar')?.addEventListener('click', function () {
-    document.getElementById('modalEdicao').style.display = 'none';
+  document.getElementById('btnExcluir').addEventListener('click', async function () {
+    if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+      const modalDetalhes = document.getElementById('modalDetalhes');
+      const eventId = modalDetalhes.dataset.eventId;
+
+      try {
+        const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          calendar.getEventById(eventId).remove();
+          modalDetalhes.style.display = 'none';
+          showToast('Atividade excluída com sucesso!');
+        } else {
+          throw new Error('Erro ao excluir atividade');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        showToast('Erro ao excluir atividade: ' + error.message, 'error');
+      }
+    }
+  });
+
+  // Fechar modais
+  document.getElementById('btnFechar').addEventListener('click', function () {
+    document.getElementById('modalDetalhes').style.display = 'none';
+  });
+
+  document.querySelectorAll('.close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', function () {
+      this.closest('.modal').style.display = 'none';
+    });
   });
 
   window.addEventListener('click', function (event) {
-    if (event.target === document.getElementById('modalEdicao')) {
-      document.getElementById('modalEdicao').style.display = 'none';
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = 'none';
     }
   });
 
   // Enviar formulário de edição
-  document.getElementById('formEdicao')?.addEventListener('submit', async function (e) {
+  document.getElementById('formEdicao').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const btnSubmit = this.querySelector('button[type="submit"]');
     const btnOriginalText = btnSubmit.innerHTML;
+    const eventId = document.getElementById('modalEdicao').dataset.eventId;
 
     try {
       btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
       btnSubmit.disabled = true;
 
-      const eventId = document.getElementById('modalEdicao').dataset.eventId;
+      // Preparar os dados para enviar (ajuste os nomes dos campos conforme seu banco)
       const formData = {
         descricao: document.getElementById('editDescricao').value,
         nomePessoalAtribuido: document.getElementById('editProfessor').value,
         datasAtividadeIndividual: document.getElementById('editData').value,
         horaInicioAgendada: document.getElementById('editHoraInicio').value,
-        fimAgendado: document.getElementById('editHoraFim').value,
-        descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value,
-        confirmada: document.getElementById('editStatus').checked
+        fimAgendado: document.getElementById('editHoraFim').value || null,
+        descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value || null,
+        confirmada: document.getElementById('editStatus').checked ? 1 : 0 // Convertendo para inteiro (1 ou 0)
       };
 
+      // DEBUG: Mostrar os dados que serão enviados
+      console.log('Dados a serem enviados:', formData);
+
+      // Enviar para o servidor
       const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
 
-      if (!response.ok) throw new Error('Erro ao atualizar');
+      // DEBUG: Mostrar a resposta do servidor
+      const responseData = await response.json();
+      console.log('Resposta do servidor:', responseData);
 
-      calendar.refetchEvents();
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Erro ao atualizar atividade');
+      }
+
+      // Atualizar o evento no calendário
+      const evento = calendar.getEventById(eventId);
+      if (evento) {
+        const novasCores = getColorFromDescription(formData.descricao);
+
+        evento.setProp('title', `${formData.descricao} - ${formData.nomePessoalAtribuido}`);
+        evento.setStart(`${formData.datasAtividadeIndividual}T${formData.horaInicioAgendada}`);
+        evento.setEnd(formData.fimAgendado ? `${formData.datasAtividadeIndividual}T${formData.fimAgendado}` : null);
+        evento.setExtendedProp('descricao', formData.descricao);
+        evento.setExtendedProp('instrutor', formData.nomePessoalAtribuido);
+        evento.setExtendedProp('local', formData.descricaoLocalizacaoAtribuida);
+        evento.setExtendedProp('status', formData.confirmada);
+        evento.setProp('backgroundColor', novasCores.backgroundColor);
+        evento.setProp('borderColor', novasCores.borderColor);
+        evento.setProp('textColor', novasCores.textColor);
+      }
+
+      // Fechar o modal
       document.getElementById('modalEdicao').style.display = 'none';
+      showToast('Atividade atualizada com sucesso!');
+
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao salvar: ' + error.message);
+      console.error('Erro detalhado:', error);
+      showToast(`Erro ao salvar: ${error.message}`, 'error');
+
+      // Forçar recarregamento dos eventos do servidor
+      calendar.refetchEvents();
     } finally {
       btnSubmit.innerHTML = btnOriginalText;
       btnSubmit.disabled = false;
     }
   });
+
+  // Adiciona listeners para os filtros
+  document.getElementById('btnAplicarFiltros').addEventListener('click', aplicarFiltros);
+  document.getElementById('btnLimparFiltros').addEventListener('click', limparFiltros);
+
+  // Opcional: aplicar filtros automaticamente ao mudar seleção
+  document.getElementById('filtroDisciplina').addEventListener('change', aplicarFiltros);
+  document.getElementById('filtroInstrutor').addEventListener('change', aplicarFiltros);
+
+  // Função para mostrar notificações
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }, 100);
+  }
 });

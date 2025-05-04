@@ -12,7 +12,7 @@ const PORT = 5500;
 const logDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
-} 
+}
 
 const logStream = fs.createWriteStream(path.join(logDir, 'server.log'), { flags: 'a' });
 
@@ -143,34 +143,10 @@ function formatarDataIndividual(dateString) {
   }
 }
 
-function formatarHora(timeString) {
-  if (!timeString) return null;
 
-  try {
-    // Formato HH:MM:SS
-    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}:\d{2}$/)) {
-      return timeString;
-    }
 
-    // Formato HH:MM
-    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}$/)) {
-      return `${timeString}:00`;
-    }
 
-    // Número decimal do Excel (fração do dia)
-    if (typeof timeString === 'number') {
-      const date = xlsx.SSF.parse_date_code(timeString);
-      const hours = Math.floor(timeString * 24);
-      const minutes = Math.floor((timeString * 24 - hours) * 60);
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00'`;
-    }
 
-    return null;
-  } catch (e) {
-    console.error("Erro ao formatar hora:", timeString, e);
-    return null;
-  }
-}
 
 // Rotas de Atividades
 app.get('/api/atividades', async (req, res) => {
@@ -345,36 +321,38 @@ app.post('/api/atividades', async (req, res) => {
     });
   }
 });
-
 app.put('/api/atividades/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      descricao,
-      nomePessoalAtribuido,
-      horaInicioAgendada,
-      descricaoLocalizacaoAtribuida,
-    } = req.body;
-
+    console.log('Dados recebidos:', req.body); // DEBUG
+    
     const conn = await dbInstituicao.getConnection();
-
+    
     try {
       const [result] = await conn.query(
         `UPDATE atividades SET
           descricao = ?,
           nomePessoalAtribuido = ?,
+          datasAtividadeIndividual = ?,
           horaInicioAgendada = ?,
-          descricaoLocalizacaoAtribuida = ?
+          fimAgendado = ?,
+          descricaoLocalizacaoAtribuida = ?,
+          confirmada = ?
         WHERE id = ?`,
         [
-          descricao,
-          nomePessoalAtribuido,
-          horaInicioAgendada,
-          descricaoLocalizacaoAtribuida,
+          req.body.descricao,
+          req.body.nomePessoalAtribuido,
+          req.body.datasAtividadeIndividual,
+          req.body.horaInicioAgendada,
+          req.body.fimAgendado,
+          req.body.descricaoLocalizacaoAtribuida,
+          req.body.confirmada,
           id
         ]
       );
 
+      console.log('Resultado da atualização:', result); // DEBUG
+      
       if (result.affectedRows === 0) {
         return res.status(404).json({
           success: false,
@@ -390,7 +368,42 @@ app.put('/api/atividades/:id', async (req, res) => {
       conn.release();
     }
   } catch (error) {
-    log(`Erro ao atualizar atividade: ${error.stack}`);
+    console.error('Erro detalhado:', error); // DEBUG
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor',
+      message: error.message
+    });
+  }
+});
+
+app.delete('/api/atividades/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const conn = await dbInstituicao.getConnection();
+
+    try {
+      const [result] = await conn.query(
+        'DELETE FROM atividades WHERE id = ?',
+        [id]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Atividade não encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Atividade excluída com sucesso'
+      });
+    } finally {
+      conn.release();
+    }
+  } catch (error) {
+    log(`Erro ao excluir atividade: ${error.stack}`);
     res.status(500).json({
       success: false,
       error: 'Erro interno no servidor'
