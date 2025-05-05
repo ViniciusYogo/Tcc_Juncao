@@ -7,6 +7,8 @@ const multer = require('multer');
 const xlsx = require('xlsx');
 const app = express();
 const PORT = 5500;
+const bcrypt = require('bcryptjs');
+
 
 // Configurações gerais
 const logDir = path.join(__dirname, 'logs');
@@ -325,9 +327,9 @@ app.put('/api/atividades/:id', async (req, res) => {
   try {
     const { id } = req.params;
     console.log('Dados recebidos:', req.body); // DEBUG
-    
+
     const conn = await dbInstituicao.getConnection();
-    
+
     try {
       const [result] = await conn.query(
         `UPDATE atividades SET
@@ -352,7 +354,7 @@ app.put('/api/atividades/:id', async (req, res) => {
       );
 
       console.log('Resultado da atualização:', result); // DEBUG
-      
+
       if (result.affectedRows === 0) {
         return res.status(404).json({
           success: false,
@@ -411,56 +413,96 @@ app.delete('/api/atividades/:id', async (req, res) => {
   }
 });
 
-// Rotas de Colaboradores
-app.post('/api/criar-colaborador', upload.single('foto'), async (req, res) => {
+
+// Rota de criação de colaborador 
+app.post('/api/criar-colaborador', async (req, res) => {
   try {
-    console.log('Dados do corpo:', req.body);
-    console.log('Arquivo recebido:', req.file);
+    const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, fotoBase64 } = req.body;
 
-    // Extrai os campos manualmente para evitar problemas de parsing
-    const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha } = req.body;
-    const foto = req.file ? req.file.filename : null;
+    // Debug: Verifique se a foto está sendo recebida
+    console.log('Foto recebida?', !!fotoBase64);
+    
+    // Processar a foto se existir
+    let fotoBuffer = null;
+    
+    if (fotoBase64 && fotoBase64.startsWith('data:image')) {
+      try {
+        // Extrai apenas os dados base64 (remove o prefixo data:image/...)
+        const base64Data = fotoBase64.split(',')[1];
+        fotoBuffer = Buffer.from(base64Data, 'base64');
 
-    // Verificação adicional da conexão com o banco
-    if (!dbInstituicao) {
-      throw new Error('Database connection not established');
+        // Debug: Verifique o tamanho do buffer
+        console.log('Tamanho da imagem (bytes):', fotoBuffer.length);
+        
+        // Validação do tamanho (5MB)
+        if (fotoBuffer.length > 5 * 1024 * 1024) {
+          throw new Error('A imagem deve ter no máximo 5MB');
+        }
+      } catch (error) {
+        console.error('Erro ao processar imagem:', error);
+        return res.status(400).json({
+          success: false,
+          error: 'Erro ao processar imagem',
+          message: error.message
+        });
+      }
     }
 
-    // Verifique a estrutura da tabela
-    const [cols] = await dbInstituicao.query('DESCRIBE colaboradores');
-    console.log('Colunas da tabela:', cols);
+    // Hash da senha
+    const hashedPassword = await bcrypt.hash(senha, 10);
 
+    // Debug: Verifique os dados antes de inserir
+    console.log('Dados para inserção:', {
+      primeiro_nome,
+      email,
+      nome_usuario,
+      temFoto: !!fotoBuffer
+    });
+
+    // Inserir no banco de dados
     const [result] = await dbInstituicao.query(
       `INSERT INTO colaboradores 
        (primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         primeiro_nome,
-        ultimo_nome,
-        numero_contato,
+        ultimo_nome || null,
+        numero_contato || null,
         email,
         nome_usuario,
-        senha,
-        foto
+        hashedPassword,
+        fotoBuffer // Pode ser null se não houver foto
       ]
     );
 
-    res.status(201).json({
+    // Debug: Verifique o resultado da inserção
+    console.log('Resultado da inserção:', result);
+
+    res.json({
       success: true,
       message: 'Colaborador criado com sucesso!',
       id: result.insertId
     });
 
-  } catch (err) {
-    console.error('Erro detalhado:', err);
+  } catch (error) {
+    console.error('Erro completo:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({
+        success: false,
+        error: 'Dados duplicados',
+        message: 'Email ou nome de usuário já está em uso'
+      });
+    }
+
     res.status(500).json({
       success: false,
       error: 'Erro interno no servidor',
-      details: process.env.NODE_ENV === 'development' ? {
-        message: err.message,
-        stack: err.stack,
-        sqlMessage: err.sqlMessage
-      } : undefined
+      message: error.message
     });
   }
 });
@@ -493,16 +535,44 @@ app.get('/api/colaboradores', async (req, res) => {
     });
   }
 });
+
+
 app.get('/api/colaboradores/:id', async (req, res) => {
   try {
-    const [rows] = await dbInstituicao.query('SELECT * FROM colaboradores WHERE id = ?', [req.params.id]);
-    if (rows.length === 0) return res.status(404).json({ error: 'Colaborador não encontrado' });
+    const [rows] = await dbInstituicao.query(
+      'SELECT id, primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, foto FROM colaboradores WHERE id = ?',
+      [req.params.id]
+    );
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ 
+        success: false,
+        error: 'Colaborador não encontrado' 
+      });
+    }
 
     const colaborador = rows[0];
-    colaborador.foto = colaborador.foto ? `/uploads/${colaborador.foto}` : null;
-    res.json(colaborador);
+    
+    // Converter foto binária para base64 se existir
+    if (colaborador.foto) {
+      // Assume que é JPEG por padrão (você pode ajustar conforme necessário)
+      colaborador.fotoBase64 = `data:image/jpeg;base64,${colaborador.foto.toString('base64')}`;
+    }
+    
+    // Remover o buffer binário da resposta
+    delete colaborador.foto;
+    
+    res.json({
+      success: true,
+      data: colaborador
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar colaborador' });
+    console.error('Erro ao buscar colaborador:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Erro ao buscar colaborador',
+      message: err.message 
+    });
   }
 });
 
