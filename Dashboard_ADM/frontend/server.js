@@ -563,19 +563,94 @@ app.get('/api/colaboradores/:id', async (req, res) => {
 
 app.put('/api/colaboradores/:id', async (req, res) => {
   try {
-    const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto } = req.body;
+    const { id } = req.params;
+    let foto = null;
 
-    await dbInstituicao.query(
-      `UPDATE colaboradores SET 
-       primeiro_nome = ?, ultimo_nome = ?, numero_contato = ?, 
-       email = ?, nome_usuario = ?, senha = ?, foto = ?
-       WHERE id = ?`,
-      [primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto, req.params.id]
+    // Processa o upload da foto se existir
+    if (req.files && req.files.foto) {
+      const fotoFile = req.files.foto;
+      const uploadDir = path.join(__dirname, 'uploads');
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      // Gera um nome único para o arquivo
+      const ext = path.extname(fotoFile.name);
+      const fileName = `${Date.now()}${ext}`;
+      const filePath = path.join(uploadDir, fileName);
+
+      // Move o arquivo para o diretório de uploads
+      await fotoFile.mv(filePath);
+      foto = fileName;
+    }
+
+    // Extrai os campos do formulário
+    const {
+      primeiro_nome,
+      ultimo_nome,
+      numero_contato,
+      email,
+      nome_usuario,
+      senha
+    } = req.body;
+
+    // Monta o objeto de atualização
+    const updateData = {
+      primeiro_nome,
+      ultimo_nome,
+      numero_contato,
+      email,
+      nome_usuario
+    };
+
+    // Só atualiza a senha se foi fornecida
+    if (senha && senha.trim() !== '') {
+      updateData.senha = senha;
+    }
+
+    // Só atualiza a foto se foi enviada uma nova
+    if (foto) {
+      updateData.foto = foto;
+    }
+
+    // Executa a atualização no banco de dados
+    const [result] = await dbInstituicao.query(
+      'UPDATE colaboradores SET ? WHERE id = ?',
+      [updateData, id]
     );
 
-    res.json({ success: true, message: 'Colaborador atualizado com sucesso!' });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Colaborador não encontrado'
+      });
+    }
+
+    // Busca os dados atualizados para retornar
+    const [rows] = await dbInstituicao.query(
+      'SELECT * FROM colaboradores WHERE id = ?',
+      [id]
+    );
+
+    const colaborador = rows[0];
+    if (colaborador.foto) {
+      colaborador.foto = `/uploads/${colaborador.foto}`;
+    }
+
+    res.json({
+      success: true,
+      message: 'Colaborador atualizado com sucesso!',
+      data: colaborador
+    });
+
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao atualizar colaborador' });
+    console.error('Erro ao atualizar colaborador:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao atualizar colaborador',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 

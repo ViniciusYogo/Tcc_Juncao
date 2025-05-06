@@ -1,196 +1,541 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editar Colaborador</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #166088;
+      --accent-color: #4fc3f7;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --warning-color: #ffc107;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
       color: #333;
+      background-color: #f5f7fa;
     }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e1e5eb;
+    }
+
+    .app-header h1 {
+      color: var(--secondary-color);
+      font-size: 28px;
+    }
+
+    .btn-back {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-back:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .content-wrapper {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+
+    .profile-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: fit-content;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .avatar-upload {
+      margin: 0 auto 15px;
+      width: 150px;
+      position: relative;
+    }
+
+    .avatar-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #e1e5eb;
+      margin: 0 auto;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-upload {
+      display: block;
+      background-color: var(--accent-color);
+      color: white;
+      text-align: center;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-upload:hover {
+      background-color: #3da8d8;
+    }
+
+    .profile-header h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+      color: var(--dark-color);
+    }
+
+    .profile-header p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .profile-info {
+      border-top: 1px solid #e1e5eb;
+      padding-top: 15px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .info-item i {
+      width: 24px;
+      color: var(--primary-color);
+      margin-right: 10px;
+    }
+
+    #form-editar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+    }
+
+    .form-section {
+      margin-bottom: 25px;
+    }
+
+    .form-section h3 {
+      font-size: 18px;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
     .form-group {
       margin-bottom: 15px;
     }
-    label {
+
+    .form-group label {
       display: block;
       margin-bottom: 5px;
-      font-weight: bold;
+      font-weight: 500;
+      color: #495057;
+      font-size: 14px;
     }
-    input {
+
+    .form-group input {
       width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ddd;
+      padding: 10px;
+      border: 1px solid #ced4da;
       border-radius: 4px;
+      font-size: 14px;
+      transition: border-color 0.3s;
     }
-    button {
-      background-color: #4CAF50;
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      border-top: 1px solid #e1e5eb;
+      padding-top: 20px;
+    }
+
+    .form-actions button {
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .form-actions button[type="submit"] {
+      background-color: var(--success-color);
       color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
+    }
+
+    .form-actions button[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    #btn-excluir {
+      background-color: var(--danger-color);
+      color: white;
+      border: none;
+    }
+
+    #btn-excluir:hover {
+      background-color: #c82333;
+    }
+
+    #togglePassword {
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      background: none;
+      border: none;
+      color: #6c757d;
       cursor: pointer;
-      width: 100%;
-      font-size: 16px;
     }
-    button:hover {
-      background-color: #45a049;
+
+    .password-container {
+      position: relative;
     }
-    .preview-container {
-      margin: 15px 0;
-      text-align: center;
+
+    .password-container input {
+      padding-right: 40px;
     }
-    #preview {
-      max-width: 150px;
-      max-height: 150px;
-      margin-top: 10px;
-      border-radius: 50%;
+
+    small {
+      font-size: 12px;
+      color: #6c757d;
+      display: block;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 768px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Editar Colaborador</h1>
-    <form id="edit-form">
-      <input type="hidden" id="id">
-      
-      <div class="form-group">
-        <label for="primeiro_nome">Primeiro Nome:</label>
-        <input type="text" id="primeiro_nome" name="primeiro_nome" required>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Editar Colaborador</h1>
+      <button class="btn-back" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </button>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar-upload">
+            <div class="avatar-preview" id="avatarPreview">
+              <img id="previewImage" src="https://i.pravatar.cc/150" alt="Foto" />
+            </div>
+            <label for="fotoInput" class="btn-upload">
+              <i class="fas fa-camera"></i> Alterar foto
+            </label>
+            <input type="file" id="fotoInput" name="foto" accept="image/*" hidden />
+          </div>
+          <h2 id="profileName">Carregando...</h2>
+          <p id="profileEmail">carregando...</p>
+        </div>
+
+        <div class="profile-info">
+          <div class="info-item">
+            <i class="fas fa-id-card"></i>
+            <span id="profileId">#---</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-user"></i>
+            <span id="profileUser">carregando...</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <span id="profileContact">carregando...</span>
+          </div>
+        </div>
       </div>
-      
-      <div class="form-group">
-        <label for="ultimo_nome">Último Nome:</label>
-        <input type="text" id="ultimo_nome" name="ultimo_nome" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="numero_contato">Número de Contato:</label>
-        <input type="tel" id="numero_contato" name="numero_contato" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="nome_usuario">Nome de Usuário:</label>
-        <input type="text" id="nome_usuario" name="nome_usuario" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
-      </div>
-      
-      <div class="preview-container">
-        <img id="preview" src="" alt="Foto do colaborador">
-      </div>
-      
-      <button type="submit">Salvar Alterações</button>
-    </form>
+
+      <form id="form-editar" enctype="multipart/form-data">
+        <div class="form-section">
+          <h3><i class="fas fa-user-edit"></i> Informações Pessoais</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="primeiro_nome">Primeiro Nome</label>
+              <input type="text" id="primeiro_nome" name="primeiro_nome" required />
+            </div>
+            <div class="form-group">
+              <label for="ultimo_nome">Último Nome</label>
+              <input type="text" id="ultimo_nome" name="ultimo_nome" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3><i class="fas fa-envelope"></i> Informações de Contato</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="numero_contato">Telefone</label>
+              <input type="text" id="numero_contato" name="numero_contato" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3><i class="fas fa-lock"></i> Credenciais</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome_usuario">Usuário</label>
+              <input type="text" id="nome_usuario" name="nome_usuario" required />
+            </div>
+            <div class="form-group password-container">
+              <label for="senha">Senha</label>
+              <input type="password" id="senha" name="senha" />
+              <button type="button" id="togglePassword">
+                <i class="fas fa-eye"></i>
+              </button>
+              <small>Deixe em branco para manter a atual</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="btn-excluir">
+            <i class="fas fa-trash"></i> Excluir
+          </button>
+          <button type="submit">
+            <i class="fas fa-save"></i> Salvar
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    async function loadColaborador() {
+    document.addEventListener('DOMContentLoaded', function () {
       const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      
-      if (!id) {
-        alert('ID do colaborador não especificado');
-        window.location.href = '/';
+      const colaboradorId = urlParams.get('id');
+
+      if (!colaboradorId) {
+        alert('ID do colaborador não encontrado na URL');
+        window.location.href = 'colaboradores.html';
         return;
       }
-      
-      try {
-        const response = await fetch(`http://localhost:5500/api/colaboradores/${id}`);
-        
-        if (!response.ok) {
-          throw new Error('Colaborador não encontrado');
+
+      const form = document.getElementById('form-editar');
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('senha');
+      const fotoInput = document.getElementById('fotoInput');
+      const previewImage = document.getElementById('previewImage');
+      const btnExcluir = document.getElementById('btn-excluir');
+
+      // Carrega os dados do colaborador
+      async function carregarDados() {
+        try {
+          const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`);
+          if (!response.ok) throw new Error('Erro ao carregar dados');
+
+          const colaborador = await response.json();
+
+          // Preenche os campos do formulário
+          document.getElementById('primeiro_nome').value = colaborador.primeiro_nome || '';
+          document.getElementById('ultimo_nome').value = colaborador.ultimo_nome || '';
+          document.getElementById('email').value = colaborador.email || '';
+          document.getElementById('numero_contato').value = colaborador.numero_contato || '';
+          document.getElementById('nome_usuario').value = colaborador.nome_usuario || '';
+
+          // Atualiza a visualização do perfil
+          document.getElementById('profileName').textContent =
+            `${colaborador.primeiro_nome || ''} ${colaborador.ultimo_nome || ''}`.trim();
+          document.getElementById('profileEmail').textContent = colaborador.email || '';
+          document.getElementById('profileUser').textContent = colaborador.nome_usuario || '';
+          document.getElementById('profileContact').textContent = colaborador.numero_contato || '';
+          document.getElementById('profileId').textContent = `#${colaboradorId}`;
+
+          // Atualiza a foto do perfil se existir
+          if (colaborador.foto) {
+            previewImage.src = colaborador.foto;
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Erro ao carregar dados do colaborador');
+          window.location.href = 'colaboradores.html';
         }
-        
-        const colaborador = await response.json();
-        
-        document.getElementById('id').value = colaborador.id;
-        document.getElementById('primeiro_nome').value = colaborador.primeiro_nome;
-        document.getElementById('ultimo_nome').value = colaborador.ultimo_nome;
-        document.getElementById('numero_contato').value = colaborador.numero_contato;
-        document.getElementById('email').value = colaborador.email;
-        document.getElementById('nome_usuario').value = colaborador.nome_usuario;
-        document.getElementById('senha').value = colaborador.senha;
-        
-        if (colaborador.foto) {
-          document.getElementById('preview').src = colaborador.foto;
-          document.getElementById('preview').style.display = 'block';
-        }
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao carregar colaborador: ' + error.message);
-        window.location.href = '/';
       }
-    }
-    
-    document.getElementById('edit-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const submitBtn = this.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Salvando...";
-      
-      try {
-        const id = document.getElementById('id').value;
-        const colaborador = {
-          primeiro_nome: document.getElementById('primeiro_nome').value,
-          ultimo_nome: document.getElementById('ultimo_nome').value,
-          numero_contato: document.getElementById('numero_contato').value,
-          email: document.getElementById('email').value,
-          nome_usuario: document.getElementById('nome_usuario').value,
-          senha: document.getElementById('senha').value,
-          foto: document.getElementById('preview').src.replace(/^.*\/uploads\//, '')
-        };
-        
-        const response = await fetch(`http://localhost:5500/api/colaboradores/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(colaborador)
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao atualizar colaborador');
+
+      // Alternar visibilidade da senha
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
+
+      // Visualização da nova imagem selecionada
+      fotoInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImage.src = e.target.result;
+          }
+          reader.readAsDataURL(file);
         }
-        
-        alert('Colaborador atualizado com sucesso!');
-        window.location.href = '/';
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro: ' + error.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Salvar Alterações";
-      }
+      });
+
+      // Envio do formulário
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        const btnOriginalText = btnSubmit.innerHTML;
+
+        try {
+          btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+          btnSubmit.disabled = true;
+
+          // Cria FormData e adiciona todos os campos manualmente
+          const formData = new FormData();
+          formData.append('primeiro_nome', document.getElementById('primeiro_nome').value);
+          formData.append('ultimo_nome', document.getElementById('ultimo_nome').value);
+          formData.append('numero_contato', document.getElementById('numero_contato').value);
+          formData.append('email', document.getElementById('email').value);
+          formData.append('nome_usuario', document.getElementById('nome_usuario').value);
+          
+          // Só adiciona a senha se foi alterada
+          const senha = document.getElementById('senha').value;
+          if (senha && senha.trim() !== '') {
+            formData.append('senha', senha);
+          }
+
+          // Adiciona a foto se foi selecionada uma nova
+          if (fotoInput.files[0]) {
+            formData.append('foto', fotoInput.files[0]);
+          }
+
+          const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
+            method: 'PUT',
+            body: formData
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Erro ao salvar alterações');
+          }
+
+          const data = await response.json();
+          alert(data.message || 'Alterações salvas com sucesso!');
+
+          // Atualiza a visualização da foto se foi alterada
+          if (data.data && data.data.foto) {
+            previewImage.src = data.data.foto;
+          }
+
+        } catch (error) {
+          console.error('Erro:', error);
+          alert(error.message || 'Erro ao salvar alterações');
+        } finally {
+          btnSubmit.innerHTML = btnOriginalText;
+          btnSubmit.disabled = false;
+        }
+      });
+
+      // Exclusão do colaborador
+      btnExcluir.addEventListener('click', async function () {
+        if (confirm('Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.')) {
+          try {
+            const response = await fetch(`http://localhost:5500/api/colaboradores/${colaboradorId}`, {
+              method: 'DELETE'
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Erro ao excluir colaborador');
+            }
+
+            alert('Colaborador excluído com sucesso!');
+            window.location.href = 'colaboradores.html';
+          } catch (error) {
+            console.error('Erro:', error);
+            alert(error.message || 'Erro ao excluir colaborador');
+          }
+        }
+      });
+
+      // Carrega os dados iniciais
+      carregarDados();
     });
-    
-    // Carrega os dados quando a página é aberta
-    window.addEventListener('DOMContentLoaded', loadColaborador);
   </script>
 </body>
+
 </html>
