@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,124 +10,337 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      background-color: #f5f5f5;
     }
+
     .form-container {
       max-width: 600px;
       margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+
     .form-group {
       margin-bottom: 15px;
     }
+
     label {
       display: block;
       margin-bottom: 5px;
+      font-weight: bold;
     }
-    input, button {
+
+    input,
+    button {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
     }
+
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
     #preview {
       max-width: 200px;
       max-height: 200px;
       margin-top: 10px;
       display: none;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .file-input-container {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-button {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .file-input-button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .file-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-name {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .error-message {
+      color: #f44336;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
     }
   </style>
 </head>
+
 <body>
   <div class="form-container">
-    <h2>Criar Colaborador</h2>
+    <h2 style="text-align: center; color: #333;">Criar Colaborador</h2>
     <form id="registration-form">
       <div class="form-group">
-        <label for="primeiro_nome">Primeiro Nome</label>
+        <label for="primeiro_nome">Primeiro Nome *</label>
         <input type="text" id="primeiro_nome" name="primeiro_nome" required>
+        <div id="primeiro_nome_error" class="error-message"></div>
       </div>
-      
+
       <div class="form-group">
         <label for="ultimo_nome">Último Nome</label>
-        <input type="text" id="ultimo_nome" name="ultimo_nome" required>
+        <input type="text" id="ultimo_nome" name="ultimo_nome">
       </div>
-      
+
       <div class="form-group">
         <label for="numero_contato">Número de Contato</label>
-        <input type="tel" id="numero_contato" name="numero_contato" required>
+        <input type="tel" id="numero_contato" name="numero_contato">
       </div>
-      
+
       <div class="form-group">
-        <label for="email">E-mail</label>
+        <label for="email">E-mail *</label>
         <input type="email" id="email" name="email" required>
+        <div id="email_error" class="error-message"></div>
       </div>
-      
+
       <div class="form-group">
-        <label for="nome_usuario">Nome de Usuário</label>
+        <label for="nome_usuario">Nome de Usuário *</label>
         <input type="text" id="nome_usuario" name="nome_usuario" required>
+        <div id="nome_usuario_error" class="error-message"></div>
       </div>
-      
+
       <div class="form-group">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" required>
+        <label for="senha">Senha *</label>
+        <input type="password" id="senha" name="senha" required minlength="6">
+        <div id="senha_error" class="error-message"></div>
       </div>
-      
+
       <div class="form-group">
         <label for="foto">Foto de Perfil</label>
-        <input type="file" id="foto" name="foto" accept="image/*">
+        <div class="file-input-container">
+          <div class="file-input-button">Escolher Arquivo</div>
+          <input type="file" id="foto" name="foto" accept="image/*" class="file-input">
+        </div>
+        <div id="file-name" class="file-name">Nenhum arquivo escolhido</div>
         <img id="preview" alt="Pré-visualização da imagem">
+        <div id="foto_error" class="error-message"></div>
       </div>
-      
-      <button type="submit">Cadastrar</button>
+
+      <button type="submit" id="submit-btn">Cadastrar</button>
     </form>
   </div>
 
   <script>
-    document.getElementById('foto').addEventListener('change', function(e) {
+    // Elementos do DOM
+    const form = document.getElementById('registration-form');
+    const fotoInput = document.getElementById('foto');
+    const preview = document.getElementById('preview');
+    const fileNameDisplay = document.getElementById('file-name');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorMessages = {
+      primeiro_nome: document.getElementById('primeiro_nome_error'),
+      email: document.getElementById('email_error'),
+      nome_usuario: document.getElementById('nome_usuario_error'),
+      senha: document.getElementById('senha_error'),
+      foto: document.getElementById('foto_error')
+    };
+
+    // Mostrar nome do arquivo e pré-visualização
+    fotoInput.addEventListener('change', function (e) {
       const file = e.target.files[0];
-      const preview = document.getElementById('preview');
-      
+
       if (file) {
+        // Validação do tipo de arquivo
+        if (!file.type.match('image.*')) {
+          showError('foto', 'Por favor, selecione uma imagem (JPEG, PNG, etc.)');
+          e.target.value = '';
+          fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+          preview.style.display = 'none';
+          return;
+        }
+
+        // Validação do tamanho do arquivo (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          showError('foto', 'A imagem deve ter no máximo 5MB');
+          e.target.value = '';
+          fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+          preview.style.display = 'none';
+          return;
+        }
+
+        fileNameDisplay.textContent = file.name;
+        hideError('foto');
+
+        // Mostrar pré-visualização
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           preview.src = e.target.result;
           preview.style.display = 'block';
         };
         reader.readAsDataURL(file);
       } else {
+        fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
         preview.style.display = 'none';
       }
     });
 
-    document.getElementById('registration-form').addEventListener('submit', async function(e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      
-      const formData = new FormData(this);
-      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      // Validação básica do formulário
+      if (!validateForm()) {
+        return;
+      }
+
+      // Desabilita o botão durante o envio
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Enviando...';
-      
+      submitBtn.textContent = 'Cadastrando...';
+
       try {
+        // Criar FormData para enviar arquivo e dados
+        const formData = new FormData();
+        formData.append('primeiro_nome', form.primeiro_nome.value);
+        formData.append('ultimo_nome', form.ultimo_nome.value);
+        formData.append('numero_contato', form.numero_contato.value);
+        formData.append('email', form.email.value);
+        formData.append('nome_usuario', form.nome_usuario.value);
+        formData.append('senha', form.senha.value);
+
+        // Adiciona o arquivo se existir
+        const fileInput = document.getElementById('foto');
+        if (fileInput.files.length > 0) {
+          formData.append('foto', fileInput.files[0]);
+        }
+
+        // Enviar como FormData
         const response = await fetch('http://localhost:5500/api/criar-colaborador', {
           method: 'POST',
           body: formData
+          // Não definir Content-Type - o navegador fará isso automaticamente com o boundary
         });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao cadastrar colaborador');
-        }
-        
+
         const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || data.message || 'Erro ao cadastrar colaborador');
+        }
+
+        // Sucesso
         alert(data.message || 'Colaborador cadastrado com sucesso!');
-        this.reset();
-        document.getElementById('preview').style.display = 'none';
-        
+        form.reset();
+        preview.style.display = 'none';
+        fileNameDisplay.textContent = 'Nenhum arquivo escolhido';
+
       } catch (error) {
         console.error('Erro:', error);
         alert('Erro: ' + error.message);
       } finally {
+        // Reabilita o botão
         submitBtn.disabled = false;
         submitBtn.textContent = 'Cadastrar';
       }
     });
+    
+    // Funções auxiliares
+    function validateForm() {
+      let isValid = true;
+
+      // Validação do primeiro nome
+      if (!form.primeiro_nome.value.trim()) {
+        showError('primeiro_nome', 'Por favor, informe o primeiro nome');
+        isValid = false;
+      } else {
+        hideError('primeiro_nome');
+      }
+
+      // Validação do e-mail
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!form.email.value.trim()) {
+        showError('email', 'Por favor, informe o e-mail');
+        isValid = false;
+      } else if (!emailRegex.test(form.email.value)) {
+        showError('email', 'Por favor, informe um e-mail válido');
+        isValid = false;
+      } else {
+        hideError('email');
+      }
+
+      // Validação do nome de usuário
+      if (!form.nome_usuario.value.trim()) {
+        showError('nome_usuario', 'Por favor, informe o nome de usuário');
+        isValid = false;
+      } else {
+        hideError('nome_usuario');
+      }
+
+      // Validação da senha
+      if (!form.senha.value) {
+        showError('senha', 'Por favor, informe a senha');
+        isValid = false;
+      } else if (form.senha.value.length < 6) {
+        showError('senha', 'A senha deve ter pelo menos 6 caracteres');
+        isValid = false;
+      } else {
+        hideError('senha');
+      }
+
+      return isValid;
+    }
+
+    function showError(field, message) {
+      if (errorMessages[field]) {
+        errorMessages[field].textContent = message;
+        errorMessages[field].style.display = 'block';
+      }
+    }
+
+    function hideError(field) {
+      if (errorMessages[field]) {
+        errorMessages[field].style.display = 'none';
+      }
+    }
   </script>
 </body>
+
 </html>

@@ -5,10 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const xlsx = require('xlsx');
+const fileupload = require('express-fileupload');
 const app = express();
 const PORT = 5500;
-const bcrypt = require('bcryptjs');
-
 
 // Configurações gerais
 const logDir = path.join(__dirname, 'logs');
@@ -84,6 +83,16 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(fileupload({
+  useTempFiles: true,
+  tempFileDir: path.join(__dirname, 'temp'),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  abortOnLimit: true,
+  responseOnLimit: 'O arquivo é muito grande (limite de 5MB)',
+  safeFileNames: true,
+  preserveExtension: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
@@ -145,10 +154,34 @@ function formatarDataIndividual(dateString) {
   }
 }
 
+function formatarHora(timeString) {
+  if (!timeString) return null;
 
+  try {
+    // Formato HH:MM:SS
+    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}:\d{2}$/)) {
+      return timeString;
+    }
 
+    // Formato HH:MM
+    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}$/)) {
+      return `${timeString}:00`;
+    }
 
+    // Número decimal do Excel (fração do dia)
+    if (typeof timeString === 'number') {
+      const date = xlsx.SSF.parse_date_code(timeString);
+      const hours = Math.floor(timeString * 24);
+      const minutes = Math.floor((timeString * 24 - hours) * 60);
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00'`;
+    }
 
+    return null;
+  } catch (e) {
+    console.error("Erro ao formatar hora:", timeString, e);
+    return null;
+  }
+}
 
 // Rotas de Atividades
 app.get('/api/atividades', async (req, res) => {
@@ -323,61 +356,6 @@ app.post('/api/atividades', async (req, res) => {
     });
   }
 });
-app.put('/api/atividades/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    console.log('Dados recebidos:', req.body); // DEBUG
-
-    const conn = await dbInstituicao.getConnection();
-
-    try {
-      const [result] = await conn.query(
-        `UPDATE atividades SET
-          descricao = ?,
-          nomePessoalAtribuido = ?,
-          datasAtividadeIndividual = ?,
-          horaInicioAgendada = ?,
-          fimAgendado = ?,
-          descricaoLocalizacaoAtribuida = ?,
-          confirmada = ?
-        WHERE id = ?`,
-        [
-          req.body.descricao,
-          req.body.nomePessoalAtribuido,
-          req.body.datasAtividadeIndividual,
-          req.body.horaInicioAgendada,
-          req.body.fimAgendado,
-          req.body.descricaoLocalizacaoAtribuida,
-          req.body.confirmada,
-          id
-        ]
-      );
-
-      console.log('Resultado da atualização:', result); // DEBUG
-
-      if (result.affectedRows === 0) {
-        return res.status(404).json({
-          success: false,
-          error: 'Atividade não encontrada'
-        });
-      }
-
-      res.json({
-        success: true,
-        message: 'Atividade atualizada com sucesso'
-      });
-    } finally {
-      conn.release();
-    }
-  } catch (error) {
-    console.error('Erro detalhado:', error); // DEBUG
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor',
-      message: error.message
-    });
-  }
-});
 
 app.delete('/api/atividades/:id', async (req, res) => {
   try {
@@ -413,96 +391,131 @@ app.delete('/api/atividades/:id', async (req, res) => {
   }
 });
 
-
-// Rota de criação de colaborador 
-app.post('/api/criar-colaborador', async (req, res) => {
+app.put('/api/atividades/:id', async (req, res) => {
   try {
-    const { primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, fotoBase64 } = req.body;
+    const { id } = req.params;
+    const {
+      descricao,
+      nomePessoalAtribuido,
+      horaInicioAgendada,
+      descricaoLocalizacaoAtribuida,
+    } = req.body;
 
-    // Debug: Verifique se a foto está sendo recebida
-    console.log('Foto recebida?', !!fotoBase64);
-    
-    // Processar a foto se existir
-    let fotoBuffer = null;
-    
-    if (fotoBase64 && fotoBase64.startsWith('data:image')) {
-      try {
-        // Extrai apenas os dados base64 (remove o prefixo data:image/...)
-        const base64Data = fotoBase64.split(',')[1];
-        fotoBuffer = Buffer.from(base64Data, 'base64');
+    const conn = await dbInstituicao.getConnection();
 
-        // Debug: Verifique o tamanho do buffer
-        console.log('Tamanho da imagem (bytes):', fotoBuffer.length);
-        
-        // Validação do tamanho (5MB)
-        if (fotoBuffer.length > 5 * 1024 * 1024) {
-          throw new Error('A imagem deve ter no máximo 5MB');
-        }
-      } catch (error) {
-        console.error('Erro ao processar imagem:', error);
-        return res.status(400).json({
+    try {
+      const [result] = await conn.query(
+        `UPDATE atividades SET
+          descricao = ?,
+          nomePessoalAtribuido = ?,
+          horaInicioAgendada = ?,
+          descricaoLocalizacaoAtribuida = ?
+        WHERE id = ?`,
+        [
+          descricao,
+          nomePessoalAtribuido,
+          horaInicioAgendada,
+          descricaoLocalizacaoAtribuida,
+          id
+        ]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
           success: false,
-          error: 'Erro ao processar imagem',
-          message: error.message
+          error: 'Atividade não encontrada'
         });
       }
+
+      res.json({
+        success: true,
+        message: 'Atividade atualizada com sucesso'
+      });
+    } finally {
+      conn.release();
     }
+  } catch (error) {
+    log(`Erro ao atualizar atividade: ${error.stack}`);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno no servidor'
+    });
+  }
+});
 
-    // Hash da senha
-    const hashedPassword = await bcrypt.hash(senha, 10);
+// Rotas de Colaboradores
+app.post('/api/criar-colaborador', async (req, res) => {
+  try {
+    console.log('Dados do corpo:', req.body);
+    console.log('Arquivo recebido:', req.files ? req.files.foto : null);
 
-    // Debug: Verifique os dados antes de inserir
-    console.log('Dados para inserção:', {
+    // Extrai os campos do corpo
+    const {
       primeiro_nome,
+      ultimo_nome,
+      numero_contato,
       email,
       nome_usuario,
-      temFoto: !!fotoBuffer
-    });
+      senha
+    } = req.body;
 
-    // Inserir no banco de dados
+    let foto = null;
+
+    // Processa o upload da foto se existir
+    if (req.files && req.files.foto) {
+      const fotoFile = req.files.foto;
+      const uploadDir = path.join(__dirname, 'uploads');
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      // Gera um nome único para o arquivo
+      const ext = path.extname(fotoFile.name);
+      const fileName = `${Date.now()}${ext}`;
+      const filePath = path.join(uploadDir, fileName);
+
+      // Move o arquivo para o diretório de uploads
+      await fotoFile.mv(filePath);
+      foto = fileName;
+    }
+
+    // Verificação adicional da conexão com o banco
+    if (!dbInstituicao) {
+      throw new Error('Database connection not established');
+    }
+
     const [result] = await dbInstituicao.query(
       `INSERT INTO colaboradores 
        (primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         primeiro_nome,
-        ultimo_nome || null,
-        numero_contato || null,
+        ultimo_nome,
+        numero_contato,
         email,
         nome_usuario,
-        hashedPassword,
-        fotoBuffer // Pode ser null se não houver foto
+        senha,
+        foto
       ]
     );
 
-    // Debug: Verifique o resultado da inserção
-    console.log('Resultado da inserção:', result);
-
-    res.json({
+    res.status(201).json({
       success: true,
       message: 'Colaborador criado com sucesso!',
       id: result.insertId
     });
 
-  } catch (error) {
-    console.error('Erro completo:', {
-      message: error.message,
-      stack: error.stack,
-      code: error.code
-    });
-    
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({
-        success: false,
-        error: 'Dados duplicados',
-        message: 'Email ou nome de usuário já está em uso'
-      });
-    }
-
+  } catch (err) {
+    console.error('Erro detalhado:', err);
     res.status(500).json({
       success: false,
       error: 'Erro interno no servidor',
-      message: error.message
+      details: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        stack: err.stack,
+        sqlMessage: err.sqlMessage
+      } : undefined
     });
   }
 });
@@ -535,44 +548,16 @@ app.get('/api/colaboradores', async (req, res) => {
     });
   }
 });
-
-
 app.get('/api/colaboradores/:id', async (req, res) => {
   try {
-    const [rows] = await dbInstituicao.query(
-      'SELECT id, primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, foto FROM colaboradores WHERE id = ?',
-      [req.params.id]
-    );
-    
-    if (rows.length === 0) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Colaborador não encontrado' 
-      });
-    }
+    const [rows] = await dbInstituicao.query('SELECT * FROM colaboradores WHERE id = ?', [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ error: 'Colaborador não encontrado' });
 
     const colaborador = rows[0];
-    
-    // Converter foto binária para base64 se existir
-    if (colaborador.foto) {
-      // Assume que é JPEG por padrão (você pode ajustar conforme necessário)
-      colaborador.fotoBase64 = `data:image/jpeg;base64,${colaborador.foto.toString('base64')}`;
-    }
-    
-    // Remover o buffer binário da resposta
-    delete colaborador.foto;
-    
-    res.json({
-      success: true,
-      data: colaborador
-    });
+    colaborador.foto = colaborador.foto ? `/uploads/${colaborador.foto}` : null;
+    res.json(colaborador);
   } catch (err) {
-    console.error('Erro ao buscar colaborador:', err);
-    res.status(500).json({ 
-      success: false,
-      error: 'Erro ao buscar colaborador',
-      message: err.message 
-    });
+    res.status(500).json({ error: 'Erro ao buscar colaborador' });
   }
 });
 
