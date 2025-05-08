@@ -4,20 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="inserirPlanilha.css">
-    <title>Extrair Dados da Planilha Excel</title>
+    <title>Upload de Planilha</title>
 </head>
 <body>
-    <div class="upload-container">
-        <h1>Upload de Planilha Excel</h1>
-        <div class="file-input-wrapper">
-            <label for="fileInput" class="file-input-label">Selecionar Planilha</label>
-            <input type="file" id="fileInput" accept=".xlsx, .xls" />
-            <div id="fileName" class="file-name"></div>
-        </div>
-        <button id="processButton">Processar Planilha</button>
-        <div id="uploadFeedback" class="upload-feedback" style="display: none;"></div>
+    <div class="content">
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1>Upload de Planilha</h1>
+                    <ul class="breadcrumb">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="upload-container">
+                <h1>Upload de Planilha Excel</h1>
+                <div class="file-input-wrapper">
+                    <label for="fileInput" class="file-input-label">
+                        <i class='bx bx-upload'></i> Selecionar Planilha
+                    </label>
+                    <input type="file" id="fileInput" accept=".xlsx, .xls" />
+                    <div id="fileName" class="file-name"></div>
+                </div>
+                <button id="processButton">Processar Planilha</button>
+                <div id="uploadFeedback" class="upload-feedback"></div>
+            </div>
+            
+            <div id="output"></div>
+        </main>
     </div>
-    <div id="output"></div>
+
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
     <script src="inserirPlanilha.js"></script>
 </body>

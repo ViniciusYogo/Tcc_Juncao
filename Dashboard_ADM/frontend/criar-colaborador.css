@@ -1,10 +1,15 @@
-bodi{
+body{
     position: relative;
     display: flex;
     text-align: center;
     height: 100vh;
     background: var(--primary-color);
 }
+
+body.dark {
+    background: #121212;
+    color: white;
+  }
 
 .conten {
     display: flex;

@@ -10,6 +10,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return [...new Set(valores)].filter(Boolean).sort();
   }
 
+  document.getElementById('export-pdf').addEventListener('click', function() {
+    const calendarElement = document.getElementById('calendar');
+    
+    // Configurações do PDF
+    const options = {
+      margin: 10,
+      filename: 'meu-calendario.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+  
+    // Gerar PDF
+    html2pdf().from(calendarElement).set(options).save();
+  });
+
   // Função para popular selects de filtro
   function popularFiltros() {
     const selectDisciplina = document.getElementById('filtroDisciplina');
@@ -35,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
       selectInstrutor.appendChild(option);
     });
   }
+
+
 
   // Função para aplicar filtros
   function aplicarFiltros() {
