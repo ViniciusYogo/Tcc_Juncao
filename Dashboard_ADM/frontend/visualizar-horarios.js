@@ -1,8 +1,13 @@
+
+
 document.addEventListener('DOMContentLoaded', function () {
+
+
   // Variáveis globais para armazenar os dados originais
   let todosEventos = [];
   let disciplinasUnicas = [];
   let instrutoresUnicos = [];
+  let calendar; // Declaração única da variável calendar
 
   // Função para extrair valores únicos de uma propriedade
   function extrairValoresUnicos(eventos, propriedade) {
@@ -10,31 +15,110 @@ document.addEventListener('DOMContentLoaded', function () {
     return [...new Set(valores)].filter(Boolean).sort();
   }
 
-  document.getElementById('export-pdf').addEventListener('click', function() {
-    const calendarElement = document.getElementById('calendar');
-    
-    // Configurações do PDF
-    const options = {
-      margin: 10,
-      filename: 'meu-calendario.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-  
-    // Gerar PDF
-    html2pdf().from(calendarElement).set(options).save();
-  });
+  // Função para configurar a exportação de PDF (versão única e melhorada)
+  function setupPDFExport() {
+    document.getElementById('export-pdf').addEventListener('click', function () {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
+      btn.disabled = true;
+
+      try {
+        // Mostra mensagem enquanto processa
+        const loadingMessage = document.createElement('div');
+        loadingMessage.style.position = 'fixed';
+        loadingMessage.style.top = '50%';
+        loadingMessage.style.left = '50%';
+        loadingMessage.style.transform = 'translate(-50%, -50%)';
+        loadingMessage.style.backgroundColor = 'rgba(0,0,0,0.7)';
+        loadingMessage.style.color = 'white';
+        loadingMessage.style.padding = '20px';
+        loadingMessage.style.borderRadius = '5px';
+        loadingMessage.style.zIndex = '9999';
+        loadingMessage.textContent = 'Gerando PDF...';
+        document.body.appendChild(loadingMessage);
+
+        // Obtém o elemento do calendário
+        const calendarEl = document.getElementById('calendar');
+
+        // Configurações do html2canvas
+        const options = {
+          scale: 2, // Aumenta a qualidade
+          logging: false,
+          useCORS: true,
+          scrollX: 0,
+          scrollY: -window.scrollY,
+          ignoreElements: function (element) {
+            // Ignora o botão de exportação no PDF
+            return element.id === 'export-pdf';
+          }
+        };
+
+        // Captura o calendário como imagem
+        html2canvas(calendarEl, options).then(canvas => {
+          // Remove a mensagem de carregamento
+          document.body.removeChild(loadingMessage);
+
+          // Configura o PDF
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm'
+          });
+
+          // Adiciona a imagem ao PDF
+          const imgData = canvas.toDataURL('image/png');
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+          // Adiciona título com a data atual
+          const currentDate = new Date();
+          const dateStr = currentDate.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+          });
+
+          pdf.setFontSize(22);
+          pdf.setTextColor(40, 40, 40);
+          pdf.text(`Agenda de Aulas - ${dateStr}`, 10, 15);
+
+          // Salva o PDF
+          pdf.save(`agenda_aulas_${currentDate.getTime()}.pdf`);
+
+          // Restaura o botão
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }).catch(err => {
+          console.error('Erro ao gerar PDF:', err);
+          document.body.removeChild(loadingMessage);
+          showToast('Ocorreu um erro ao gerar o PDF. Por favor, tente novamente.', 'error');
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        });
+      } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        showToast('Erro ao gerar PDF. Verifique o console para detalhes.', 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    });
+  }
+
+
 
   // Função para popular selects de filtro
   function popularFiltros() {
     const selectDisciplina = document.getElementById('filtroDisciplina');
     const selectInstrutor = document.getElementById('filtroInstrutor');
-    
+
     // Limpa opções existentes (mantendo a primeira)
     while (selectDisciplina.options.length > 1) selectDisciplina.remove(1);
     while (selectInstrutor.options.length > 1) selectInstrutor.remove(1);
-    
+
     // Adiciona disciplinas
     disciplinasUnicas.forEach(disciplina => {
       const option = document.createElement('option');
@@ -42,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
       option.textContent = disciplina;
       selectDisciplina.appendChild(option);
     });
-    
+
     // Adiciona instrutores
     instrutoresUnicos.forEach(instrutor => {
       const option = document.createElement('option');
@@ -58,21 +142,21 @@ document.addEventListener('DOMContentLoaded', function () {
   function aplicarFiltros() {
     const filtroDisciplina = document.getElementById('filtroDisciplina').value;
     const filtroInstrutor = document.getElementById('filtroInstrutor').value;
-    
+
     let eventosFiltrados = todosEventos;
-    
+
     if (filtroDisciplina) {
-      eventosFiltrados = eventosFiltrados.filter(evento => 
+      eventosFiltrados = eventosFiltrados.filter(evento =>
         evento.extendedProps.descricao === filtroDisciplina
       );
     }
-    
+
     if (filtroInstrutor) {
-      eventosFiltrados = eventosFiltrados.filter(evento => 
+      eventosFiltrados = eventosFiltrados.filter(evento =>
         evento.extendedProps.instrutor === filtroInstrutor
       );
     }
-    
+
     calendar.removeAllEvents();
     calendar.addEventSource(eventosFiltrados);
   }
@@ -115,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Inicializa o calendário
   var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
+  calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'pt-br',
     initialView: 'timeGridWeek',
     headerToolbar: {
@@ -126,8 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
     customButtons: {
       filtrosButton: {
         text: 'Filtros',
-        click: function() {
-          document.getElementById('filtrosContainer').style.display = 
+        click: function () {
+          document.getElementById('filtrosContainer').style.display =
             document.getElementById('filtrosContainer').style.display === 'block' ? 'none' : 'block';
         }
       }
@@ -276,10 +360,10 @@ document.addEventListener('DOMContentLoaded', function () {
           // Extrai valores únicos para os filtros
           disciplinasUnicas = extrairValoresUnicos(todosEventos, 'descricao');
           instrutoresUnicos = extrairValoresUnicos(todosEventos, 'instrutor');
-          
+
           // Popula os selects de filtro
           popularFiltros();
-          
+
           successCallback(todosEventos);
         } else {
           throw new Error(data.message || 'Erro ao carregar aulas');
@@ -313,6 +397,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Renderiza o calendário
   calendar.render();
+
+  // Configura a exportação para PDF após a inicialização do calendário
+  setupPDFExport();
 
   // Configuração dos botões de ação
   document.getElementById('btnEditar').addEventListener('click', function () {
@@ -454,6 +541,8 @@ document.addEventListener('DOMContentLoaded', function () {
       btnSubmit.disabled = false;
     }
   });
+
+  
 
   // Adiciona listeners para os filtros
   document.getElementById('btnAplicarFiltros').addEventListener('click', aplicarFiltros);
