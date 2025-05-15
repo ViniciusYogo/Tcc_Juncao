@@ -135,7 +135,7 @@
 
       <div class="form-group">
         <label for="numero_contato">Número de Contato</label>
-        <input type="tel" id="numero_contato" name="numero_contato">
+        <input type="tel" id="numero_contato" minlength="13" maxlength="13" name="numero_contato">
       </div>
 
       <div class="form-group">
@@ -154,6 +154,16 @@
         <label for="senha">Senha *</label>
         <input type="password" id="senha" name="senha" required minlength="6">
         <div id="senha_error" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="funcao">Função *</label>
+        <select id="funcao" required>
+          <option value="">Selecione uma função</option>
+          <option value="admin">Administrador</option>
+          <option value="professor">Professor</option>
+        </select>
+        <div id="funcao_error" class="error-message"></div>
       </div>
 
       <div class="form-group">
@@ -183,7 +193,9 @@
       email: document.getElementById('email_error'),
       nome_usuario: document.getElementById('nome_usuario_error'),
       senha: document.getElementById('senha_error'),
-      foto: document.getElementById('foto_error')
+      foto: document.getElementById('foto_error'),
+      funcao: document.getElementById('funcao_error') // Novo
+
     };
 
     // Mostrar nome do arquivo e pré-visualização
@@ -246,6 +258,8 @@
         formData.append('email', form.email.value);
         formData.append('nome_usuario', form.nome_usuario.value);
         formData.append('senha', form.senha.value);
+        formData.append('funcao', form.funcao.value); // Novo campo
+
 
         // Adiciona o arquivo se existir
         const fileInput = document.getElementById('foto');
@@ -281,7 +295,7 @@
         submitBtn.textContent = 'Cadastrar';
       }
     });
-    
+
     // Funções auxiliares
     function validateForm() {
       let isValid = true;

@@ -794,3 +794,20 @@ h1 {
 .zap-btn:hover {
   background-color: #1ebc59;
 }
+
+
+.role-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #4361ee;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}

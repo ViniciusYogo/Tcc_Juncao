@@ -5,6 +5,7 @@ const cors = require('cors');
 const fs = require('fs');
 const multer = require('multer');
 const xlsx = require('xlsx');
+const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
 const session = require('express-session');
 const app = express();
@@ -27,11 +28,11 @@ function log(message) {
 
 // Configuração de sessão
 app.use(session({
-  secret: 'sua_chave_secreta',
+  secret: 'sua_chave_secreta_super_segura_123',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Defina como true em produção com HTTPS
+    secure: false, // Em produção deve ser true com HTTPS
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
 }));
@@ -93,6 +94,12 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname)));
+
+
+
 app.use(fileupload({
   useTempFiles: true,
   tempFileDir: path.join(__dirname, 'temp'),
@@ -121,8 +128,18 @@ const requireAuth = (req, res, next) => {
   if (req.session.authenticated) {
     return next();
   }
-  res.redirect('/');
+  res.status(401).json({ error: 'Não autorizado' });
 };
+
+// Middleware de verificação de função
+const checkRole = (roles) => {
+  return (req, res, next) => {
+    if (roles.includes(req.session.user.funcao)) {
+      return next();
+    }
+    res.status(403).json({ error: 'Acesso negado' });
+  };
+}
 
 // Funções auxiliares para formatação de dados
 function formatarDatas(dateString) {
@@ -198,9 +215,26 @@ function formatarHora(timeString) {
 // ROTA PRINCIPAL (LOGIN)
 app.get('/', (req, res) => {
   if (req.session.authenticated) {
-    return res.redirect('/Dashboard_ADM/frontend/');
+    // Redireciona para o mesmo padrão usado no login
+    return res.redirect('/dashboard');
   }
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/api/user-permissions', requireAuth, (req, res) => {
+  const isAdmin = req.session.user.funcao === 'admin';
+
+  res.json({
+    success: true,
+    data: {
+      isAdmin, // Adiciona esta flag
+      canViewUsers: isAdmin,
+      canCreateUsers: isAdmin,
+      canUploadFiles: isAdmin,
+      canViewSchedules: true,  // Todos podem ver horários
+      canManageSettings: true   // Todos podem acessar configurações
+    }
+  });
 });
 
 // ROTA DE LOGIN
@@ -208,24 +242,57 @@ app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
   try {
-    const [result] = await db.query(
-      'SELECT * FROM administrador WHERE email = ? AND senha = ?',
+    // Verifica se é administrador
+    const [admin] = await db.query(
+      'SELECT id, email, funcao FROM colaboradores WHERE email = ? AND senha = ? AND funcao = "admin"',
       [email, senha]
     );
 
-    if (result.length > 0) {
+    if (admin.length > 0) {
       req.session.authenticated = true;
       req.session.user = {
-        id: result[0].id,
-        email: result[0].email
+        id: admin[0].id,
+        email: admin[0].email,
+        funcao: 'admin'
       };
-      return res.redirect('/Dashboard_ADM/frontend/');
-    } else {
-      return res.send('<script>alert("Email ou senha inválidos!"); window.history.back();</script>');
+      // Redireciona para a rota correta do dashboard
+      return res.json({
+        success: true,
+        redirect: '/Dashboard_ADM/frontend/?funcao=admin'
+      });
     }
+
+    // Verifica se é professor
+    const [professor] = await db.query(
+      'SELECT id, email, funcao FROM colaboradores WHERE email = ? AND senha = ? AND funcao = "professor"',
+      [email, senha]
+    );
+
+    if (professor.length > 0) {
+      req.session.authenticated = true;
+      req.session.user = {
+        id: professor[0].id,
+        email: professor[0].email,
+        funcao: 'professor'
+      };
+      // Redireciona para a rota correta do dashboard
+      return res.json({
+        success: true,
+        redirect: '/Dashboard_ADM/frontend/?funcao=professor'
+      });
+    }
+
+    return res.status(401).json({
+      success: false,
+      error: 'E-mail ou senha inválidos'
+    });
+
   } catch (err) {
-    log(`Erro no login: ${err.stack}`);
-    return res.status(500).send('Erro no servidor.');
+    console.error('Erro no login:', err);
+    return res.status(500).json({
+      success: false,
+      error: 'Erro no servidor'
+    });
   }
 });
 
@@ -240,9 +307,52 @@ app.get('/logout', (req, res) => {
 });
 
 // ROTA DO DASHBOARD (PROTEGIDA)
-app.get('/Dashboard_ADM/frontend/*', requireAuth, (req, res, next) => {
-  next();
+app.get('/Dashboard_ADM/frontend', requireAuth, (req, res) => {
+  // Verifica se o caminho físico existe
+  const dashboardPath = path.join(__dirname, 'Dashboard_ADM', 'frontend', 'index.html');
+
+  if (fs.existsSync(dashboardPath)) {
+    res.sendFile(dashboardPath);
+  } else {
+    res.status(404).json({
+      success: false,
+      error: 'Dashboard não encontrado'
+    });
+  }
 });
+
+
+
+
+// Rotas para administradores
+app.get('/api/colaboradores',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
+    try {
+      const [colaboradores] = await db.query('SELECT * FROM colaboradores');
+      res.json(colaboradores);
+    } catch (err) {
+      res.status(500).json({ error: 'Erro ao buscar colaboradores' });
+    }
+  }
+);
+
+// Rotas para professores
+app.get('/api/horarios',
+  requireAuth,
+  checkRole(['admin', 'professor']),
+  async (req, res) => {
+    try {
+      const [horarios] = await db.query('SELECT * FROM atividades');
+      res.json(horarios);
+    } catch (err) {
+      res.status(500).json({ error: 'Erro ao buscar horários' });
+    }
+  }
+);
+
+
 
 // Rotas de Atividades (PROTEGIDAS)
 app.get('/api/atividades', requireAuth, async (req, res) => {

@@ -43,7 +43,7 @@
   <h1>Colaboradores Cadastrados</h1>
 
   <div id="colaboradores-container" class="cards-wrapper">
-    <!-- Cards gerados via JS -->
+
   </div>
 
   <script>
@@ -68,7 +68,6 @@
 
           return `
             <div class="card-colaborador" onclick="window.location.href='edicao_colaborador.html?id=${c.id}'">
-              <img src="${avatar}" alt="Foto de ${c.primeiro_nome}" class="card-img" />
               <h3>${c.primeiro_nome} ${c.ultimo_nome}</h3>
               <a href="${whatsapp}" target="_blank" class="zap-btn" onclick="event.stopPropagation()">WhatsApp</a>
             </div>

@@ -1,98 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Senai</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para a página de login */
+        .login-logo {
+            max-width: 250px;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password,
+        .back-to-login {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a,
+        .back-to-login a {
+            color: #4361ee;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login__field input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .error-message {
+            color: #ff3333;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="container">
+        <div class="screen">
+            <div class="screen__content">
+                <!-- FORMULÁRIO DE LOGIN -->
+                <form class="login" id="login-form">
+                    <div class="logo-container">
+                        <img src="https://www.imagemhost.com.br/images/2024/11/22/Logo-novo-SENAI_-sem-slogan_755X325.png"
+                            alt="Logo Senai" class="login-logo">
+                    </div>
 
-<div class="container">
-    <div class="screen">
-        <div class="screen__content">
+                    <div id="error-message" class="error-message"></div>
 
-            <!-- FORMULÁRIO DE LOGIN -->
-            <form class="login" id="login-form" action="/login" method="POST">
-                <div class="logo-container">
-                    <img src="https://www.imagemhost.com.br/images/2024/11/22/Logo-novo-SENAI_-sem-slogan_755X325.png" alt="Logo Senai" class="login-logo">
-                </div>
+                    <div class="login__field">
+                        <i class="login__icon fas fa-user"></i>
+                        <input type="text" name="email" class="login__input" placeholder="E-mail" required>
+                    </div>
+                    <div class="login__field">
+                        <i class="login__icon fas fa-lock"></i>
+                        <input type="password" name="senha" class="login__input" placeholder="Senha" required>
+                    </div>
 
-                <div class="login__field">
-                    <i class="login__icon fas fa-user"></i>
-                    <input type="text" name="email" class="login__input" placeholder="User name / Email" required>
-                </div>
-                <div class="login__field">
-                    <i class="login__icon fas fa-lock"></i>
-                    <input type="password" name="senha" class="login__input" placeholder="Password" required>
-                </div>
+                    <div class="login__field">
+                        <input type="checkbox" id="keep-connected">
+                        <label for="keep-connected">Manter Conectado</label>
+                    </div>
 
-                <div class="login__field">
-                    <input type="checkbox" id="keep-connected">
-                    <label for="keep-connected">Manter Conectado</label>
-                </div>
+                    <button type="submit" class="button login__submit">
+                        <span class="button__text">Acessar</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
 
-                <button class="button login__submit">
-                    <span class="button__text">Acessar</span>
-                    <i class="button__icon fas fa-chevron-right"></i>
-                </button>
+                    <p class="forgot-password">
+                        <a href="#" onclick="showForgotPassword()">Esqueceu sua senha?</a>
+                    </p>
+                </form>
 
-                <p class="forgot-password">
-                    <a href="#" onclick="showForgotPassword()">Esqueceu sua senha?</a>
-                </p>
-            </form>
+                <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
+                <form class="forgot-password-form" id="forgot-password-form" style="display: none;">
+                    <h3>Recuperação de Senha</h3>
+                    <p>Digite seu e-mail para receber um link de redefinição de senha.</p>
 
-            <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
-            <form class="forgot-password-form" id="forgot-password-form" style="display: none;">
-                <h3>Recuperação de Senha</h3>
-                <p>Digite seu e-mail para receber um link de redefinição de senha.</p>
+                    <div class="login__field">
+                        <i class="login__icon fas fa-envelope"></i>
+                        <input type="email" class="login__input" placeholder="Digite seu e-mail" required>
+                    </div>
 
-                <div class="login__field">
-                    <i class="login__icon fas fa-envelope"></i>
-                    <input type="email" class="login__input" placeholder="Digite seu e-mail">
-                </div>
+                    <button type="submit" class="button login__submit">
+                        <span class="button__text">Enviar Link</span>
+                        <i class="button__icon fas fa-paper-plane"></i>
+                    </button>
 
-                <button class="button login__submit">
-                    <span class="button__text">Enviar Link</span>
-                    <i class="button__icon fas fa-paper-plane"></i>
-                </button>
+                    <p class="back-to-login">
+                        <a href="#" onclick="showLogin()">Voltar ao Login</a>
+                    </p>
+                </form>
 
-                <p class="back-to-login">
-                    <a href="#" onclick="showLogin()">Voltar ao Login</a>
-                </p>
-            </form>
-
-            <div class="social-login">
-                <h3></h3>
-                <div class="social-icons">
-                    <a href="#" class="social-login__icon fab fa-instagram"></a>
-                    <a href="#" class="social-login__icon fab fa-facebook"></a>
-                    <a href="#" class="social-login__icon fab fa-twitter"></a>
+                <div class="social-login">
+                    <h3></h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-login__icon fab fa-instagram"></a>
+                        <a href="#" class="social-login__icon fab fa-facebook"></a>
+                        <a href="#" class="social-login__icon fab fa-twitter"></a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="screen__background">
-            <span class="screen__background__shape screen__background__shape4"></span>
-            <span class="screen__background__shape screen__background__shape3"></span>
-            <span class="screen__background__shape screen__background__shape2"></span>
-            <span class="screen__background__shape screen__background__shape1"></span>
+            <div class="screen__background">
+                <span class="screen__background__shape screen__background__shape4"></span>
+                <span class="screen__background__shape screen__background__shape3"></span>
+                <span class="screen__background__shape screen__background__shape2"></span>
+                <span class="screen__background__shape screen__background__shape1"></span>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    function showForgotPassword() {
-        document.getElementById("login-form").style.display = "none";
-        document.getElementById("forgot-password-form").style.display = "block";
-    }
+    <script>
+        // Funções para alternar entre formulários
+        function showForgotPassword() {
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("forgot-password-form").style.display = "block";
+        }
 
-    function showLogin() {
-        document.getElementById("forgot-password-form").style.display = "none";
-        document.getElementById("login-form").style.display = "block";
-    }
-</script>
+        function showLogin() {
+            document.getElementById("forgot-password-form").style.display = "none";
+            document.getElementById("login-form").style.display = "block";
+        }
 
+        // Controle do formulário de login
+        document.getElementById("login-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: document.querySelector('input[name="email"]').value,
+                        senha: document.querySelector('input[name="senha"]').value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.redirect) {
+                    window.location.href = result.redirect;
+                } else {
+                    alert(result.error || 'Erro no login');
+                }
+            } catch (error) {
+                alert('Erro na conexão com o servidor');
+            }
+        });
+
+        // Controle do formulário de recuperação de senha (simplificado)
+        document.getElementById("forgot-password-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const email = this.querySelector("input[type='email']").value;
+
+            // Aqui você implementaria a lógica de recuperação de senha
+            alert(`Um link de recuperação foi enviado para: ${email}`);
+            showLogin();
+        });
+    </script>
 </body>
+
 </html>

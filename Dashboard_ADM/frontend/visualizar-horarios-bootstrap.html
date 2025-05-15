@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Lista de Aulas</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            font-weight: bold;
+            background-color: #f1f1f1;
+        }
+
+        .badge-status {
+            font-size: 0.8em;
+            padding: 5px 8px;
+        }
+
+        .status-confirmada {
+            background-color: #28a745;
+        }
+
+        .status-nao-confirmada {
+            background-color: #dc3545;
+        }
+
+        .filtros-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        #export-pdf {
+            margin-left: 10px;
+        }
+
+        .periodo-filtro {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .materia-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+        .data-divider {
+            background-color: #e9ecef;
+            padding: 8px 15px;
+            font-weight: bold;
+            border-left: 4px solid #0d6efd;
+            margin: 10px 0;
+        }
+
+        .evento-item {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .evento-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="header text-center">
+            <h1><i class="fas fa-calendar-alt me-2"></i>Lista de Aulas</h1>
+            <p class="lead">Todos os eventos cadastrados no calendário</p>
+        </div>
+
+        <div class="filtros-container">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="periodo-filtro">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="filtroTipoPeriodo" class="form-label">Filtrar por:</label>
+                                <select id="filtroTipoPeriodo" class="form-select">
+                                    <option value="todos">Todos os eventos</option>
+                                    <option value="mes">Mês</option>
+                                    <option value="semana">Semana</option>
+                                    <option value="personalizado">Período personalizado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3" id="containerMes" style="display: none;">
+                                <label for="filtroMes" class="form-label">Mês:</label>
+                                <input type="month" id="filtroMes" class="form-control">
+                            </div>
+                            <div class="col-md-3" id="containerSemana" style="display: none;">
+                                <label for="filtroSemana" class="form-label">Semana de:</label>
+                                <input type="week" id="filtroSemana" class="form-control">
+                            </div>
+                            <div class="col-md-3" id="containerDataInicio" style="display: none;">
+                                <label for="filtroDataInicio" class="form-label">Data inicial:</label>
+                                <input type="date" id="filtroDataInicio" class="form-control">
+                            </div>
+                            <div class="col-md-3" id="containerDataFim" style="display: none;">
+                                <label for="filtroDataFim" class="form-label">Data final:</label>
+                                <input type="date" id="filtroDataFim" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="filtroDisciplina" class="form-label">Filtrar por Disciplina:</label>
+                    <select id="filtroDisciplina" class="form-select">
+                        <option value="">Todas disciplinas</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label for="filtroInstrutor" class="form-label">Filtrar por Instrutor:</label>
+                    <select id="filtroInstrutor" class="form-select">
+                        <option value="">Todos instrutores</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button id="btnAplicarFiltros" class="btn btn-primary w-100">Filtrar</button>
+                    <button id="export-pdf" class="btn btn-danger">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i>Eventos Cadastrados</span>
+                        <span class="badge bg-primary rounded-pill" id="totalEventos">0</span>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="listaEventos">
+                            <!-- Os eventos serão inseridos aqui pelo JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Variáveis para armazenar os dados
+            let todosEventos = [];
+            let eventosFiltrados = [];
+            let disciplinasUnicas = [];
+            let instrutoresUnicos = [];
+            const { jsPDF } = window.jspdf;
+
+            // Objeto para armazenar as cores das matérias
+            let coresMaterias = {};
+
+            // Função para gerar uma cor única baseada no nome da matéria
+            function gerarCorParaMateria(nomeMateria) {
+                // Se já tivermos uma cor para esta matéria, retornamos ela
+                if (coresMaterias[nomeMateria]) {
+                    return coresMaterias[nomeMateria];
+                }
+
+                // Gera um hash numérico a partir do nome da matéria
+                let hash = 0;
+                for (let i = 0; i < nomeMateria.length; i++) {
+                    hash = nomeMateria.charCodeAt(i) + ((hash << 5) - hash);
+                }
+
+                // Converte o hash em uma cor HSL
+                const h = Math.abs(hash) % 360;
+                const s = 70;
+                const l = 50;
+
+                // Converte HSL para RGB
+                const c = (1 - Math.abs(2 * l / 100 - 1)) * s / 100;
+                const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+                const m = l / 100 - c / 2;
+
+                let r, g, b;
+                if (h >= 0 && h < 60) {
+                    [r, g, b] = [c, x, 0];
+                } else if (h >= 60 && h < 120) {
+                    [r, g, b] = [x, c, 0];
+                } else if (h >= 120 && h < 180) {
+                    [r, g, b] = [0, c, x];
+                } else if (h >= 180 && h < 240) {
+                    [r, g, b] = [0, x, c];
+                } else if (h >= 240 && h < 300) {
+                    [r, g, b] = [x, 0, c];
+                } else {
+                    [r, g, b] = [c, 0, x];
+                }
+
+                // Converte para valores de 0-255
+                r = Math.round((r + m) * 255);
+                g = Math.round((g + m) * 255);
+                b = Math.round((b + m) * 255);
+
+                // Formata como cor hexadecimal
+                const cor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+                // Armazena a cor para esta matéria
+                coresMaterias[nomeMateria] = cor;
+
+                return cor;
+            }
+
+            // Função para carregar os eventos da API
+            async function carregarEventos() {
+                try {
+                    const response = await fetch('http://localhost:5500/api/atividades');
+
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        todosEventos = data.data.map(aula => ({
+                            id: aula.id,
+                            atividade: aula.atividade,
+                            instrutor: aula.instrutor,
+                            data: aula.data,
+                            dataObj: new Date(aula.data),
+                            horaInicio: aula.horaInicio,
+                            horaFim: aula.horaFim,
+                            local: aula.local,
+                            status: aula.status
+                        }));
+
+                        // Extrai valores únicos para os filtros
+                        disciplinasUnicas = [...new Set(todosEventos.map(e => e.atividade))].filter(Boolean).sort();
+                        instrutoresUnicos = [...new Set(todosEventos.map(e => e.instrutor))].filter(Boolean).sort();
+
+                        // Gera cores para todas as matérias
+                        disciplinasUnicas.forEach(materia => {
+                            gerarCorParaMateria(materia);
+                        });
+
+                        // Popula os selects de filtro
+                        popularFiltros();
+
+                        // Exibe todos os eventos inicialmente
+                        eventosFiltrados = [...todosEventos];
+                        exibirEventos();
+                    } else {
+                        throw new Error(data.message || 'Erro ao carregar aulas');
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar eventos:', error);
+                    alert('Erro ao carregar eventos: ' + error.message);
+                }
+            }
+
+            // Função para popular os selects de filtro
+            function popularFiltros() {
+                const selectDisciplina = document.getElementById('filtroDisciplina');
+                const selectInstrutor = document.getElementById('filtroInstrutor');
+
+                // Limpa opções existentes (mantendo a primeira)
+                while (selectDisciplina.options.length > 1) selectDisciplina.remove(1);
+                while (selectInstrutor.options.length > 1) selectInstrutor.remove(1);
+
+                // Adiciona disciplinas
+                disciplinasUnicas.forEach(disciplina => {
+                    const option = document.createElement('option');
+                    option.value = disciplina;
+                    option.textContent = disciplina;
+                    selectDisciplina.appendChild(option);
+                });
+
+                // Adiciona instrutores
+                instrutoresUnicos.forEach(instrutor => {
+                    const option = document.createElement('option');
+                    option.value = instrutor;
+                    option.textContent = instrutor;
+                    selectInstrutor.appendChild(option);
+                });
+            }
+
+            // Função para agrupar eventos por data
+            function agruparEventosPorData(eventos) {
+                const grupos = {};
+                
+                eventos.forEach(evento => {
+                    const dataKey = evento.dataObj.toLocaleDateString('pt-BR');
+                    
+                    if (!grupos[dataKey]) {
+                        grupos[dataKey] = [];
+                    }
+                    
+                    grupos[dataKey].push(evento);
+                });
+                
+                // Ordena as datas
+                const datasOrdenadas = Object.keys(grupos).sort((a, b) => {
+                    return new Date(a.split('/').reverse().join('/')) - new Date(b.split('/').reverse().join('/'));
+                });
+                
+                // Cria um novo objeto com as datas ordenadas
+                const gruposOrdenados = {};
+                datasOrdenadas.forEach(data => {
+                    gruposOrdenados[data] = grupos[data];
+                });
+                
+                return gruposOrdenados;
+            }
+
+            // Função para exibir os eventos na lista, agrupados por data
+            function exibirEventos() {
+                const listaEventos = document.getElementById('listaEventos');
+                const totalEventos = document.getElementById('totalEventos');
+
+                listaEventos.innerHTML = '';
+                totalEventos.textContent = eventosFiltrados.length;
+
+                if (eventosFiltrados.length === 0) {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item text-center text-muted';
+                    li.textContent = 'Nenhum evento encontrado com os filtros aplicados';
+                    listaEventos.appendChild(li);
+                    return;
+                }
+
+                // Agrupa eventos por data
+                const eventosPorData = agruparEventosPorData(eventosFiltrados);
+
+                // Para cada data, cria um divisor e os eventos correspondentes
+                for (const [data, eventos] of Object.entries(eventosPorData)) {
+                    // Cria o divisor da data
+                    const divider = document.createElement('li');
+                    divider.className = 'list-group-item data-divider';
+                    divider.innerHTML = `<i class="fas fa-calendar-day me-2"></i>${data}`;
+                    listaEventos.appendChild(divider);
+
+                    // Adiciona os eventos desta data
+                    eventos.forEach(evento => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item evento-item';
+
+                        const horario = evento.horaFim
+                            ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
+                            : evento.horaInicio.substring(0, 5);
+
+                        const status = evento.status
+                            ? '<span class="badge status-confirmada badge-status">Confirmada</span>'
+                            : '<span class="badge status-nao-confirmada badge-status">Não confirmada</span>';
+
+                        // Gera o badge colorido para a matéria
+                        const corMateria = gerarCorParaMateria(evento.atividade);
+                        const badgeMateria = `<span class="materia-badge" style="background-color: ${corMateria}">${evento.atividade}</span>`;
+
+                        li.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">${badgeMateria} ${evento.instrutor}</h5>
+                                    <small class="text-muted">${evento.local || 'Local não especificado'}</small>
+                                </div>
+                                <div class="text-end">
+                                    <div>${horario}</div>
+                                    <div>${status}</div>
+                                </div>
+                            </div>
+                        `;
+
+                        listaEventos.appendChild(li);
+                    });
+                }
+            }
+
+            // Função para filtrar por período
+            function filtrarPorPeriodo() {
+                const tipoPeriodo = document.getElementById('filtroTipoPeriodo').value;
+
+                if (tipoPeriodo === 'todos') {
+                    return todosEventos;
+                }
+
+                let dataInicio, dataFim;
+
+                if (tipoPeriodo === 'mes') {
+                    const mesSelecionado = document.getElementById('filtroMes').value;
+                    if (!mesSelecionado) return todosEventos;
+
+                    const [ano, mes] = mesSelecionado.split('-');
+                    dataInicio = new Date(ano, mes - 1, 1);
+                    dataFim = new Date(ano, mes, 0);
+                }
+                else if (tipoPeriodo === 'semana') {
+                    const semanaSelecionada = document.getElementById('filtroSemana').value;
+                    if (!semanaSelecionada) return todosEventos;
+
+                    const [ano, semana] = semanaSelecionada.split('-W');
+                    dataInicio = getDateOfWeek(parseInt(semana), parseInt(ano));
+                    dataFim = new Date(dataInicio);
+                    dataFim.setDate(dataFim.getDate() + 6);
+                }
+                else if (tipoPeriodo === 'personalizado') {
+                    const dataInicioStr = document.getElementById('filtroDataInicio').value;
+                    const dataFimStr = document.getElementById('filtroDataFim').value;
+
+                    if (!dataInicioStr || !dataFimStr) return todosEventos;
+
+                    dataInicio = new Date(dataInicioStr);
+                    dataFim = new Date(dataFimStr);
+                }
+
+                return todosEventos.filter(evento => {
+                    const dataEvento = evento.dataObj;
+                    return dataEvento >= dataInicio && dataEvento <= dataFim;
+                });
+            }
+
+            // Função auxiliar para obter data da semana ISO
+            function getDateOfWeek(week, year) {
+                const date = new Date(year, 0, 1);
+                const dayOffset = date.getDay() <= 4 ? 1 - date.getDay() : 8 - date.getDay();
+                date.setDate(date.getDate() + dayOffset + (week - 1) * 7);
+                return date;
+            }
+
+            // Função para aplicar todos os filtros
+            function aplicarFiltros() {
+                // Filtra primeiro por período
+                eventosFiltrados = filtrarPorPeriodo();
+
+                // Aplica filtros adicionais
+                const filtroDisciplina = document.getElementById('filtroDisciplina').value;
+                const filtroInstrutor = document.getElementById('filtroInstrutor').value;
+
+                if (filtroDisciplina) {
+                    eventosFiltrados = eventosFiltrados.filter(evento =>
+                        evento.atividade === filtroDisciplina
+                    );
+                }
+
+                if (filtroInstrutor) {
+                    eventosFiltrados = eventosFiltrados.filter(evento =>
+                        evento.instrutor === filtroInstrutor
+                    );
+                }
+
+                exibirEventos();
+            }
+
+            // Função para exportar para PDF
+            function exportarParaPDF() {
+                const doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm'
+                });
+
+                // Título do documento
+                const titulo = 'Relatório de Aulas';
+                const tipoPeriodo = document.getElementById('filtroTipoPeriodo').value;
+                let periodo = '';
+
+                // Adiciona informações do período ao título
+                if (tipoPeriodo === 'mes') {
+                    const mesSelecionado = document.getElementById('filtroMes').value;
+                    if (mesSelecionado) {
+                        const [ano, mes] = mesSelecionado.split('-');
+                        periodo = `Mês: ${mes}/${ano}`;
+                    }
+                }
+                else if (tipoPeriodo === 'semana') {
+                    const semanaSelecionada = document.getElementById('filtroSemana').value;
+                    if (semanaSelecionada) {
+                        const [ano, semana] = semanaSelecionada.split('-W');
+                        periodo = `Semana ${semana} de ${ano}`;
+                    }
+                }
+                else if (tipoPeriodo === 'personalizado') {
+                    const dataInicio = document.getElementById('filtroDataInicio').value;
+                    const dataFim = document.getElementById('filtroDataFim').value;
+                    if (dataInicio && dataFim) {
+                        periodo = `Período: ${formatarDataParaExibicao(dataInicio)} a ${formatarDataParaExibicao(dataFim)}`;
+                    }
+                }
+
+                // Adiciona filtros aplicados
+                const filtroDisciplina = document.getElementById('filtroDisciplina').value;
+                const filtroInstrutor = document.getElementById('filtroInstrutor').value;
+
+                let filtros = [];
+                if (filtroDisciplina) filtros.push(`Disciplina: ${filtroDisciplina}`);
+                if (filtroInstrutor) filtros.push(`Instrutor: ${filtroInstrutor}`);
+
+                // Configuração do cabeçalho
+                doc.setFontSize(16);
+                doc.text(titulo, 14, 15);
+
+                doc.setFontSize(12);
+                if (periodo) doc.text(periodo, 14, 22);
+                if (filtros.length > 0) doc.text(filtros.join(', '), 14, 29);
+
+                // Agrupa eventos por data para o PDF
+                const eventosPorData = agruparEventosPorData(eventosFiltrados);
+                let startY = periodo || filtros.length > 0 ? 35 : 25;
+
+                // Para cada data, adiciona uma seção no PDF
+                for (const [data, eventos] of Object.entries(eventosPorData)) {
+                    // Adiciona o cabeçalho da data
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`Data: ${data}`, 14, startY);
+                    startY += 7;
+
+                    // Cabeçalho da tabela
+                    const headers = [
+                        { title: "Disciplina", dataKey: "atividade" },
+                        { title: "Instrutor", dataKey: "instrutor" },
+                        { title: "Horário", dataKey: "horario" },
+                        { title: "Local", dataKey: "local" },
+                        { title: "Status", dataKey: "status" }
+                    ];
+
+                    // Preparar dados para a tabela
+                    const dadosTabela = eventos.map(evento => {
+                        const horario = evento.horaFim
+                            ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
+                            : evento.horaInicio.substring(0, 5);
+                        const status = evento.status ? 'Confirmada' : 'Não confirmada';
+
+                        return {
+                            atividade: evento.atividade,
+                            instrutor: evento.instrutor,
+                            horario: horario,
+                            local: evento.local || 'Não especificado',
+                            status: status
+                        };
+                    });
+
+                    // Adiciona a tabela ao PDF
+                    doc.autoTable({
+                        head: [headers.map(h => h.title)],
+                        body: dadosTabela.map(row => headers.map(h => row[h.dataKey])),
+                        startY: startY,
+                        margin: { top: 10 },
+                        styles: {
+                            fontSize: 10,
+                            cellPadding: 3,
+                            overflow: 'linebreak'
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 'auto' },
+                            1: { cellWidth: 'auto' },
+                            2: { cellWidth: 'auto' },
+                            3: { cellWidth: 'auto' },
+                            4: { cellWidth: 'auto' }
+                        }
+                    });
+
+                    // Atualiza a posição Y para a próxima seção
+                    startY = doc.lastAutoTable.finalY + 10;
+                    
+                    // Adiciona uma nova página se necessário
+                    if (startY > 280) {
+                        doc.addPage();
+                        startY = 20;
+                    }
+                }
+
+                // Salva o PDF
+                const dataAtual = new Date().toISOString().split('T')[0];
+                doc.save(`relatorio_aulas_${dataAtual}.pdf`);
+            }
+
+            // Função para formatar data para exibição
+            function formatarDataParaExibicao(dataStr) {
+                const [ano, mes, dia] = dataStr.split('-');
+                return `${dia}/${mes}/${ano}`;
+            }
+
+            // Mostrar/ocultar controles de filtro por período
+            document.getElementById('filtroTipoPeriodo').addEventListener('change', function () {
+                const tipoPeriodo = this.value;
+
+                document.getElementById('containerMes').style.display = 'none';
+                document.getElementById('containerSemana').style.display = 'none';
+                document.getElementById('containerDataInicio').style.display = 'none';
+                document.getElementById('containerDataFim').style.display = 'none';
+
+                if (tipoPeriodo === 'mes') {
+                    document.getElementById('containerMes').style.display = 'block';
+                }
+                else if (tipoPeriodo === 'semana') {
+                    document.getElementById('containerSemana').style.display = 'block';
+                }
+                else if (tipoPeriodo === 'personalizado') {
+                    document.getElementById('containerDataInicio').style.display = 'block';
+                    document.getElementById('containerDataFim').style.display = 'block';
+                }
+            });
+
+            // Event listeners
+            document.getElementById('btnAplicarFiltros').addEventListener('click', aplicarFiltros);
+            document.getElementById('export-pdf').addEventListener('click', exportarParaPDF);
+
+            // Inicializa a página
+            carregarEventos();
+        });
+    </script>
+</body>
+
+</html>

@@ -395,6 +395,99 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // Nova função para ajustar a altura das células
+  function ajustarAlturaCalendario() {
+    const calendarContainer = document.getElementById('calendar-container');
+    const events = calendar.getEvents();
+
+    // Conta eventos por dia
+    const eventosPorDia = {};
+    events.forEach(event => {
+      if (event.start) {
+        const dia = event.start.toISOString().split('T')[0];
+        eventosPorDia[dia] = (eventosPorDia[dia] || 0) + 1;
+      }
+    });
+
+    // Encontra o dia com mais eventos
+    const maxEventosPorDia = Math.max(...Object.values(eventosPorDia), 0);
+
+    // Aplica estilos conforme necessário
+    if (maxEventosPorDia > 4) {
+      calendarContainer.classList.add('expanded');
+
+      // Marca dias com muitos eventos
+      Object.keys(eventosPorDia).forEach(dia => {
+        if (eventosPorDia[dia] > 3) {
+          document.querySelectorAll(`[data-date="${dia}"]`).forEach(el => {
+            el.classList.add('fc-day-many-events');
+          });
+        }
+      });
+    } else {
+      calendarContainer.classList.remove('expanded');
+      document.querySelectorAll('.fc-day-many-events').forEach(el => {
+        el.classList.remove('fc-day-many-events');
+      });
+    }
+
+    // Ajusta a altura da view
+    const viewType = calendar.view.type;
+    if (viewType === 'timeGridWeek' || viewType === 'timeGridDay') {
+      const slotMinHeight = maxEventosPorDia > 3 ? '40px' : '30px';
+      calendar.setOption('slotMinTime', '07:00:00');
+      calendar.setOption('slotMaxTime', '22:00:00');
+      calendar.setOption('slotDuration', '00:30:00');
+      document.querySelectorAll('.fc-timegrid-slot').forEach(slot => {
+        slot.style.height = slotMinHeight;
+      });
+    }
+  }
+
+  // Configura os listeners
+  calendar.on('eventsSet', ajustarAlturaCalendario);
+  calendar.on('viewDidMount', ajustarAlturaCalendario);
+  window.addEventListener('resize', ajustarAlturaCalendario);
+
+  // Chama inicialmente
+  setTimeout(ajustarAlturaCalendario, 500);
+
+
+  // Função melhorada para expandir o calendário
+
+  function expandirCalendarioConformeNecessario() {
+    const calendarContainer = document.getElementById('calendar-container');
+    const events = calendar.getEvents();
+
+    // Contar eventos por dia
+    const eventosPorDia = {};
+    events.forEach(event => {
+      if (event.start) {
+        const dateStr = event.start.toISOString().split('T')[0];
+        eventosPorDia[dateStr] = (eventosPorDia[dateStr] || 0) + 1;
+      }
+    });
+
+    // Verificar se precisa expandir
+    const maxEventosPorDia = Math.max(...Object.values(eventosPorDia), 0);
+    const precisaExpandir = maxEventosPorDia > 4;
+
+    // Aplicar classes CSS
+    calendarContainer.classList.toggle('expanded', precisaExpandir);
+
+    // Marcar dias com muitos eventos
+    document.querySelectorAll('.fc-day').forEach(dayEl => {
+      const date = dayEl.getAttribute('data-date');
+      dayEl.classList.toggle('fc-day-many-events', eventosPorDia[date] > 3);
+    });
+
+    // Ajustar altura das células
+    ajustarAlturaCelulas();
+  }
+
+
+
+
   // Renderiza o calendário
   calendar.render();
 
@@ -542,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  
+
 
   // Adiciona listeners para os filtros
   document.getElementById('btnAplicarFiltros').addEventListener('click', aplicarFiltros);
