@@ -2,39 +2,143 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="inserirPlanilha.css">
-    <title>Upload de Planilha</title>
+    <title>Inserir Planilha | Dashboard Adm</title>
 </head>
 <body>
+    <!-- Barra Lateral -->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <img src="assets/logo_senai.png" alt="Logo" class="logo-img">
+        </a>
+        <ul class="side-menu">
+            <li>
+                <a href="#" id="inicio"><i class="bx bx-home"></i>Início</a>
+            </li>
+            <li>
+                <a href="#" data-page="criar-colaborador.html"><i class="bx bx-user-plus"></i>Criar Colaborador</a>
+            </li>
+            <li>
+                <a href="#" data-page="visualizar-perfil.html"><i class="bx bx-user"></i>Colaboradores</a>
+            </li>
+            <li class="active">
+                <a href="inserirPlanilha.html" data-page="inserirPlanilha.html"><i class="bx bx-time"></i>Inserir Planilha</a>
+            </li>
+            <li>
+                <a href="visualizar-horarios.html" data-page="visualizar-horarios.html"><i class="bx bx-time"></i>Visualizar Horários</a>
+            </li>
+            <li>
+                <a href="#" data-page="configuracoes.html"><i class="bx bx-cog"></i>Configurações</a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="#" class="logout">
+                    <i class="bx bx-log-out-circle"></i>
+                    Sair
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo Principal -->
     <div class="content">
+        <!-- Barra Superior -->
+        <nav>
+            <i class="bx bx-menu"></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit">
+                        <i class="bx bx-search"></i>
+                    </button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class="bx bx-bell"></i>
+            </a>
+            <div class="profile-menu">
+                <img src="assets/logo.png" alt="Perfil" id="profile-img">
+                <ul class="dropdown" id="profile-dropdown">
+                    <li><a href="#" data-page="configuracoes-perfil.html">Configurações⚙️</a></li>
+                    <li><a href="#" id="profile-logout">Sair🚪</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Conteúdo da Página de Upload -->
         <main>
             <div class="header">
                 <div class="left">
-                    <h1>Upload de Planilha</h1>
-                    <ul class="breadcrumb">
-                    </ul>
+                    <a href="http://localhost:5500" class="back-button">
+                        <i class='bx bx-chevron-left'></i> Voltar ao Dashboard
+                    </a>
                 </div>
             </div>
 
             <div class="upload-container">
                 <h1>Upload de Planilha Excel</h1>
+                <p class="upload-description">Selecione um arquivo .xlsx ou .xls para importar os dados</p>
+                
                 <div class="file-input-wrapper">
                     <label for="fileInput" class="file-input-label">
-                        <i class='bx bx-upload'></i> Selecionar Planilha
+                        <i class='bx bx-upload'></i> Selecionar Arquivo
                     </label>
-                    <input type="file" id="fileInput" accept=".xlsx, .xls" />
+                    <input type="file" id="fileInput" accept=".xlsx, .xls">
                     <div id="fileName" class="file-name"></div>
                 </div>
-                <button id="processButton">Processar Planilha</button>
+                
+                <div class="button-container">
+                    <button id="processButton">Processar Planilha</button>
+                </div>
+                
                 <div id="uploadFeedback" class="upload-feedback"></div>
             </div>
             
-            <div id="output"></div>
+            <div id="output" style="display:none;"></div>
         </main>
     </div>
 
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
     <script src="inserirPlanilha.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

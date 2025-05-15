@@ -227,3 +227,164 @@ body.dark {
     display: none;
     border-radius: 8px;
   }
+
+  /* VARIÁVEIS DE COR */
+:root {
+  --light: #ffffff;
+  --dark: #333333;
+  --grey: #f0f2f5;
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+  --error: #d32f2f;
+  --dark-grey: #777777;
+}
+
+/* ESTILOS GERAIS */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--grey);
+  margin: 0;
+  padding: 20px;
+}
+
+/* ajuste para modo escuro */
+body.dark .content nav {
+  background-color: #1e2026;
+}
+
+/* adicione margem superior ao conteúdo abaixo da navbar */
+main#content {
+  padding-top: 80px;
+}
+
+/* FORMULÁRIO PRINCIPAL */
+.form-container {
+  background: var(--light);
+  margin: 2rem auto;
+  padding: 2rem;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--dark-grey);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  background: var(--light);
+  color: var(--dark);
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* BOTÃO */
+#submit-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#submit-btn:hover {
+  background: var(--accent-hover);
+}
+
+/* UPLOAD DE ARQUIVO */
+.file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.file-input-button {
+  background: var(--grey);
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: var(--dark-grey);
+  margin-top: 0.5rem;
+}
+
+#preview {
+  max-width: 150px;
+  border-radius: 6px;
+  margin-top: 1rem;
+  display: none;
+}
+
+/* MENSAGENS DE ERRO */
+.error-message {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+/* MODO ESCURO */
+body.dark {
+  background: #121212;
+  color: #f0f2f5;
+}
+
+body.dark .form-container {
+  background: #1e2026;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .form-group input {
+  background: #25272e;
+  border-color: #3e4046;
+  color: #f0f2f5;
+}
+
+body.dark .form-group label {
+  color: #a0a2a8;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+}

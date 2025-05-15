@@ -188,35 +188,7 @@ body {
   z-index: 10 !important;
 }
 
-/* ============ AJUSTES PARA MUITOS EVENTOS ============ */
-.fc-daygrid-day.fc-day-many-events {
-  min-height: 120px;
-}
 
-.fc-timegrid-col.fc-day-many-events {
-  min-height: 1000px;
-}
-
-.fc-daygrid-day-events {
-  min-height: 60px;
-  overflow-y: auto;
-  max-height: 300px;
-  scrollbar-width: thin;
-  scrollbar-color: #ddd #f8f8f8;
-}
-
-.fc-daygrid-day-events::-webkit-scrollbar {
-  width: 6px;
-}
-
-.fc-daygrid-day-events::-webkit-scrollbar-track {
-  background: #f8f8f8;
-}
-
-.fc-daygrid-day-events::-webkit-scrollbar-thumb {
-  background-color: #ddd;
-  border-radius: 3px;
-}
 
 /* ============ MODAL ============ */
 .modal {
@@ -483,11 +455,11 @@ body {
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .fc-toolbar-chunk {
     width: 100%;
   }
-  
+
   .fc-toolbar-chunk:last-child {
     order: -1;
   }
@@ -498,37 +470,39 @@ body {
     min-height: 90vh;
     padding: 10px;
   }
-  
+
   #calendar-container.expanded {
     min-height: 150vh;
   }
-  
+
   .fc-event-title {
     font-size: 0.8rem !important;
   }
-  
-  .fc-event-time, .fc-event-location {
+
+  .fc-event-time,
+  .fc-event-location {
     font-size: 0.7rem !important;
   }
-  
+
   .fc-daygrid-day-events {
     max-height: 200px;
   }
-  
+
   .filtros-container {
     flex-direction: column;
   }
-  
+
   .filtro-item {
     width: 100%;
   }
-  
+
   .form-row {
     flex-direction: column;
     gap: 10px;
   }
-  
-  .botoes-acoes, .form-buttons {
+
+  .botoes-acoes,
+  .form-buttons {
     flex-direction: column;
   }
 }
@@ -539,7 +513,8 @@ body {
     visibility: hidden;
   }
 
-  #calendar-container, #calendar-container * {
+  #calendar-container,
+  #calendar-container * {
     visibility: visible;
   }
 
@@ -554,24 +529,80 @@ body {
     box-shadow: none;
     background-color: white;
   }
-  
+
   .fc-daygrid-day-events {
     max-height: none !important;
     overflow: visible !important;
   }
-  
+
   .fc-event {
     page-break-inside: avoid;
     break-inside: avoid;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  
-  .fc-header-toolbar, .fc-toolbar {
+
+  .fc-header-toolbar,
+  .fc-toolbar {
     display: none !important;
   }
-  
-  .fc-theme-standard td, .fc-theme-standard th {
+
+  .fc-theme-standard td,
+  .fc-theme-standard th {
     border-color: #ddd !important;
   }
+}
+
+/* Estilos para os status */
+.status-confirmada {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-nao-confirmada {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Estilos visuais para os eventos no calendário */
+.fc-event.evento-confirmado {
+  border-left: 4px solid #28a745;
+}
+
+.fc-event.evento-nao-confirmado {
+  border-left: 4px solid #dc3545;
+}
+
+.fc-event.evento-confirmado .fc-event-main {
+  font-weight: bold;
+}
+
+/* Estilos para os status */
+.status-confirmada {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-nao-confirmada {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Estilos visuais para os eventos no calendário */
+.fc-event.evento-confirmado {
+  border-left: 4px solid #28a745;
+}
+
+.fc-event.evento-nao-confirmado {
+  border-left: 4px solid #dc3545;
+}
+
+.fc-event.evento-confirmado .fc-event-main {
+  font-weight: bold;
+}
+
+/* Estilos para os ícones de status */
+.status-confirmada i,
+.status-nao-confirmada i {
+  margin-right: 5px;
 }

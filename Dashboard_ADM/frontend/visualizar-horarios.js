@@ -1,13 +1,9 @@
-
-
 document.addEventListener('DOMContentLoaded', function () {
-
-
   // Variáveis globais para armazenar os dados originais
   let todosEventos = [];
   let disciplinasUnicas = [];
   let instrutoresUnicos = [];
-  let calendar; // Declaração única da variável calendar
+  let calendar;
 
   // Função para extrair valores únicos de uma propriedade
   function extrairValoresUnicos(eventos, propriedade) {
@@ -15,9 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return [...new Set(valores)].filter(Boolean).sort();
   }
 
-  // Função para configurar a exportação de PDF (versão única e melhorada)
+  // Função para configurar a exportação de PDF
   function setupPDFExport() {
-    document.getElementById('export-pdf').addEventListener('click', function () {
+    const btnExport = document.getElementById('export-pdf');
+    if (!btnExport) return;
+
+    btnExport.addEventListener('click', async function () {
       const btn = this;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
@@ -35,91 +34,137 @@ document.addEventListener('DOMContentLoaded', function () {
         loadingMessage.style.padding = '20px';
         loadingMessage.style.borderRadius = '5px';
         loadingMessage.style.zIndex = '9999';
-        loadingMessage.textContent = 'Gerando PDF...';
+        loadingMessage.textContent = 'Preparando calendário para exportação...';
         document.body.appendChild(loadingMessage);
 
-        // Obtém o elemento do calendário
-        const calendarEl = document.getElementById('calendar');
+        // Mudar para visualização diária para melhor legibilidade
+        calendar.changeView('timeGridDay');
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Configurações do html2canvas
-        const options = {
-          scale: 2, // Aumenta a qualidade
-          logging: false,
+        // Expandir todos os eventos
+        const events = calendar.getEvents();
+        events.forEach(event => {
+          const el = event.el;
+          if (el) {
+            el.classList.add('fc-event-expanded');
+            el.style.height = 'auto';
+            el.style.whiteSpace = 'normal';
+            el.style.overflow = 'visible';
+
+            const content = el.querySelector('.fc-event-main');
+            if (content) {
+              content.style.whiteSpace = 'normal';
+              content.style.overflow = 'visible';
+            }
+          }
+        });
+
+        calendar.updateSize();
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Captura o calendário como imagem
+        const calendarEl = document.getElementById('calendar');
+        const canvas = await html2canvas(calendarEl, {
+          scale: 3,
+          logging: true,
           useCORS: true,
           scrollX: 0,
           scrollY: -window.scrollY,
           ignoreElements: function (element) {
-            // Ignora o botão de exportação no PDF
             return element.id === 'export-pdf';
+          },
+          onclone: function (clonedDoc) {
+            const clonedEvents = clonedDoc.querySelectorAll('.fc-event');
+            clonedEvents.forEach(el => {
+              el.classList.add('fc-event-expanded');
+              el.style.height = 'auto';
+              el.style.whiteSpace = 'normal';
+              el.style.overflow = 'visible';
+
+              const content = el.querySelector('.fc-event-main');
+              if (content) {
+                content.style.whiteSpace = 'normal';
+                content.style.overflow = 'visible';
+              }
+            });
+
+            const exportBtn = clonedDoc.getElementById('export-pdf');
+            if (exportBtn) exportBtn.style.display = 'none';
           }
-        };
-
-        // Captura o calendário como imagem
-        html2canvas(calendarEl, options).then(canvas => {
-          // Remove a mensagem de carregamento
-          document.body.removeChild(loadingMessage);
-
-          // Configura o PDF
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF({
-            orientation: 'landscape',
-            unit: 'mm'
-          });
-
-          // Adiciona a imagem ao PDF
-          const imgData = canvas.toDataURL('image/png');
-          const imgProps = pdf.getImageProperties(imgData);
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-          // Adiciona título com a data atual
-          const currentDate = new Date();
-          const dateStr = currentDate.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-          });
-
-          pdf.setFontSize(22);
-          pdf.setTextColor(40, 40, 40);
-          pdf.text(`Agenda de Aulas - ${dateStr}`, 10, 15);
-
-          // Salva o PDF
-          pdf.save(`agenda_aulas_${currentDate.getTime()}.pdf`);
-
-          // Restaura o botão
-          btn.innerHTML = originalText;
-          btn.disabled = false;
-        }).catch(err => {
-          console.error('Erro ao gerar PDF:', err);
-          document.body.removeChild(loadingMessage);
-          showToast('Ocorreu um erro ao gerar o PDF. Por favor, tente novamente.', 'error');
-          btn.innerHTML = originalText;
-          btn.disabled = false;
         });
+
+        document.body.removeChild(loadingMessage);
+
+        // Configura o PDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+        // Adiciona título com a data atual
+        const currentDate = new Date();
+        const dateStr = currentDate.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        });
+
+        pdf.setFontSize(22);
+        pdf.setTextColor(40, 40, 40);
+        pdf.text(`Agenda de Aulas - ${dateStr}`, 10, 15);
+
+        // Salva o PDF
+        pdf.save(`agenda_aulas_${currentDate.getTime()}.pdf`);
+
       } catch (error) {
         console.error('Erro ao gerar PDF:', error);
         showToast('Erro ao gerar PDF. Verifique o console para detalhes.', 'error');
+      } finally {
+        // Restaura o estado original
         btn.innerHTML = originalText;
         btn.disabled = false;
+        calendar.changeView('timeGridWeek');
+
+        const events = calendar.getEvents();
+        events.forEach(event => {
+          const el = event.el;
+          if (el) {
+            el.classList.remove('fc-event-expanded');
+            el.style.height = '';
+            el.style.whiteSpace = '';
+            el.style.overflow = '';
+
+            const content = el.querySelector('.fc-event-main');
+            if (content) {
+              content.style.whiteSpace = '';
+              content.style.overflow = '';
+            }
+          }
+        });
+
+        calendar.updateSize();
       }
     });
   }
-
-
 
   // Função para popular selects de filtro
   function popularFiltros() {
     const selectDisciplina = document.getElementById('filtroDisciplina');
     const selectInstrutor = document.getElementById('filtroInstrutor');
 
-    // Limpa opções existentes (mantendo a primeira)
+    if (!selectDisciplina || !selectInstrutor) return;
+
     while (selectDisciplina.options.length > 1) selectDisciplina.remove(1);
     while (selectInstrutor.options.length > 1) selectInstrutor.remove(1);
 
-    // Adiciona disciplinas
     disciplinasUnicas.forEach(disciplina => {
       const option = document.createElement('option');
       option.value = disciplina;
@@ -127,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
       selectDisciplina.appendChild(option);
     });
 
-    // Adiciona instrutores
     instrutoresUnicos.forEach(instrutor => {
       const option = document.createElement('option');
       option.value = instrutor;
@@ -136,12 +180,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-
-
   // Função para aplicar filtros
   function aplicarFiltros() {
-    const filtroDisciplina = document.getElementById('filtroDisciplina').value;
-    const filtroInstrutor = document.getElementById('filtroInstrutor').value;
+    const filtroDisciplina = document.getElementById('filtroDisciplina')?.value;
+    const filtroInstrutor = document.getElementById('filtroInstrutor')?.value;
 
     let eventosFiltrados = todosEventos;
 
@@ -163,8 +205,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Função para limpar filtros
   function limparFiltros() {
-    document.getElementById('filtroDisciplina').value = '';
-    document.getElementById('filtroInstrutor').value = '';
+    const filtroDisciplina = document.getElementById('filtroDisciplina');
+    const filtroInstrutor = document.getElementById('filtroInstrutor');
+    
+    if (filtroDisciplina) filtroDisciplina.value = '';
+    if (filtroInstrutor) filtroInstrutor.value = '';
+    
     calendar.removeAllEvents();
     calendar.addEventSource(todosEventos);
   }
@@ -179,11 +225,19 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function formatStatus(status) {
-    return status ? 'Confirmada' : 'Não confirmada';
+    return status ? 
+      '<span class="status-confirmada"><i class="fas fa-check-circle"></i> Confirmada</span>' : 
+      '<span class="status-nao-confirmada"><i class="fas fa-times-circle"></i> Não confirmada</span>';
   }
 
   // Função para gerar cores baseadas na descrição
   function getColorFromDescription(description) {
+    if (!description) return {
+      backgroundColor: '#6c757d',
+      borderColor: '#5a6268',
+      textColor: '#ffffff'
+    };
+
     let hash = 0;
     for (let i = 0; i < description.length; i++) {
       hash = description.charCodeAt(i) + ((hash << 5) - hash);
@@ -197,369 +251,296 @@ document.addEventListener('DOMContentLoaded', function () {
     return { backgroundColor, borderColor, textColor };
   }
 
+  // Função para configurar os botões de ação
+  function setupActionButtons() {
+    // Botão Editar
+    const btnEditar = document.getElementById('btnEditar');
+    if (btnEditar) {
+      btnEditar.addEventListener('click', function() {
+        const modalDetalhes = document.getElementById('modalDetalhes');
+        const eventId = modalDetalhes.dataset.eventId;
+        const evento = calendar.getEventById(eventId);
+
+        if (evento) {
+          document.getElementById('editDescricao').value = evento.extendedProps.descricao;
+          document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
+          document.getElementById('editData').value = formatDate(evento.start);
+          document.getElementById('editHoraInicio').value = formatTime(evento.start);
+          document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
+          document.getElementById('editLocal').value = evento.extendedProps.local || '';
+          document.getElementById('editStatus').checked = evento.extendedProps.status;
+
+          modalDetalhes.style.display = 'none';
+          document.getElementById('modalEdicao').style.display = 'block';
+          document.getElementById('modalEdicao').dataset.eventId = eventId;
+        }
+      });
+    }
+
+    // Botão Excluir
+    const btnExcluir = document.getElementById('btnExcluir');
+    if (btnExcluir) {
+      btnExcluir.addEventListener('click', async function() {
+        if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+          const modalDetalhes = document.getElementById('modalDetalhes');
+          const eventId = modalDetalhes.dataset.eventId;
+
+          try {
+            const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              calendar.getEventById(eventId).remove();
+              modalDetalhes.style.display = 'none';
+              showToast('Atividade excluída com sucesso!');
+            } else {
+              throw new Error('Erro ao excluir atividade');
+            }
+          } catch (error) {
+            console.error('Erro:', error);
+            showToast('Erro ao excluir atividade: ' + error.message, 'error');
+          }
+        }
+      });
+    }
+
+    // Botão Fechar
+    const btnFechar = document.getElementById('btnFechar');
+    if (btnFechar) {
+      btnFechar.addEventListener('click', function() {
+        document.getElementById('modalDetalhes').style.display = 'none';
+      });
+    }
+
+    // Botão Cancelar na modal de edição
+    const btnCancelar = document.querySelector('.botao-cancelar');
+    if (btnCancelar) {
+      btnCancelar.addEventListener('click', function() {
+        document.getElementById('modalEdicao').style.display = 'none';
+      });
+    }
+
+    // Fechar modais ao clicar no X
+    document.querySelectorAll('.close').forEach(closeBtn => {
+      closeBtn.addEventListener('click', function() {
+        this.closest('.modal').style.display = 'none';
+      });
+    });
+
+    // Fechar modais ao clicar fora
+    window.addEventListener('click', function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    });
+  }
+
   // Inicializa o calendário
   var calendarEl = document.getElementById('calendar');
-  calendar = new FullCalendar.Calendar(calendarEl, {
-    locale: 'pt-br',
-    initialView: 'timeGridWeek',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'filtrosButton dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    customButtons: {
-      filtrosButton: {
-        text: 'Filtros',
-        click: function () {
-          document.getElementById('filtrosContainer').style.display =
-            document.getElementById('filtrosContainer').style.display === 'block' ? 'none' : 'block';
-        }
-      }
-    },
-    buttonText: {
-      today: 'Hoje',
-      month: 'Mês',
-      week: 'Semana',
-      day: 'Dia'
-    },
-
-    // Configurações de visualização
-    views: {
-      timeGridWeek: {
-        eventMinHeight: 30,
-        slotEventOverlap: false,
-        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short' },
-        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-        allDaySlot: false
+  if (calendarEl) {
+    calendar = new FullCalendar.Calendar(calendarEl, {
+      locale: 'pt-br',
+      initialView: 'timeGridWeek',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'filtrosButton dayGridMonth,timeGridWeek,timeGridDay'
       },
-      timeGridDay: {
-        dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' },
-        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-        eventMinHeight: 30,
-        slotEventOverlap: false
-      }
-    },
-
-    // Configurações gerais
-    eventDisplay: 'block',
-    eventOrder: 'start',
-    eventOverlap: false,
-    slotEventOverlap: false,
-    allDaySlot: false,
-    slotMinTime: '07:00:00',
-    slotMaxTime: '22:00:00',
-    slotDuration: '00:30:00',
-    nowIndicator: true,
-    navLinks: true,
-    editable: false,
-    dayMaxEvents: true,
-
-    // Personalização dos eventos
-    eventContent: function (arg) {
-      const evento = arg.event;
-      const eventEl = document.createElement('div');
-      eventEl.className = 'fc-event-content';
-
-      // Encontra eventos sobrepostos
-      const eventosSobrepostos = calendar.getEvents().filter(e =>
-        e.id !== evento.id &&
-        e.start < evento.end &&
-        e.end > evento.start
-      );
-
-      const temSobreposicao = eventosSobrepostos.length > 0;
-
-      if (temSobreposicao) {
-        // Calcula a posição e largura proporcional
-        const totalEventos = eventosSobrepostos.length + 1;
-        const eventosOrdenados = [...eventosSobrepostos, evento].sort((a, b) => a.id.localeCompare(b.id));
-        const posicao = eventosOrdenados.findIndex(e => e.id === evento.id);
-
-        // Aplica estilos para visualização compacta
-        eventEl.style.width = `calc(${100 / totalEventos}% - 2px)`;
-        eventEl.style.left = `calc(${posicao * (100 / totalEventos)}%)`;
-        eventEl.style.zIndex = posicao + 1;
-        eventEl.style.height = '100%';
-
-        eventEl.innerHTML = `
-          <div class="fc-event-compact">
-            <div class="fc-event-title-compact">${evento.title.split(' - ')[0]}</div>
-            <div class="fc-event-time-compact">${arg.timeText}</div>
-          </div>
-        `;
-      } else {
-        // Visualização normal quando não há sobreposição
-        eventEl.innerHTML = `
-          <div class="fc-event-title">${evento.title}</div>
-          <div class="fc-event-time">${arg.timeText}</div>
-          ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
-        `;
-      }
-
-      return { domNodes: [eventEl] };
-    },
-
-    eventDidMount: function (info) {
-      const eventEl = info.el;
-
-      // Garante que o texto não ultrapasse os limites
-      const elementos = eventEl.querySelectorAll('.fc-event-title, .fc-event-title-compact');
-      elementos.forEach(el => {
-        el.style.whiteSpace = 'nowrap';
-        el.style.overflow = 'hidden';
-        el.style.textOverflow = 'ellipsis';
-      });
-
-      // Tooltip com informações completas
-      eventEl.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}`;
-
-      // Ajusta altura para caber todo o conteúdo
-      eventEl.style.height = 'auto';
-      const contentHeight = eventEl.scrollHeight;
-      eventEl.style.height = `${contentHeight}px`;
-    },
-
-    // Carregamento dos eventos
-    events: async function (fetchInfo, successCallback, failureCallback) {
-      try {
-        const start = formatDate(fetchInfo.start);
-        const end = formatDate(fetchInfo.end);
-
-        const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
-
-        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-
-        const data = await response.json();
-
-        if (data.success) {
-          todosEventos = data.data.map(aula => {
-            if (!aula.data || !aula.horaInicio) {
-              console.warn('Aula incompleta:', aula);
-              return null;
+      customButtons: {
+        filtrosButton: {
+          text: 'Filtros',
+          click: function () {
+            const filtrosContainer = document.getElementById('filtrosContainer');
+            if (filtrosContainer) {
+              filtrosContainer.style.display =
+                filtrosContainer.style.display === 'block' ? 'none' : 'block';
             }
+          }
+        }
+      },
+      buttonText: {
+        today: 'Hoje',
+        month: 'Mês',
+        week: 'Semana',
+        day: 'Dia'
+      },
+      views: {
+        timeGridWeek: {
+          eventMinHeight: 30,
+          slotEventOverlap: false,
+          dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short' },
+          slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+          allDaySlot: false
+        },
+        timeGridDay: {
+          dayHeaderFormat: { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' },
+          slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+          eventMinHeight: 30,
+          slotEventOverlap: false
+        }
+      },
+      eventDisplay: 'block',
+      eventOrder: 'start',
+      eventOverlap: false,
+      slotEventOverlap: false,
+      allDaySlot: false,
+      slotMinTime: '07:00:00',
+      slotMaxTime: '22:00:00',
+      slotDuration: '00:30:00',
+      nowIndicator: true,
+      navLinks: true,
+      editable: false,
+      dayMaxEvents: true,
+      eventContent: function (arg) {
+        const evento = arg.event;
+        const eventEl = document.createElement('div');
+        eventEl.className = 'fc-event-content';
 
-            const cores = getColorFromDescription(aula.atividade);
+        const eventosSobrepostos = calendar.getEvents().filter(e =>
+          e.id !== evento.id &&
+          e.start < evento.end &&
+          e.end > evento.start
+        );
 
-            return {
-              id: aula.id,
-              title: `${aula.atividade} - ${aula.instrutor}`,
-              start: `${aula.data}T${aula.horaInicio}`,
-              end: aula.horaFim ? `${aula.data}T${aula.horaFim}` : null,
-              extendedProps: {
-                descricao: aula.atividade,
-                instrutor: aula.instrutor,
-                local: aula.local,
-                status: aula.status
-              },
-              backgroundColor: cores.backgroundColor,
-              borderColor: cores.borderColor,
-              textColor: cores.textColor
-            };
-          }).filter(evento => evento !== null);
+        const temSobreposicao = eventosSobrepostos.length > 0;
 
-          // Extrai valores únicos para os filtros
-          disciplinasUnicas = extrairValoresUnicos(todosEventos, 'descricao');
-          instrutoresUnicos = extrairValoresUnicos(todosEventos, 'instrutor');
+        if (temSobreposicao) {
+          const totalEventos = eventosSobrepostos.length + 1;
+          const eventosOrdenados = [...eventosSobrepostos, evento].sort((a, b) => a.id.localeCompare(b.id));
+          const posicao = eventosOrdenados.findIndex(e => e.id === evento.id);
 
-          // Popula os selects de filtro
-          popularFiltros();
+          eventEl.style.width = `calc(${100 / totalEventos}% - 2px)`;
+          eventEl.style.left = `calc(${posicao * (100 / totalEventos)}%)`;
+          eventEl.style.zIndex = posicao + 1;
+          eventEl.style.height = '100%';
 
-          successCallback(todosEventos);
+          eventEl.innerHTML = `
+            <div class="fc-event-compact">
+              <div class="fc-event-title-compact">${evento.title.split(' - ')[0]}</div>
+              <div class="fc-event-time-compact">${arg.timeText}</div>
+            </div>
+          `;
         } else {
-          throw new Error(data.message || 'Erro ao carregar aulas');
+          eventEl.innerHTML = `
+            <div class="fc-event-title">${evento.title}</div>
+            <div class="fc-event-time">${arg.timeText}</div>
+            ${evento.extendedProps.local ? `<div class="fc-event-location">${evento.extendedProps.local}</div>` : ''}
+          `;
         }
-      } catch (error) {
-        console.error('Erro:', error);
-        failureCallback(error.message);
-      }
-    },
 
-    // Manipulação de eventos
-    eventClick: function (info) {
-      const evento = info.event;
+        return { domNodes: [eventEl] };
+      },
+      eventDidMount: function (info) {
+        const eventEl = info.el;
 
-      // Preenche a modal de detalhes
-      document.getElementById('detalhesAtividade').textContent = evento.extendedProps.descricao;
-      document.getElementById('detalhesInstrutor').textContent = evento.extendedProps.instrutor;
-      document.getElementById('detalhesData').textContent = formatDate(evento.start);
-      document.getElementById('detalhesHorario').textContent = `${formatTime(evento.start)} - ${evento.end ? formatTime(evento.end) : ''}`;
-      document.getElementById('detalhesLocal').textContent = evento.extendedProps.local || 'Não especificado';
-      document.getElementById('detalhesStatus').textContent = formatStatus(evento.extendedProps.status);
-
-      // Mostra a modal de detalhes
-      const modalDetalhes = document.getElementById('modalDetalhes');
-      modalDetalhes.style.display = 'block';
-      modalDetalhes.dataset.eventId = evento.id;
-
-      info.jsEvent.stopPropagation();
-    }
-  });
-
-  // Nova função para ajustar a altura das células
-  function ajustarAlturaCalendario() {
-    const calendarContainer = document.getElementById('calendar-container');
-    const events = calendar.getEvents();
-
-    // Conta eventos por dia
-    const eventosPorDia = {};
-    events.forEach(event => {
-      if (event.start) {
-        const dia = event.start.toISOString().split('T')[0];
-        eventosPorDia[dia] = (eventosPorDia[dia] || 0) + 1;
-      }
-    });
-
-    // Encontra o dia com mais eventos
-    const maxEventosPorDia = Math.max(...Object.values(eventosPorDia), 0);
-
-    // Aplica estilos conforme necessário
-    if (maxEventosPorDia > 4) {
-      calendarContainer.classList.add('expanded');
-
-      // Marca dias com muitos eventos
-      Object.keys(eventosPorDia).forEach(dia => {
-        if (eventosPorDia[dia] > 3) {
-          document.querySelectorAll(`[data-date="${dia}"]`).forEach(el => {
-            el.classList.add('fc-day-many-events');
-          });
+        // Adiciona classe conforme o status
+        if (info.event.extendedProps.status) {
+          eventEl.classList.add('evento-confirmado');
+        } else {
+          eventEl.classList.add('evento-nao-confirmado');
         }
-      });
-    } else {
-      calendarContainer.classList.remove('expanded');
-      document.querySelectorAll('.fc-day-many-events').forEach(el => {
-        el.classList.remove('fc-day-many-events');
-      });
-    }
 
-    // Ajusta a altura da view
-    const viewType = calendar.view.type;
-    if (viewType === 'timeGridWeek' || viewType === 'timeGridDay') {
-      const slotMinHeight = maxEventosPorDia > 3 ? '40px' : '30px';
-      calendar.setOption('slotMinTime', '07:00:00');
-      calendar.setOption('slotMaxTime', '22:00:00');
-      calendar.setOption('slotDuration', '00:30:00');
-      document.querySelectorAll('.fc-timegrid-slot').forEach(slot => {
-        slot.style.height = slotMinHeight;
-      });
-    }
-  }
-
-  // Configura os listeners
-  calendar.on('eventsSet', ajustarAlturaCalendario);
-  calendar.on('viewDidMount', ajustarAlturaCalendario);
-  window.addEventListener('resize', ajustarAlturaCalendario);
-
-  // Chama inicialmente
-  setTimeout(ajustarAlturaCalendario, 500);
-
-
-  // Função melhorada para expandir o calendário
-
-  function expandirCalendarioConformeNecessario() {
-    const calendarContainer = document.getElementById('calendar-container');
-    const events = calendar.getEvents();
-
-    // Contar eventos por dia
-    const eventosPorDia = {};
-    events.forEach(event => {
-      if (event.start) {
-        const dateStr = event.start.toISOString().split('T')[0];
-        eventosPorDia[dateStr] = (eventosPorDia[dateStr] || 0) + 1;
-      }
-    });
-
-    // Verificar se precisa expandir
-    const maxEventosPorDia = Math.max(...Object.values(eventosPorDia), 0);
-    const precisaExpandir = maxEventosPorDia > 4;
-
-    // Aplicar classes CSS
-    calendarContainer.classList.toggle('expanded', precisaExpandir);
-
-    // Marcar dias com muitos eventos
-    document.querySelectorAll('.fc-day').forEach(dayEl => {
-      const date = dayEl.getAttribute('data-date');
-      dayEl.classList.toggle('fc-day-many-events', eventosPorDia[date] > 3);
-    });
-
-    // Ajustar altura das células
-    ajustarAlturaCelulas();
-  }
-
-
-
-
-  // Renderiza o calendário
-  calendar.render();
-
-  // Configura a exportação para PDF após a inicialização do calendário
-  setupPDFExport();
-
-  // Configuração dos botões de ação
-  document.getElementById('btnEditar').addEventListener('click', function () {
-    const modalDetalhes = document.getElementById('modalDetalhes');
-    const eventId = modalDetalhes.dataset.eventId;
-    const evento = calendar.getEventById(eventId);
-
-    if (evento) {
-      // Preenche a modal de edição
-      document.getElementById('editDescricao').value = evento.extendedProps.descricao;
-      document.getElementById('editProfessor').value = evento.extendedProps.instrutor;
-      document.getElementById('editData').value = formatDate(evento.start);
-      document.getElementById('editHoraInicio').value = formatTime(evento.start);
-      document.getElementById('editHoraFim').value = evento.end ? formatTime(evento.end) : '';
-      document.getElementById('editLocal').value = evento.extendedProps.local || '';
-      document.getElementById('editStatus').checked = evento.extendedProps.status;
-
-      // Fecha a modal de detalhes e abre a de edição
-      modalDetalhes.style.display = 'none';
-      document.getElementById('modalEdicao').style.display = 'block';
-      document.getElementById('modalEdicao').dataset.eventId = eventId;
-    }
-  });
-
-  document.getElementById('btnExcluir').addEventListener('click', async function () {
-    if (confirm('Tem certeza que deseja excluir esta atividade?')) {
-      const modalDetalhes = document.getElementById('modalDetalhes');
-      const eventId = modalDetalhes.dataset.eventId;
-
-      try {
-        const response = await fetch(`http://localhost:5500/api/atividades/${eventId}`, {
-          method: 'DELETE'
+        const elementos = eventEl.querySelectorAll('.fc-event-title, .fc-event-title-compact');
+        elementos.forEach(el => {
+          el.style.whiteSpace = 'nowrap';
+          el.style.overflow = 'hidden';
+          el.style.textOverflow = 'ellipsis';
         });
 
-        if (response.ok) {
-          calendar.getEventById(eventId).remove();
-          modalDetalhes.style.display = 'none';
-          showToast('Atividade excluída com sucesso!');
-        } else {
-          throw new Error('Erro ao excluir atividade');
+        eventEl.title = `${info.event.title}\n${info.timeText}\nLocal: ${info.event.extendedProps.local || 'Não especificado'}\nStatus: ${info.event.extendedProps.status ? 'Confirmada' : 'Não confirmada'}`;
+        eventEl.style.height = 'auto';
+        const contentHeight = eventEl.scrollHeight;
+        eventEl.style.height = `${contentHeight}px`;
+      },
+      events: async function (fetchInfo, successCallback, failureCallback) {
+        try {
+          const start = formatDate(fetchInfo.start);
+          const end = formatDate(fetchInfo.end);
+
+          const response = await fetch(`http://localhost:5500/api/atividades?start=${start}&end=${end}`);
+
+          if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
+          const data = await response.json();
+
+          if (data.success) {
+            todosEventos = data.data.map(aula => {
+              if (!aula.data || !aula.horaInicio) {
+                console.warn('Aula incompleta:', aula);
+                return null;
+              }
+
+              const cores = getColorFromDescription(aula.atividade);
+
+              return {
+                id: aula.id,
+                title: `${aula.atividade} - ${aula.instrutor}`,
+                start: `${aula.data}T${aula.horaInicio}`,
+                end: aula.horaFim ? `${aula.data}T${aula.horaFim}` : null,
+                extendedProps: {
+                  descricao: aula.atividade,
+                  instrutor: aula.instrutor,
+                  local: aula.local,
+                  status: aula.status
+                },
+                backgroundColor: cores.backgroundColor,
+                borderColor: cores.borderColor,
+                textColor: cores.textColor
+              };
+            }).filter(evento => evento !== null);
+
+            disciplinasUnicas = extrairValoresUnicos(todosEventos, 'descricao');
+            instrutoresUnicos = extrairValoresUnicos(todosEventos, 'instrutor');
+
+            popularFiltros();
+            successCallback(todosEventos);
+          } else {
+            throw new Error(data.message || 'Erro ao carregar aulas');
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          failureCallback(error.message);
         }
-      } catch (error) {
-        console.error('Erro:', error);
-        showToast('Erro ao excluir atividade: ' + error.message, 'error');
+      },
+      eventClick: function (info) {
+        const evento = info.event;
+
+        document.getElementById('detalhesAtividade').textContent = evento.extendedProps.descricao;
+        document.getElementById('detalhesInstrutor').textContent = evento.extendedProps.instrutor;
+        document.getElementById('detalhesData').textContent = formatDate(evento.start);
+        document.getElementById('detalhesHorario').textContent = `${formatTime(evento.start)} - ${evento.end ? formatTime(evento.end) : ''}`;
+        document.getElementById('detalhesLocal').textContent = evento.extendedProps.local || 'Não especificado';
+        document.getElementById('detalhesStatus').innerHTML = formatStatus(evento.extendedProps.status);
+
+        const modalDetalhes = document.getElementById('modalDetalhes');
+        if (modalDetalhes) {
+          modalDetalhes.style.display = 'block';
+          modalDetalhes.dataset.eventId = evento.id;
+        }
+
+        info.jsEvent.stopPropagation();
       }
-    }
-  });
-
-  // Fechar modais
-  document.getElementById('btnFechar').addEventListener('click', function () {
-    document.getElementById('modalDetalhes').style.display = 'none';
-  });
-
-  document.querySelectorAll('.close').forEach(closeBtn => {
-    closeBtn.addEventListener('click', function () {
-      this.closest('.modal').style.display = 'none';
     });
-  });
 
-  window.addEventListener('click', function (event) {
-    if (event.target.classList.contains('modal')) {
-      event.target.style.display = 'none';
-    }
-  });
+    calendar.render();
+  }
+
+  // Configura a exportação para PDF
+  setupPDFExport();
+
+  // Configura os botões de ação
+  setupActionButtons();
+
+  // Adiciona listeners para os filtros
+  document.getElementById('btnAplicarFiltros')?.addEventListener('click', aplicarFiltros);
+  document.getElementById('btnLimparFiltros')?.addEventListener('click', limparFiltros);
+
+  document.getElementById('filtroDisciplina')?.addEventListener('change', aplicarFiltros);
+  document.getElementById('filtroInstrutor')?.addEventListener('change', aplicarFiltros);
 
   // Enviar formulário de edição
-  document.getElementById('formEdicao').addEventListener('submit', async function (e) {
+  document.getElementById('formEdicao')?.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const btnSubmit = this.querySelector('button[type="submit"]');
@@ -570,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
       btnSubmit.disabled = true;
 
-      // Preparar os dados para enviar (ajuste os nomes dos campos conforme seu banco)
+      // Preparar os dados para enviar
       const formData = {
         descricao: document.getElementById('editDescricao').value,
         nomePessoalAtribuido: document.getElementById('editProfessor').value,
@@ -578,10 +559,9 @@ document.addEventListener('DOMContentLoaded', function () {
         horaInicioAgendada: document.getElementById('editHoraInicio').value,
         fimAgendado: document.getElementById('editHoraFim').value || null,
         descricaoLocalizacaoAtribuida: document.getElementById('editLocal').value || null,
-        confirmada: document.getElementById('editStatus').checked ? 1 : 0 // Convertendo para inteiro (1 ou 0)
+        confirmada: document.getElementById('editStatus').checked ? 1 : 0 // 1 para confirmada, 0 para não confirmada
       };
 
-      // DEBUG: Mostrar os dados que serão enviados
       console.log('Dados a serem enviados:', formData);
 
       // Enviar para o servidor
@@ -594,7 +574,6 @@ document.addEventListener('DOMContentLoaded', function () {
         body: JSON.stringify(formData)
       });
 
-      // DEBUG: Mostrar a resposta do servidor
       const responseData = await response.json();
       console.log('Resposta do servidor:', responseData);
 
@@ -617,6 +596,17 @@ document.addEventListener('DOMContentLoaded', function () {
         evento.setProp('backgroundColor', novasCores.backgroundColor);
         evento.setProp('borderColor', novasCores.borderColor);
         evento.setProp('textColor', novasCores.textColor);
+
+        // Atualiza visualmente o status
+        const eventEl = evento.el;
+        if (eventEl) {
+          eventEl.classList.remove('evento-confirmado', 'evento-nao-confirmado');
+          if (formData.confirmada === 1) {
+            eventEl.classList.add('evento-confirmado');
+          } else {
+            eventEl.classList.add('evento-nao-confirmado');
+          }
+        }
       }
 
       // Fechar o modal
@@ -626,24 +616,12 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (error) {
       console.error('Erro detalhado:', error);
       showToast(`Erro ao salvar: ${error.message}`, 'error');
-
-      // Forçar recarregamento dos eventos do servidor
       calendar.refetchEvents();
     } finally {
       btnSubmit.innerHTML = btnOriginalText;
       btnSubmit.disabled = false;
     }
   });
-
-
-
-  // Adiciona listeners para os filtros
-  document.getElementById('btnAplicarFiltros').addEventListener('click', aplicarFiltros);
-  document.getElementById('btnLimparFiltros').addEventListener('click', limparFiltros);
-
-  // Opcional: aplicar filtros automaticamente ao mudar seleção
-  document.getElementById('filtroDisciplina').addEventListener('change', aplicarFiltros);
-  document.getElementById('filtroInstrutor').addEventListener('change', aplicarFiltros);
 
   // Função para mostrar notificações
   function showToast(message, type = 'success') {

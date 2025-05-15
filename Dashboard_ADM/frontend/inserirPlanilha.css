@@ -1,136 +1,193 @@
-:root {
-    --light: #f6f6f9;
-    --primary: #1976d2;
-    --light-primary: #cfe8ff;
-    --grey: #eee;
-    --dark-grey: #aaaaaa;
-    --dark: #363949;
-    --danger: #d32f2f;
-    --light-danger: #fecdd3;
-    --warning: #fbc02d;
-    --light-warning: #fff2c6;
-    --success: #388e3c;
-    --light-success: #bbf7d0;
-  }
-  
+
+/* ESTILOS PARA UPLOAD DE PLANILHA */
+.upload-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.upload-container h1 {
+  font-size: 24px;
+  color: #1e293b;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.upload-container p {
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.file-input-wrapper {
+  margin: 25px 0;
+  position: relative;
+}
+
+.file-input-label {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.file-input-label:hover {
+  background: #1d4ed8;
+}
+
+.file-input-label i {
+  margin-right: 8px;
+}
+
+#fileInput {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#fileName {
+  margin: 15px 0;
+  color: #475569;
+  font-size: 14px;
+  padding: 8px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+#processButton {
+  width: 100%;
+  padding: 12px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+
+#processButton:hover {
+  background: #15803d;
+}
+
+#processButton:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.upload-feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+}
+
+.upload-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  display: block;
+}
+
+.upload-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  display: block;
+}
+
+#output {
+  margin-top: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 600px) {
   .upload-container {
-    background: var(--light);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    margin-bottom: 24px;
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-  
-  .upload-container:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    padding: 20px;
+    margin: 20px;
   }
   
   .upload-container h1 {
-    color: var(--dark);
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 20px;
   }
   
-  .file-input-wrapper {
-    margin: 20px 0;
-  }
-  
-  .file-input-label {
-    display: inline-block;
-    background-color: var(--primary);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-  
-  .file-input-label:hover {
-    background-color: #1565c0;
-  }
-  
-  #fileInput {
-    display: none;
-  }
-  
-  #fileName {
-    margin: 15px 0;
-    color: var(--dark);
-    font-weight: 500;
-  }
-  
+  .file-input-label, 
   #processButton {
-    background-color: var(--success);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    width: 100%;
-    max-width: 300px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    padding: 10px 15px;
+    font-size: 14px;
   }
-  
-  #processButton:hover:not(:disabled) {
-    background-color: #2e7d32;
-  }
-  
-  #processButton:disabled {
-    background-color: var(--dark-grey);
-    cursor: not-allowed;
-  }
-  
-  #processButton.processing {
-    background-color: var(--primary);
-  }
-  
-  .upload-feedback {
-    margin-top: 20px;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 500;
-    display: none;
-  }
-  
-  .upload-success {
-    background-color: var(--light-success);
-    color: var(--success);
-    border: 1px solid var(--success);
-    display: block;
-  }
-  
-  .upload-error {
-    background-color: var(--light-danger);
-    color: var(--danger);
-    border: 1px solid var(--danger);
-    display: block;
-  }
-  
-  #output {
-    margin-top: 24px;
-    background: var(--light);
-    padding: 20px;
-    border-radius: 12px;
-  }
-  
-  .atividade {
-    background: white;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  }
-  
-  .atividade p {
-    margin: 8px 0;
-    color: var(--dark);
-  }
-  
-  .atividade strong {
-    color: var(--primary);
-  }
+}
+
+/* MODO ESCURO COM CONTRASTE SUTIL */
+body.dark {
+  /* Cores principais */
+  --light: #25272e;       /* Container/Cards (mais claro) */
+  --grey: #1a1c22;        /* Fundo da página (mais escuro) */
+  --dark: #e4e6eb;        /* Texto principal */
+  --dark-grey: #3e4046;   /* Bordas discretas */
+
+  /* Ajuste de contraste */
+  --contrast-5: rgba(255,255,255,0.05);
+  --contrast-10: rgba(255,255,255,0.1);
+}
+
+/* FUNDO GERAL */
+body.dark {
+  background-color: var(--grey); /* Cor mais escura */
+}
+
+/* CONTAINERS PRINCIPAIS */
+body.dark .content main .bottom-data > div,
+body.dark .content main .insights li,
+body.dark .config-container,
+body.dark .card-colaborador {
+  background-color: var(--light); /* 10% mais claro que o fundo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* BARRA LATERAL E SUPERIOR */
+body.dark .sidebar,
+body.dark .content nav {
+  background-color: var(--light);
+}
+
+/* HOVER E EFEITOS */
+body.dark .content main .bottom-data .orders table tr:hover {
+  background-color: var(--contrast-5);
+}
+
+/* BORDAS DISCRETAS (OPCIONAL) */
+body.dark .content main .bottom-data > div,
+body.dark .content main .insights li {
+  border: 1px solid var(--contrast-10);
+}
+
+body {
+  background: var(--grey);
+  overflow-x: hidden;
+}
+
+
+
