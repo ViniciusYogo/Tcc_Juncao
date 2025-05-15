@@ -66,23 +66,6 @@
             font-size: 0.8em;
             margin-right: 5px;
         }
-
-        .data-divider {
-            background-color: #e9ecef;
-            padding: 8px 15px;
-            font-weight: bold;
-            border-left: 4px solid #0d6efd;
-            margin: 10px 0;
-        }
-
-        .evento-item {
-            border-left: 4px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .evento-item:hover {
-            background-color: #f8f9fa;
-        }
     </style>
 </head>
 
@@ -176,8 +159,9 @@
             let instrutoresUnicos = [];
             const { jsPDF } = window.jspdf;
 
-            // Objeto para armazenar as cores das matérias
+            // Objeto para armazenar as cores das matérias (ADICIONE ESTA LINHA)
             let coresMaterias = {};
+
 
             // Função para gerar uma cor única baseada no nome da matéria
             function gerarCorParaMateria(nomeMateria) {
@@ -259,7 +243,7 @@
                         disciplinasUnicas = [...new Set(todosEventos.map(e => e.atividade))].filter(Boolean).sort();
                         instrutoresUnicos = [...new Set(todosEventos.map(e => e.instrutor))].filter(Boolean).sort();
 
-                        // Gera cores para todas as matérias
+                        // Gera cores para todas as matérias (ADICIONE ESTAS LINHAS)
                         disciplinasUnicas.forEach(materia => {
                             gerarCorParaMateria(materia);
                         });
@@ -305,35 +289,7 @@
                 });
             }
 
-            // Função para agrupar eventos por data
-            function agruparEventosPorData(eventos) {
-                const grupos = {};
-                
-                eventos.forEach(evento => {
-                    const dataKey = evento.dataObj.toLocaleDateString('pt-BR');
-                    
-                    if (!grupos[dataKey]) {
-                        grupos[dataKey] = [];
-                    }
-                    
-                    grupos[dataKey].push(evento);
-                });
-                
-                // Ordena as datas
-                const datasOrdenadas = Object.keys(grupos).sort((a, b) => {
-                    return new Date(a.split('/').reverse().join('/')) - new Date(b.split('/').reverse().join('/'));
-                });
-                
-                // Cria um novo objeto com as datas ordenadas
-                const gruposOrdenados = {};
-                datasOrdenadas.forEach(data => {
-                    gruposOrdenados[data] = grupos[data];
-                });
-                
-                return gruposOrdenados;
-            }
-
-            // Função para exibir os eventos na lista, agrupados por data
+            // Função para exibir os eventos na lista
             function exibirEventos() {
                 const listaEventos = document.getElementById('listaEventos');
                 const totalEventos = document.getElementById('totalEventos');
@@ -341,58 +297,38 @@
                 listaEventos.innerHTML = '';
                 totalEventos.textContent = eventosFiltrados.length;
 
-                if (eventosFiltrados.length === 0) {
+                eventosFiltrados.forEach(evento => {
                     const li = document.createElement('li');
-                    li.className = 'list-group-item text-center text-muted';
-                    li.textContent = 'Nenhum evento encontrado com os filtros aplicados';
+                    li.className = 'list-group-item';
+
+                    const dataFormatada = evento.dataObj.toLocaleDateString('pt-BR');
+                    const horario = evento.horaFim
+                        ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
+                        : evento.horaInicio.substring(0, 5);
+
+                    const status = evento.status
+                        ? '<span class="badge status-confirmada badge-status">Confirmada</span>'
+                        : '<span class="badge status-nao-confirmada badge-status">Não confirmada</span>';
+
+                    // Gera o badge colorido para a matéria (MODIFICADO)
+                    const corMateria = gerarCorParaMateria(evento.atividade);
+                    const badgeMateria = `<span class="materia-badge" style="background-color: ${corMateria}">${evento.atividade}</span>`;
+
+                    li.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">${badgeMateria} ${evento.instrutor}</h5>
+                    <small class="text-muted">${evento.local || 'Local não especificado'}</small>
+                </div>
+                <div class="text-end">
+                    <div>${dataFormatada} - ${horario}</div>
+                    <div>${status}</div>
+                </div>
+            </div>
+        `;
+
                     listaEventos.appendChild(li);
-                    return;
-                }
-
-                // Agrupa eventos por data
-                const eventosPorData = agruparEventosPorData(eventosFiltrados);
-
-                // Para cada data, cria um divisor e os eventos correspondentes
-                for (const [data, eventos] of Object.entries(eventosPorData)) {
-                    // Cria o divisor da data
-                    const divider = document.createElement('li');
-                    divider.className = 'list-group-item data-divider';
-                    divider.innerHTML = `<i class="fas fa-calendar-day me-2"></i>${data}`;
-                    listaEventos.appendChild(divider);
-
-                    // Adiciona os eventos desta data
-                    eventos.forEach(evento => {
-                        const li = document.createElement('li');
-                        li.className = 'list-group-item evento-item';
-
-                        const horario = evento.horaFim
-                            ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
-                            : evento.horaInicio.substring(0, 5);
-
-                        const status = evento.status
-                            ? '<span class="badge status-confirmada badge-status">Confirmada</span>'
-                            : '<span class="badge status-nao-confirmada badge-status">Não confirmada</span>';
-
-                        // Gera o badge colorido para a matéria
-                        const corMateria = gerarCorParaMateria(evento.atividade);
-                        const badgeMateria = `<span class="materia-badge" style="background-color: ${corMateria}">${evento.atividade}</span>`;
-
-                        li.innerHTML = `
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="mb-1">${badgeMateria} ${evento.instrutor}</h5>
-                                    <small class="text-muted">${evento.local || 'Local não especificado'}</small>
-                                </div>
-                                <div class="text-end">
-                                    <div>${horario}</div>
-                                    <div>${status}</div>
-                                </div>
-                            </div>
-                        `;
-
-                        listaEventos.appendChild(li);
-                    });
-                }
+                });
             }
 
             // Função para filtrar por período
@@ -521,72 +457,54 @@
                 if (periodo) doc.text(periodo, 14, 22);
                 if (filtros.length > 0) doc.text(filtros.join(', '), 14, 29);
 
-                // Agrupa eventos por data para o PDF
-                const eventosPorData = agruparEventosPorData(eventosFiltrados);
-                let startY = periodo || filtros.length > 0 ? 35 : 25;
+                // Cabeçalho da tabela
+                const headers = [
+                    { title: "Disciplina", dataKey: "atividade" },
+                    { title: "Instrutor", dataKey: "instrutor" },
+                    { title: "Data", dataKey: "dataFormatada" },
+                    { title: "Horário", dataKey: "horario" },
+                    { title: "Local", dataKey: "local" },
+                    { title: "Status", dataKey: "status" }
+                ];
 
-                // Para cada data, adiciona uma seção no PDF
-                for (const [data, eventos] of Object.entries(eventosPorData)) {
-                    // Adiciona o cabeçalho da data
-                    doc.setFontSize(12);
-                    doc.setFont(undefined, 'bold');
-                    doc.text(`Data: ${data}`, 14, startY);
-                    startY += 7;
+                // Preparar dados para a tabela
+                const dadosTabela = eventosFiltrados.map(evento => {
+                    const dataFormatada = evento.dataObj.toLocaleDateString('pt-BR');
+                    const horario = evento.horaFim
+                        ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
+                        : evento.horaInicio.substring(0, 5);
+                    const status = evento.status ? 'Confirmada' : 'Não confirmada';
 
-                    // Cabeçalho da tabela
-                    const headers = [
-                        { title: "Disciplina", dataKey: "atividade" },
-                        { title: "Instrutor", dataKey: "instrutor" },
-                        { title: "Horário", dataKey: "horario" },
-                        { title: "Local", dataKey: "local" },
-                        { title: "Status", dataKey: "status" }
-                    ];
+                    return {
+                        atividade: evento.atividade,
+                        instrutor: evento.instrutor,
+                        dataFormatada: dataFormatada,
+                        horario: horario,
+                        local: evento.local || 'Não especificado',
+                        status: status
+                    };
+                });
 
-                    // Preparar dados para a tabela
-                    const dadosTabela = eventos.map(evento => {
-                        const horario = evento.horaFim
-                            ? `${evento.horaInicio.substring(0, 5)} - ${evento.horaFim.substring(0, 5)}`
-                            : evento.horaInicio.substring(0, 5);
-                        const status = evento.status ? 'Confirmada' : 'Não confirmada';
-
-                        return {
-                            atividade: evento.atividade,
-                            instrutor: evento.instrutor,
-                            horario: horario,
-                            local: evento.local || 'Não especificado',
-                            status: status
-                        };
-                    });
-
-                    // Adiciona a tabela ao PDF
-                    doc.autoTable({
-                        head: [headers.map(h => h.title)],
-                        body: dadosTabela.map(row => headers.map(h => row[h.dataKey])),
-                        startY: startY,
-                        margin: { top: 10 },
-                        styles: {
-                            fontSize: 10,
-                            cellPadding: 3,
-                            overflow: 'linebreak'
-                        },
-                        columnStyles: {
-                            0: { cellWidth: 'auto' },
-                            1: { cellWidth: 'auto' },
-                            2: { cellWidth: 'auto' },
-                            3: { cellWidth: 'auto' },
-                            4: { cellWidth: 'auto' }
-                        }
-                    });
-
-                    // Atualiza a posição Y para a próxima seção
-                    startY = doc.lastAutoTable.finalY + 10;
-                    
-                    // Adiciona uma nova página se necessário
-                    if (startY > 280) {
-                        doc.addPage();
-                        startY = 20;
+                // Adiciona a tabela ao PDF
+                doc.autoTable({
+                    head: [headers.map(h => h.title)],
+                    body: dadosTabela.map(row => headers.map(h => row[h.dataKey])),
+                    startY: periodo || filtros.length > 0 ? 35 : 25,
+                    margin: { top: 10 },
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 'auto' },
+                        1: { cellWidth: 'auto' },
+                        2: { cellWidth: 'auto' },
+                        3: { cellWidth: 'auto' },
+                        4: { cellWidth: 'auto' },
+                        5: { cellWidth: 'auto' }
                     }
-                }
+                });
 
                 // Salva o PDF
                 const dataAtual = new Date().toISOString().split('T')[0];
