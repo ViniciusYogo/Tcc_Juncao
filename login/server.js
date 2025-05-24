@@ -32,7 +32,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Em produção deve ser true com HTTPS
+    secure: false,
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
 }));
@@ -98,12 +98,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-
-
 app.use(fileupload({
   useTempFiles: true,
   tempFileDir: path.join(__dirname, 'temp'),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   abortOnLimit: true,
   responseOnLimit: 'O arquivo é muito grande (limite de 5MB)',
   safeFileNames: true,
@@ -119,7 +117,6 @@ app.use('/Dashboard_ADM/frontend', express.static(path.join(__dirname, '../Dashb
 // Middleware de logging
 app.use((req, res, next) => {
   log(`📥 ${req.method} ${req.url}`);
-  log(`Headers: ${JSON.stringify(req.headers)}`);
   next();
 });
 
@@ -134,169 +131,115 @@ const requireAuth = (req, res, next) => {
 // Middleware de verificação de função
 const checkRole = (roles) => {
   return (req, res, next) => {
+    if (!req.session.user || !req.session.user.funcao) {
+      return res.status(403).json({ 
+        error: 'Acesso negado',
+        message: 'Função do usuário não definida'
+      });
+    }
+
     if (roles.includes(req.session.user.funcao)) {
       return next();
     }
-    res.status(403).json({ error: 'Acesso negado' });
+
+    res.status(403).json({ 
+      error: 'Acesso negado',
+      message: `Esta ação requer uma das seguintes funções: ${roles.join(', ')}`
+    });
   };
-}
+};
 
-// Funções auxiliares para formatação de dados
-function formatarDatas(dateString) {
-  if (!dateString) return null;
 
-  try {
-    if (typeof dateString === 'string' && dateString.includes(';')) {
-      return dateString.split(';')
-        .map(date => formatarDataIndividual(date.trim()))
-        .filter(date => date)
-        .join(';');
-    }
 
-    return formatarDataIndividual(dateString);
-  } catch (e) {
-    console.error("Erro ao formatar data:", dateString, e);
-    return null;
-  }
-}
-
-function formatarDataIndividual(dateString) {
-  if (!dateString) return null;
-
-  try {
-    if (typeof dateString === 'string' && dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-      const [day, month, year] = dateString.split('/');
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-    }
-
-    if (typeof dateString === 'number') {
-      const date = xlsx.SSF.parse_date_code(dateString);
-      return new Date(date.y, date.m - 1, date.d).toISOString().split('T')[0];
-    }
-
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString().split('T')[0];
-    }
-
-    return null;
-  } catch (e) {
-    console.error("Erro ao formatar data individual:", dateString, e);
-    return null;
-  }
-}
-
-function formatarHora(timeString) {
-  if (!timeString) return null;
-
-  try {
-    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}:\d{2}$/)) {
-      return timeString;
-    }
-
-    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}$/)) {
-      return `${timeString}:00`;
-    }
-
-    if (typeof timeString === 'number') {
-      const date = xlsx.SSF.parse_date_code(timeString);
-      const hours = Math.floor(timeString * 24);
-      const minutes = Math.floor((timeString * 24 - hours) * 60);
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00'`;
-    }
-
-    return null;
-  } catch (e) {
-    console.error("Erro ao formatar hora:", timeString, e);
-    return null;
-  }
-}
-
-// ROTA PRINCIPAL (LOGIN)
+// ROTAS PÚBLICAS
 app.get('/', (req, res) => {
   if (req.session.authenticated) {
-    // Redireciona para o mesmo padrão usado no login
-    return res.redirect('/dashboard');
+    const redirectPath = req.session.user.funcao === 'admin' 
+      ? '/Dashboard_ADM/frontend/?funcao=admin' 
+      : '/Dashboard_ADM/frontend/?funcao=professor';
+    return res.redirect(redirectPath);
   }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/api/user-permissions', requireAuth, (req, res) => {
-  const isAdmin = req.session.user.funcao === 'admin';
-
-  res.json({
-    success: true,
-    data: {
-      isAdmin, // Adiciona esta flag
-      canViewUsers: isAdmin,
-      canCreateUsers: isAdmin,
-      canUploadFiles: isAdmin,
-      canViewSchedules: true,  // Todos podem ver horários
-      canManageSettings: true   // Todos podem acessar configurações
-    }
-  });
-});
-
-// ROTA DE LOGIN
+// Rota de login 
 app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
-  try {
-    // Verifica se é administrador
-    const [admin] = await db.query(
-      'SELECT id, email, funcao FROM colaboradores WHERE email = ? AND senha = ? AND funcao = "admin"',
-      [email, senha]
-    );
-
-    if (admin.length > 0) {
-      req.session.authenticated = true;
-      req.session.user = {
-        id: admin[0].id,
-        email: admin[0].email,
-        funcao: 'admin'
-      };
-      // Redireciona para a rota correta do dashboard
-      return res.json({
-        success: true,
-        redirect: '/Dashboard_ADM/frontend/?funcao=admin'
-      });
-    }
-
-    // Verifica se é professor
-    const [professor] = await db.query(
-      'SELECT id, email, funcao FROM colaboradores WHERE email = ? AND senha = ? AND funcao = "professor"',
-      [email, senha]
-    );
-
-    if (professor.length > 0) {
-      req.session.authenticated = true;
-      req.session.user = {
-        id: professor[0].id,
-        email: professor[0].email,
-        funcao: 'professor'
-      };
-      // Redireciona para a rota correta do dashboard
-      return res.json({
-        success: true,
-        redirect: '/Dashboard_ADM/frontend/?funcao=professor'
-      });
-    }
-
-    return res.status(401).json({
+  // Validação básica dos campos
+  if (!email || !senha) {
+    return res.status(400).json({
       success: false,
-      error: 'E-mail ou senha inválidos'
+      error: 'E-mail e senha são obrigatórios'
+    });
+  }
+
+  try {
+    // Primeiro verifica se o usuário existe (independente da função)
+    const [users] = await db.query(
+      'SELECT id, email, funcao, primeiro_nome, ultimo_nome FROM colaboradores WHERE email = ? AND senha = ?',
+      [email, senha]
+    );
+
+    if (users.length === 0) {
+      return res.status(401).json({
+        success: false,
+        error: 'Credenciais inválidas'
+      });
+    }
+
+    const user = users[0];
+    
+    // Cria a sessão
+    req.session.regenerate(err => {
+      if (err) {
+        console.error('Erro ao regenerar sessão:', err);
+        return res.status(500).json({
+          success: false,
+          error: 'Erro interno no servidor'
+        });
+      }
+
+      req.session.authenticated = true;
+      req.session.user = {
+        id: user.id,
+        email: user.email,
+        nome: `${user.primeiro_nome} ${user.ultimo_nome}`,
+        funcao: user.funcao
+      };
+
+      // Salva a sessão
+      req.session.save(err => {
+        if (err) {
+          console.error('Erro ao salvar sessão:', err);
+          return res.status(500).json({
+            success: false,
+            error: 'Erro interno no servidor'
+          });
+        }
+
+        // Redireciona conforme a função
+        return res.json({
+          success: true,
+          redirect: `/Dashboard_ADM/frontend/?funcao=${user.funcao}`,
+          user: {
+            nome: `${user.primeiro_nome} ${user.ultimo_nome}`,
+            funcao: user.funcao
+          }
+        });
+      });
     });
 
   } catch (err) {
     console.error('Erro no login:', err);
     return res.status(500).json({
       success: false,
-      error: 'Erro no servidor'
+      error: 'Erro interno no servidor'
     });
   }
 });
 
-// ROTA DE LOGOUT
+// Rota de logout
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -306,11 +249,32 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// ROTA DO DASHBOARD (PROTEGIDA)
-app.get('/Dashboard_ADM/frontend', requireAuth, (req, res) => {
-  // Verifica se o caminho físico existe
-  const dashboardPath = path.join(__dirname, 'Dashboard_ADM', 'frontend', 'index.html');
+// Rota para obter permissões do usuário
+app.get('/api/user-permissions', requireAuth, (req, res) => {
+  const isAdmin = req.session.user.funcao === 'admin';
+  const isProfessor = req.session.user.funcao === 'professor';
 
+  res.json({
+    success: true,
+    data: {
+      isAdmin,
+      isProfessor,
+      canViewUsers: isAdmin,
+      canCreateUsers: isAdmin,
+      canEditUsers: isAdmin,
+      canDeleteUsers: isAdmin,
+      canUploadFiles: isAdmin,
+      canViewSchedules: true,
+      canManageSchedules: isAdmin,
+      canViewSettings: true,
+      canManageSettings: isAdmin
+    }
+  });
+});
+
+// Rota do dashboard (protegida)
+app.get('/Dashboard_ADM/frontend', requireAuth, (req, res) => {
+  const dashboardPath = path.join(__dirname, 'Dashboard_ADM', 'frontend', 'index.html');
   if (fs.existsSync(dashboardPath)) {
     res.sendFile(dashboardPath);
   } else {
@@ -321,10 +285,7 @@ app.get('/Dashboard_ADM/frontend', requireAuth, (req, res) => {
   }
 });
 
-
-
-
-// Rotas para administradores
+// ROTAS DE ADMINISTRAÇÃO (apenas para admin)
 app.get('/api/colaboradores',
   requireAuth,
   checkRole(['admin']),
@@ -338,148 +299,265 @@ app.get('/api/colaboradores',
   }
 );
 
-// Rotas para professores
-app.get('/api/horarios',
+app.post('/api/criar-colaborador',
   requireAuth,
-  checkRole(['admin', 'professor']),
+  checkRole(['admin']),
   async (req, res) => {
     try {
-      const [horarios] = await db.query('SELECT * FROM atividades');
-      res.json(horarios);
+      const {
+        primeiro_nome,
+        ultimo_nome,
+        numero_contato,
+        email,
+        nome_usuario,
+        senha,
+        funcao
+      } = req.body;
+
+      let foto = null;
+      if (req.files && req.files.foto) {
+        const fotoFile = req.files.foto;
+        const uploadDir = path.join(__dirname, 'uploads');
+        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+        
+        const ext = path.extname(fotoFile.name);
+        const fileName = `${Date.now()}${ext}`;
+        const filePath = path.join(uploadDir, fileName);
+        
+        await fotoFile.mv(filePath);
+        foto = fileName;
+      }
+
+      const [result] = await db.query(
+        `INSERT INTO colaboradores SET ?`,
+        {
+          primeiro_nome,
+          ultimo_nome,
+          numero_contato,
+          email,
+          nome_usuario,
+          senha,
+          foto,
+          funcao: funcao || 'professor' // Default para professor
+        }
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Colaborador criado com sucesso!',
+        id: result.insertId
+      });
     } catch (err) {
-      res.status(500).json({ error: 'Erro ao buscar horários' });
+      console.error('Erro ao criar colaborador:', err);
+      res.status(500).json({
+        success: false,
+        error: 'Erro interno no servidor'
+      });
     }
   }
 );
 
-
-
-// Rotas de Atividades (PROTEGIDAS)
-app.get('/api/atividades', requireAuth, async (req, res) => {
-  try {
-    const { start, end } = req.query;
-    const conn = await db.getConnection();
-
+app.put('/api/colaboradores/:id',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
     try {
-      let query = `
-        SELECT 
-          id,
-          descricao as atividade,
-          DATE_FORMAT(datasAtividadeIndividual, '%Y-%m-%d') as data,
-          DATE_FORMAT(horaInicioAgendada, '%H:%i') as horaInicio,
-          DATE_FORMAT(fimAgendado, '%H:%i') as horaFim,
-          nomePessoalAtribuido as instrutor,
-          descricaoLocalizacaoAtribuida as local,
-          confirmada as status
-        FROM atividades
-      `;
+      const { id } = req.params;
+      let foto = null;
 
-      let params = [];
-
-      if (start && end) {
-        query += ' WHERE datasAtividadeIndividual BETWEEN ? AND ?';
-        params.push(start, end);
+      if (req.files && req.files.foto) {
+        const fotoFile = req.files.foto;
+        const uploadDir = path.join(__dirname, 'uploads');
+        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+        
+        const ext = path.extname(fotoFile.name);
+        const fileName = `${Date.now()}${ext}`;
+        const filePath = path.join(uploadDir, fileName);
+        
+        await fotoFile.mv(filePath);
+        foto = fileName;
       }
 
-      query += ' ORDER BY datasAtividadeIndividual, horaInicioAgendada';
+      const {
+        primeiro_nome,
+        ultimo_nome,
+        numero_contato,
+        email,
+        nome_usuario,
+        senha,
+        funcao
+      } = req.body;
 
-      const [atividades] = await conn.query(query, params);
+      const updateData = {
+        primeiro_nome,
+        ultimo_nome,
+        numero_contato,
+        email,
+        nome_usuario,
+        funcao
+      };
+
+      if (senha && senha.trim() !== '') {
+        updateData.senha = senha;
+      }
+
+      if (foto) {
+        updateData.foto = foto;
+      }
+
+      const [result] = await db.query(
+        'UPDATE colaboradores SET ? WHERE id = ?',
+        [updateData, id]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Colaborador não encontrado'
+        });
+      }
 
       res.json({
         success: true,
-        data: atividades
+        message: 'Colaborador atualizado com sucesso!'
       });
-    } finally {
-      conn.release();
+    } catch (err) {
+      console.error('Erro ao atualizar colaborador:', err);
+      res.status(500).json({
+        success: false,
+        error: 'Erro ao atualizar colaborador'
+      });
     }
+  }
+);
+
+app.delete('/api/colaboradores/:id',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
+    try {
+      const [result] = await db.query(
+        'DELETE FROM colaboradores WHERE id = ?',
+        [req.params.id]
+      );
+      
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ 
+          success: false,
+          error: 'Colaborador não encontrado' 
+        });
+      }
+      
+      res.json({ 
+        success: true, 
+        message: 'Colaborador excluído com sucesso!' 
+      });
+    } catch (err) {
+      res.status(500).json({ 
+        success: false,
+        error: 'Erro ao excluir colaborador' 
+      });
+    }
+  }
+);
+
+// ROTAS DE ATIVIDADES
+// Visualização para todos autenticados
+app.get('/api/atividades', requireAuth, async (req, res) => {
+  try {
+    const { start, end } = req.query;
+    let query = `
+      SELECT 
+        id,
+        descricao as atividade,
+        DATE_FORMAT(datasAtividadeIndividual, '%Y-%m-%d') as data,
+        DATE_FORMAT(horaInicioAgendada, '%H:%i') as horaInicio,
+        DATE_FORMAT(fimAgendado, '%H:%i') as horaFim,
+        nomePessoalAtribuido as instrutor,
+        descricaoLocalizacaoAtribuida as local,
+        confirmada as status
+      FROM atividades
+    `;
+
+    let params = [];
+    if (start && end) {
+      query += ' WHERE datasAtividadeIndividual BETWEEN ? AND ?';
+      params.push(start, end);
+    }
+
+    query += ' ORDER BY datasAtividadeIndividual, horaInicioAgendada';
+
+    const [atividades] = await db.query(query, params);
+    res.json({ success: true, data: atividades });
   } catch (error) {
     log(`Erro ao buscar atividades: ${error.stack}`);
     res.status(500).json({
       success: false,
-      error: 'Erro interno no servidor',
-      message: error.message
+      error: 'Erro interno no servidor'
     });
   }
 });
 
 app.get('/api/atividades/:id', requireAuth, async (req, res) => {
   try {
-    const { id } = req.params;
+    const [atividade] = await db.query(
+      `SELECT 
+        id,
+        descricao as atividade,
+        DATE_FORMAT(datasAtividadeIndividual, '%Y-%m-%d') as data,
+        DATE_FORMAT(horaInicioAgendada, '%H:%i') as horaInicio,
+        DATE_FORMAT(fimAgendado, '%H:%i') as horaFim,
+        nomePessoalAtribuido as instrutor,
+        descricaoLocalizacaoAtribuida as local,
+        confirmada as status
+      FROM atividades
+      WHERE id = ?`,
+      [req.params.id]
+    );
 
-    if (!id || isNaN(id)) {
-      return res.status(400).json({
+    if (atividade.length === 0) {
+      return res.status(404).json({
         success: false,
-        error: 'ID inválido',
-        message: 'Por favor, forneça um ID válido'
+        error: 'Atividade não encontrada'
       });
     }
 
-    const conn = await db.getConnection();
-
-    try {
-      const [atividades] = await conn.query(
-        `SELECT 
-          id,
-          descricao as atividade,
-          DATE_FORMAT(horaInicioAgendada, '%H:%i') as hora,
-          nomePessoalAtribuido as instrutor,
-          descricaoLocalizacaoAtribuida as local,
-          confirmada as status,
-          datasAtividadeIndividual as data
-        FROM atividades
-        WHERE id = ?`,
-        [id]
-      );
-
-      if (atividades.length === 0) {
-        return res.status(404).json({
-          success: false,
-          error: 'Não encontrado',
-          message: 'Atividade não encontrada'
-        });
-      }
-
-      res.json({
-        success: true,
-        data: atividades[0]
-      });
-    } finally {
-      conn.release();
-    }
+    res.json({ success: true, data: atividade[0] });
   } catch (error) {
     log(`Erro ao buscar atividade: ${error.stack}`);
     res.status(500).json({
       success: false,
-      error: 'Erro interno no servidor',
-      message: 'Ocorreu um erro ao buscar a atividade'
+      error: 'Erro interno no servidor'
     });
   }
 });
 
-app.post('/api/atividades', requireAuth, async (req, res) => {
-  if (!Array.isArray(req.body)) {
-    return res.status(400).json({
-      success: false,
-      error: 'O corpo da requisição deve ser um array de atividades'
-    });
-  }
-
-  try {
-    const conn = await db.getConnection();
-    let inserted = 0;
-    let skipped = 0;
-
+// Modificação de atividades apenas para admin
+app.post('/api/atividades',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
     try {
+      if (!Array.isArray(req.body)) {
+        return res.status(400).json({
+          success: false,
+          error: 'O corpo da requisição deve ser um array de atividades'
+        });
+      }
+
+      let inserted = 0;
+      let skipped = 0;
+
       for (const atividade of req.body) {
         if (!atividade.descricao || !atividade.nomePessoalAtribuido) {
           continue;
         }
 
-        const [existing] = await conn.query(
+        const [existing] = await db.query(
           `SELECT id FROM atividades WHERE 
-                   descricao = ? AND 
-                   nomePessoalAtribuido = ? AND 
-                   datasAtividadeIndividual = ?`,
+           descricao = ? AND 
+           nomePessoalAtribuido = ? AND 
+           datasAtividadeIndividual = ?`,
           [
             atividade.descricao,
             atividade.nomePessoalAtribuido,
@@ -488,7 +566,7 @@ app.post('/api/atividades', requireAuth, async (req, res) => {
         );
 
         if (existing.length === 0) {
-          await conn.query(
+          await db.query(
             `INSERT INTO atividades SET ?`,
             {
               descricao: atividade.descricao,
@@ -512,78 +590,58 @@ app.post('/api/atividades', requireAuth, async (req, res) => {
         inserted,
         skipped
       });
-    } finally {
-      conn.release();
+    } catch (error) {
+      console.error('Erro ao importar atividades:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erro interno no servidor'
+      });
     }
-  } catch (error) {
-    console.error('Erro ao importar atividades:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor',
-      message: error.message
-    });
   }
-});
+);
 
-app.delete('/api/atividades/:id', requireAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const conn = await db.getConnection();
-
+app.put('/api/atividades/:id',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
     try {
-      const [result] = await conn.query(
-        'DELETE FROM atividades WHERE id = ?',
-        [id]
-      );
+      const { id } = req.params;
+      const {
+        descricao,
+        nomePessoalAtribuido,
+        horaInicioAgendada,
+        fimAgendado,
+        datasAtividadeIndividual,
+        descricaoLocalizacaoAtribuida,
+        confirmada
+      } = req.body;
 
-      if (result.affectedRows === 0) {
-        return res.status(404).json({
+      // Validação básica
+      if (!descricao || !nomePessoalAtribuido || !datasAtividadeIndividual || !horaInicioAgendada) {
+        return res.status(400).json({
           success: false,
-          error: 'Atividade não encontrada'
+          error: 'Dados incompletos'
         });
       }
 
-      res.json({
-        success: true,
-        message: 'Atividade excluída com sucesso'
-      });
-    } finally {
-      conn.release();
-    }
-  } catch (error) {
-    log(`Erro ao excluir atividade: ${error.stack}`);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor'
-    });
-  }
-});
-
-app.put('/api/atividades/:id', requireAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      descricao,
-      nomePessoalAtribuido,
-      horaInicioAgendada,
-      descricaoLocalizacaoAtribuida,
-    } = req.body;
-
-    const conn = await db.getConnection();
-
-    try {
-      const [result] = await conn.query(
+      const [result] = await db.query(
         `UPDATE atividades SET
           descricao = ?,
           nomePessoalAtribuido = ?,
           horaInicioAgendada = ?,
-          descricaoLocalizacaoAtribuida = ?
+          fimAgendado = ?,
+          datasAtividadeIndividual = ?,
+          descricaoLocalizacaoAtribuida = ?,
+          confirmada = ?
         WHERE id = ?`,
         [
           descricao,
           nomePessoalAtribuido,
           horaInicioAgendada,
-          descricaoLocalizacaoAtribuida,
+          fimAgendado || null,
+          datasAtividadeIndividual,
+          descricaoLocalizacaoAtribuida || null,
+          confirmada ? 1 : 0,
           id
         ]
       );
@@ -599,234 +657,100 @@ app.put('/api/atividades/:id', requireAuth, async (req, res) => {
         success: true,
         message: 'Atividade atualizada com sucesso'
       });
-    } finally {
-      conn.release();
-    }
-  } catch (error) {
-    log(`Erro ao atualizar atividade: ${error.stack}`);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor'
-    });
-  }
-});
-
-// Rotas de Colaboradores (PROTEGIDAS)
-app.post('/api/criar-colaborador', requireAuth, async (req, res) => {
-  try {
-    console.log('Dados do corpo:', req.body);
-    console.log('Arquivo recebido:', req.files ? req.files.foto : null);
-
-    const {
-      primeiro_nome,
-      ultimo_nome,
-      numero_contato,
-      email,
-      nome_usuario,
-      senha
-    } = req.body;
-
-    let foto = null;
-
-    if (req.files && req.files.foto) {
-      const fotoFile = req.files.foto;
-      const uploadDir = path.join(__dirname, 'uploads');
-
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-
-      const ext = path.extname(fotoFile.name);
-      const fileName = `${Date.now()}${ext}`;
-      const filePath = path.join(uploadDir, fileName);
-
-      await fotoFile.mv(filePath);
-      foto = fileName;
-    }
-
-    if (!db) {
-      throw new Error('Database connection not established');
-    }
-
-    const [result] = await db.query(
-      `INSERT INTO colaboradores 
-       (primeiro_nome, ultimo_nome, numero_contato, email, nome_usuario, senha, foto)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [
-        primeiro_nome,
-        ultimo_nome,
-        numero_contato,
-        email,
-        nome_usuario,
-        senha,
-        foto
-      ]
-    );
-
-    res.status(201).json({
-      success: true,
-      message: 'Colaborador criado com sucesso!',
-      id: result.insertId
-    });
-
-  } catch (err) {
-    console.error('Erro detalhado:', err);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor',
-      details: process.env.NODE_ENV === 'development' ? {
-        message: err.message,
-        stack: err.stack,
-        sqlMessage: err.sqlMessage
-      } : undefined
-    });
-  }
-});
-
-app.get('/api/colaboradores', requireAuth, async (req, res) => {
-  try {
-    const [colaboradores] = await db.query(`
-      SELECT 
-        id,
-        primeiro_nome,
-        ultimo_nome,
-        numero_contato,
-        email,
-        nome_usuario,
-        foto
-      FROM colaboradores
-      ORDER BY primeiro_nome
-    `);
-
-    res.json(colaboradores.map(c => ({
-      ...c,
-      foto: c.foto ? `/uploads/${c.foto}` : null
-    })));
-  } catch (error) {
-    log(`Erro ao buscar colaboradores: ${error.stack}`);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno no servidor',
-      message: error.message
-    });
-  }
-});
-
-app.get('/api/colaboradores/:id', requireAuth, async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM colaboradores WHERE id = ?', [req.params.id]);
-    if (rows.length === 0) return res.status(404).json({ error: 'Colaborador não encontrado' });
-
-    const colaborador = rows[0];
-    colaborador.foto = colaborador.foto ? `/uploads/${colaborador.foto}` : null;
-    res.json(colaborador);
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar colaborador' });
-  }
-});
-
-app.put('/api/colaboradores/:id', requireAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    let foto = null;
-
-    if (req.files && req.files.foto) {
-      const fotoFile = req.files.foto;
-      const uploadDir = path.join(__dirname, 'uploads');
-
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-
-      const ext = path.extname(fotoFile.name);
-      const fileName = `${Date.now()}${ext}`;
-      const filePath = path.join(uploadDir, fileName);
-
-      await fotoFile.mv(filePath);
-      foto = fileName;
-    }
-
-    const {
-      primeiro_nome,
-      ultimo_nome,
-      numero_contato,
-      email,
-      nome_usuario,
-      senha
-    } = req.body;
-
-    const updateData = {
-      primeiro_nome,
-      ultimo_nome,
-      numero_contato,
-      email,
-      nome_usuario
-    };
-
-    if (senha && senha.trim() !== '') {
-      updateData.senha = senha;
-    }
-
-    if (foto) {
-      updateData.foto = foto;
-    }
-
-    const [result] = await db.query(
-      'UPDATE colaboradores SET ? WHERE id = ?',
-      [updateData, id]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
+    } catch (error) {
+      log(`Erro ao atualizar atividade: ${error.stack}`);
+      res.status(500).json({
         success: false,
-        error: 'Colaborador não encontrado'
+        error: 'Erro interno no servidor'
       });
     }
+  }
+);
 
-    const [rows] = await db.query(
-      'SELECT * FROM colaboradores WHERE id = ?',
-      [id]
-    );
+app.delete('/api/atividades/:id',
+  requireAuth,
+  checkRole(['admin']),
+  async (req, res) => {
+    try {
+      const [result] = await db.query(
+        'DELETE FROM atividades WHERE id = ?',
+        [req.params.id]
+      );
 
-    const colaborador = rows[0];
-    if (colaborador.foto) {
-      colaborador.foto = `/uploads/${colaborador.foto}`;
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Atividade não encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Atividade excluída com sucesso'
+      });
+    } catch (error) {
+      log(`Erro ao excluir atividade: ${error.stack}`);
+      res.status(500).json({
+        success: false,
+        error: 'Erro interno no servidor'
+      });
     }
+  }
+);
 
+// ROTA DE CONFIGURAÇÕES (acesso para todos autenticados)
+app.get('/api/configuracoes', requireAuth, async (req, res) => {
+  try {
+    // Exemplo: retornar configurações básicas do sistema
     res.json({
       success: true,
-      message: 'Colaborador atualizado com sucesso!',
-      data: colaborador
+      data: {
+        nomeInstituicao: "Nome da Instituição",
+        horarioFuncionamento: "08:00 às 18:00",
+        contato: "contato@instituicao.com"
+      }
     });
-
-  } catch (err) {
-    console.error('Erro ao atualizar colaborador:', err);
+  } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao atualizar colaborador',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: 'Erro ao buscar configurações'
     });
   }
 });
 
-app.delete('/api/colaboradores/:id', requireAuth, async (req, res) => {
-  try {
-    const [result] = await db.query('DELETE FROM colaboradores WHERE id = ?', [req.params.id]);
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Colaborador não encontrado' });
+// Rota para upload de arquivos (apenas admin)
+app.post('/api/upload',
+  requireAuth,
+  checkRole(['admin']),
+  upload.single('arquivo'),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: 'Nenhum arquivo enviado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Arquivo recebido com sucesso',
+        filename: req.file.filename
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Erro ao processar arquivo'
+      });
     }
-    res.json({ success: true, message: 'Colaborador excluído com sucesso!' });
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao excluir colaborador' });
   }
-});
+);
 
 // Tratamento para rotas não encontradas
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    error: 'Rota não encontrada',
-    message: `A rota ${req.method} ${req.url} não foi encontrada`
+    error: 'Rota não encontrada'
   });
 });
 
@@ -835,9 +759,7 @@ app.use((error, req, res, next) => {
   log(`Erro não tratado: ${error.stack}`);
   res.status(500).json({
     success: false,
-    error: 'Erro interno no servidor',
-    message: 'Ocorreu um erro inesperado no servidor',
-    details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    error: 'Erro interno no servidor'
   });
 });
 
